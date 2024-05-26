@@ -1,0 +1,197 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap");
+
+*:focus {
+    box-shadow: none !important;
+}
+
+html {
+    height: 100% !important;
+}
+
+body {
+    display: flex !important;
+    height: 100% !important;
+    flex-direction: column !important;
+    font-family: "Quicksand", sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+}
+
+#wrapper {
+    padding: 71px 0 56px;
+    flex-grow: 1 !important;
+    background-color: #edf1f5;
+}
+
+.navbar {
+    height: 55px;
+}
+
+.navbar input.form-control {
+    background: transparent;
+    border: 1px solid #444;
+    color: #ccc;
+}
+
+.navbar input.form-control::placeholder {
+    color: #888;
+}
+
+.navbar input.form-control:focus {
+    border-color: #999;
+}
+
+#navOffcanvas {
+    max-width: 250px;
+    margin-top: 55px;
+    margin-bottom: 40px;
+}
+
+#navOffcanvas .offcanvas-body {
+    padding: 1rem 0;
+}
+
+#navOffcanvas .list-group-item {
+    border: none;
+    background-color: transparent;
+}
+
+#navOffcanvas .list-group-item.active {
+    border: none;
+    background-color: #edf1f5;
+}
+
+.offcanvas-backdrop.show {
+    opacity: 0 !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.form-control,
+.form-select {
+    font-size: small !important;
+    line-height: 1.5rem !important;
+}
+
+[type="password"] {
+    direction: ltr;
+}
+
+.bg-img-cover {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-img-contain {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-muted-8 {
+    background-color: #f8f8f8;
+}
+
+.bg-muted-2 {
+    background-color: #f2f2f2;
+}
+
+.card.card-box {
+    border: none;
+    border-radius: 0;
+}
+
+.card.card-box .card-title {
+    font-size: 115%;
+}
+
+label.error {
+    font-size: 60%;
+    color: #a00;
+    position: absolute;
+}
+.help-cursor {
+    cursor: help;
+}
+
+.pointer-cursor {
+    cursor: pointer;
+}
+
+.dir-ltr {
+    direction: ltr;
+}
+
+.dir-rtl {
+    direction: rtl;
+}
+
+.btn-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    line-height: 35px;
+    padding: 0;
+    font-size: 17px;
+}
+
+.input-group > button {
+    border-color: #ced4da;
+}
+
+.input-group > .btn-outline-secondary:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+td {
+    vertical-align: middle;
+}
+
+.invalid {
+    background-color: #ffe5e5;
+    color: #900;
+}
+
+.col-fit {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.bootstrap-datetimepicker-widget {
+    font-size: 11px !important;
+    font-family: monospace !important;
+}
+
+footer {
+    height: 40px;
+}
+
+footer > [href="#page-top"] {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    left: 10px;
+    bottom: 10px;
+    font-size: 20px;
+    border-radius: 50%;
+    border: 1px solid;
+}
+/* .modal {
+    max-width: 700px;
+    margin-top: 60px;
+    margin-left: 35%;
+} */
+
+/* media */
+
+@media (max-width: 600px) {
+    .container-fluid {
+        max-width: none;
+        margin-left: 0;
+    }
+}
