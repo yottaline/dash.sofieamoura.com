@@ -22,6 +22,9 @@ Route::middleware('auth')->group(function(){
     // locations
     Route::prefix('locations')->group(function(){
         Route::get('/', 'LocationController@index');
+        Route::post('load', 'LocationController@load');
+        Route::match(['post', 'put'], 'submit', 'LocationController@submit');
+        Route::put('change_visible', 'LocationController@changeVisible');
     });
 });
 
