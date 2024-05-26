@@ -26,6 +26,13 @@ Route::middleware('auth')->group(function(){
         Route::match(['post', 'put'], 'submit', 'LocationController@submit');
         Route::put('change_visible', 'LocationController@changeVisible');
     });
+
+    // currencies
+    Route::prefix('currencies')->group(function(){
+        Route::get('/', 'CurrencyController@index');
+        Route::post('load', 'CurrencyController@load');
+        Route::match(['post', 'put'], 'submit', 'CurrencyController@submit');
+    });
 });
 
 

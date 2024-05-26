@@ -20,10 +20,10 @@ class LocationController extends Controller
 
     public function load(Request $request)
     {
-        $params = $request->q ? ['q', $request->q] : [];
+        $param  = $request->q ? ['q' => $request->q] : [];
         $limit  = $request->limit;
         $lastId = $request->last_id;
-        echo json_encode(Location::fetch(0, $params, $limit, $lastId));
+        echo json_encode(Location::fetch(0, $param, $limit, $lastId));
     }
 
     public function submit(Request $request)

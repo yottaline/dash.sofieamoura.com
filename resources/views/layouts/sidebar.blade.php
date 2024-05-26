@@ -20,7 +20,11 @@
                  </a>
              </li>
 
-
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/currencies/">
+                     <i class="bi bi-currency-exchange text-secondary me-2"></i><b>Currencies</b>
+                 </a>
+             </li>
 
              {{-- <li class="list-group-item">
                  <a class="link-dark d-block" data-bs-toggle="collapse" href="#reportsCollapse" role="button"
@@ -55,12 +59,6 @@
                      if (['rep-customers', 'rep-trans', 'rep-subsc'].includes(navTarget))
                          reportsCollapse.show();
                  </script>
-             </li> --}}
-
-             {{-- <li class="list-group-item nav-support">
-                 <a class="link-dark d-block" href="/settings/">
-                     <i class="bi bi-gear text-secondary me-2"></i><b>Settings</b>
-                 </a>
              </li> --}}
 
              {{-- <li class="list-group-item nav-help">

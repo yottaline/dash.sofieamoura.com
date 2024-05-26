@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Location extends Model
 {
@@ -24,6 +25,17 @@ class Location extends Model
         $locations = self::limit($limit)->orderBy('location_id', 'DESC');
 
         if($lastId) $locations->where('location_id', '<', $lastId);
+
+        if (isset($params['q'])) {
+            $locations->where(function (Builder $query) use ($params) {
+                $query->where('location_name', 'like', '%' . $params['q'] . '%')
+                    ->orWhere('location_iso_2', $params['q'])
+                    ->orWhere('location_code', $params['q'])
+                    ->orWhere('location_iso_3', $params['q']);
+            });
+
+            unset($params['q']);
+        }
 
         if($params) $locations->where($params);
 
