@@ -293,7 +293,7 @@ CREATE TABLE IF NOT EXISTS
 
 -- --------------------------------------
 CREATE TABLE IF NOT EXISTS
-  `retailer_wishlist` (
+  `retailers_wishlist` (
     `wishlist_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `wishlist_retailer` INT UNSIGNED NOT NULL,
     `wishlist_product` INT UNSIGNED NOT NULL,
