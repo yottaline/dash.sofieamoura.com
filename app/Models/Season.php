@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Carbon;
 class Season extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
-    // $table->integer('season_id', true, true);
     protected $fillable = [
         'season_name',
         'season_code',
@@ -24,4 +23,29 @@ class Season extends Model
         'season_lookbook',
         'season_visible'
     ];
+
+    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    {
+        $seasons = self::orderBy('season_id', 'DESC')->limit($limit);
+
+        if($lastId) $seasons->where('season_id', '<', $lastId);
+
+        if($params) $seasons->where($params);
+
+        if($id) $seasons->where('season_id', $id);
+
+        return $id ? $seasons->first() : $seasons->get();
+    }
+
+    public static function submit($param, $id)
+    {
+        if($id) return self::where('season_id', $id)->update($param) ? $id : false;
+        $status = self::create($param);
+        return $status ? $status->id : false;
+    }
+
+    public static function parse($realTime, $time)
+    {
+        return Carbon::parse($realTime)->addMonth($time);
+    }
 }

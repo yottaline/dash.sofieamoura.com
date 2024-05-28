@@ -48,6 +48,13 @@ Route::middleware('auth')->group(function(){
         Route::post('load', 'CategoryController@load');
         Route::match(['post', 'put'], 'submit', 'CategoryController@submit');
     });
+
+    // seasons
+    Route::prefix('seasons')->group(function(){
+        Route::get('/', 'SeasonController@index');
+        Route::post('load', 'SeasonController@load');
+        Route::match(['post', 'put'], 'submit', 'SeasonController@submit');
+    });
 });
 
 

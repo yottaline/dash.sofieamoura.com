@@ -38,6 +38,12 @@
                                  <i class="bi bi-grid text-secondary me-2"></i><b>Categories</b>
                              </a>
                          </li>
+
+                         <li class="list-group-item nav-trans">
+                             <a class="link-dark d-block" href="/seasons/">
+                                 <i class="bi bi-arrows-fullscreen text-secondary me-2"></i><b>Seasons</b>
+                             </a>
+                         </li>
                      </ul>
                  </div>
                  <script>
