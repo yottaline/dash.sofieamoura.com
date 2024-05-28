@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Reatilers')
+@section('title', 'Categories')
 @section('search')
     <form id="nvSearch" role="search">
         <input type="search" name="q" class="form-control my-3 my-md-0 rounded-pill" placeholder="Search...">
@@ -22,11 +22,11 @@
                         <div class="d-flex">
                             <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
                                 <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
-                                    role="status"></span><span>RETAILERS</span>
+                                    role="status"></span><span>CATEGORIES</span>
                             </h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
-                                    data-ng-click="setRetailer(false)"></button>
+                                    data-ng-click="setCategory(false)"></button>
                                 <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
                                     data-ng-click="dataLoader(true)"></button>
                             </div>
@@ -37,59 +37,36 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
-                                        <th>Full Name</th>
-                                        <th class="text-center">Company Name</th>
-                                        <th class="text-center">Country</th>
-                                        <th class="text-center">Address</th>
-                                        <th class="text-center">Province</th>
-                                        <th class="text-center">Advance Payment</th>
-                                        <th class="text-center">Currency</th>
-                                        <th class="text-center">Apperoved Date</th>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Type</th>
+                                        <th class="text-center">Gender</th>
                                         <th class="text-center">Status</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="retailer in list track by $index">
-                                        <td data-ng-bind="retailer.retailer_code"
+                                    <tr data-ng-repeat="category in list track by $index">
+                                        <td data-ng-bind="category.category_id"
                                             class="text-center small font-monospace text-uppercase"></td>
-                                        <td>
-                                            <span data-ng-bind="retailer.retailer_fullName" class="fw-bold"></span><br>
-                                            <small data-ng-if="+retailer.retailer_phone"
-                                                class="me-1 db-inline-block dir-ltr font-monospace badge bg-primary">
-                                                <i class="bi bi-phone me-1"></i>
-                                                <span data-ng-bind="retailer.retailer_phone" class="fw-normal"></span>
-                                            </small>
-                                            <small data-ng-if="retailer.retailer_email"
-                                                class="db-inline-block dir-ltr font-monospace badge bg-primary">
-                                                <i class="bi bi-envelope-at me-1"></i>
-                                                <span data-ng-bind="retailer.retailer_email" class="fw-normal"></span>
-                                            </small>
-                                        </td>
-                                        <td class="text-center" data-ng-bind="retailer.retailer_company"></td>
-                                        <td class="text-center" data-ng-bind="retailer.location_name"></td>
-                                        <td class="text-center" data-ng-bind="retailer.retailer_address"></td>
-                                        <td class="text-center" data-ng-bind="retailer.retailer_province"></td>
-                                        <td class="text-center" data-ng-bind="retailer.retailer_adv_payment"></td>
-                                        <td class="text-center" data-ng-bind="retailer.currency_name"></td>
-                                        <td class="text-center">
-                                            <span data-ng-if="retailer.retailer_approved == null">Not Approved</span>
-                                            <span data-ng-if="retailer.retailer_approved != null"
-                                                data-ng-bind="retailer.retailer_approved"></span>
-                                        </td>
-
+                                        <td class="text-center" data-ng-bind="category.category_name"></td>
                                         <td class="text-center">
                                             <span
-                                                class="badge bg-<%statusObject.color[retailer.retailer_blocked]%> rounded-pill font-monospace p-2"><%statusObject.name[retailer.retailer_blocked]%></span>
+                                                class="rounded-pill font-monospace p-2"><%typeObject.name[category.category_type]%></span>
+
+                                        </td>
+                                        <td class="text-center">
+                                            <span
+                                                class="rounded-pill font-monospace p-2"><%genderObject.name[category.category_gender]%></span>
+
+                                        </td>
+                                        <td class="text-center">
+                                            <span
+                                                class="badge bg-<%statusObject.color[category.category_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[category.category_visible]%></span>
 
                                         </td>
                                         <td class="col-fit">
-
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                data-ng-click="setRetailer($index)"></button>
-                                            <button data-ng-if="retailer.retailer_approved == null"
-                                                class="btn btn-outline-dark btn-circle bi bi-shield-fill-check"
-                                                data-ng-click="editApproved($index)"></button>
+                                                data-ng-click="setCategory($index)"></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -103,7 +80,7 @@
             </div>
         </div>
 
-        @include('contents.components.modal.retailers')
+        @include('contents.components.modal.categories')
     </div>
 @endsection
 
@@ -117,20 +94,24 @@
 
         app.controller('myCtrl', function($scope) {
             $scope.statusObject = {
-                name: ['Blacked', 'Available'],
+                name: ['Un visible', 'Visible'],
                 color: ['danger', 'success']
+            };
+            $scope.typeObject = {
+                name: ['All', 'Babies', 'Kids', 'Teens', 'Adults'],
+            };
+            $scope.genderObject = {
+                name: ['Both', 'Girl', 'Boy']
             };
             $('.loading-spinner').hide();
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
-            $scope.updateRetailer = false;
+            $scope.updateCategory = false;
             $scope.list = [];
             $scope.last_id = 0;
 
             $scope.jsonParse = (str) => JSON.parse(str);
-            $scope.locations = <?= json_encode($locations) ?>;
-            $scope.currencies = <?= json_encode($currencies) ?>;
             $scope.dataLoader = function(reload = false) {
                 if (reload) {
                     $scope.list = [];
@@ -149,7 +130,7 @@
                     _token: '{{ csrf_token() }}'
                 };
 
-                $.post("/retailers/load", request, function(data) {
+                $.post("/categories/load", request, function(data) {
                     $('.loading-spinner').hide();
                     var ln = data.length;
                     $scope.$apply(() => {
@@ -158,21 +139,16 @@
                             $scope.noMore = ln < limit;
                             $scope.list = data;
                             console.log(data)
-                            $scope.last_id = data[ln - 1].retailer_id;
+                            $scope.last_id = data[ln - 1].category_id;
                         }
                     });
                 }, 'json');
             }
 
-            $scope.setRetailer = (indx) => {
-                $scope.updateRetailer = indx;
-                $('#retailerForm').modal('show');
+            $scope.setCategory = (indx) => {
+                $scope.updateCategory = indx;
+                $('#categoryForm').modal('show');
             };
-
-            $scope.editApproved = (index) => {
-                $scope.updateRetailer = index;
-                $('#editApproved').modal('show');
-            }
             $scope.dataLoader();
             scope = $scope;
         });

@@ -113,6 +113,20 @@ class RetailerController extends Controller
         ]);
     }
 
+    public function editApproved(Request $request)
+    {
+        $id = $request->id;
+        $param = [
+            'retailer_approved'     => Carbon::now(),
+            'retailer_approved_by'  => auth()->user()->id
+        ];
+
+        $result = Retailer::submit($param, $id);
+        echo json_encode([
+            'status' => boolval($result),
+            'data'   => $result ? Retailer::fetch($result) : []
+        ]);
+    }
 
 
     private function uniqidReal($lenght = 12)

@@ -39,6 +39,14 @@ Route::middleware('auth')->group(function(){
         Route::get('/', 'RetailerController@index');
         Route::post('load', 'RetailerController@load');
         Route::match(['post', 'put'], 'submit', 'RetailerController@submit');
+        Route::put('edit_approved', 'RetailerController@editApproved');
+    });
+
+    // categories
+    Route::prefix('categories')->group(function(){
+        Route::get('/', 'CategoryController@index');
+        Route::post('load', 'CategoryController@load');
+        Route::match(['post', 'put'], 'submit', 'CategoryController@submit');
     });
 });
 
