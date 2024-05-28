@@ -70,7 +70,7 @@
                                 <label for="Lookbook">
                                     Season Lookbook</label>
                                 <input type="text" class="form-control" name="Lookbook"
-                                    data-ng-value="list[updateSeason].season_adv_payment" id="Lookbook" />
+                                    data-ng-value="list[updateSeason].season_lookbook" id="Lookbook" />
                             </div>
                         </div>
 

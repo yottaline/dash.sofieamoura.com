@@ -38,30 +38,30 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-center">Name</th>
-                                        <th class="text-center">Type</th>
-                                        <th class="text-center">Gender</th>
+                                        <th class="text-center">Advance Payment </th>
+                                        <th class="text-center">Start</th>
+                                        <th class="text-center">End</th>
+                                        <th class="text-center">Current </th>
                                         <th class="text-center">Status</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="category in list track by $index">
-                                        <td data-ng-bind="category.category_id"
+                                    <tr data-ng-repeat="season in list track by $index">
+                                        <td data-ng-bind="season.season_code"
                                             class="text-center small font-monospace text-uppercase"></td>
-                                        <td class="text-center" data-ng-bind="category.category_name"></td>
+                                        <td class="text-center" data-ng-bind="season.season_name"></td>
+                                        <td class="text-center" data-ng-bind="season.season_adv_payment"></td>
+                                        <td class="text-center" data-ng-bind="season.season_start"></td>
+                                        <td class="text-center" data-ng-bind="season.season_end"></td>
                                         <td class="text-center">
                                             <span
-                                                class="rounded-pill font-monospace p-2"><%typeObject.name[category.category_type]%></span>
+                                                class="badge bg-<%currentObject.color[season.season_visible]%> rounded-pill font-monospace p-2"><%currentObject.name[season.season_visible]%></span>
 
                                         </td>
                                         <td class="text-center">
                                             <span
-                                                class="rounded-pill font-monospace p-2"><%genderObject.name[category.category_gender]%></span>
-
-                                        </td>
-                                        <td class="text-center">
-                                            <span
-                                                class="badge bg-<%statusObject.color[category.category_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[category.category_visible]%></span>
+                                                class="badge bg-<%statusObject.color[season.season_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[season.season_visible]%></span>
 
                                         </td>
                                         <td class="col-fit">
@@ -97,11 +97,9 @@
                 name: ['Un visible', 'Visible'],
                 color: ['danger', 'success']
             };
-            $scope.typeObject = {
-                name: ['All', 'Babies', 'Kids', 'Teens', 'Adults'],
-            };
-            $scope.genderObject = {
-                name: ['Both', 'Girl', 'Boy']
+            $scope.currentObject = {
+                name: ['Not current', 'Current'],
+                color: ['danger', 'success']
             };
             $('.loading-spinner').hide();
             $scope.noMore = false;
