@@ -25,6 +25,7 @@ class Retailer extends Model
         'retailer_city',
         'retailer_address',
         'retailer_shipAdd',
+        'retailer_billAdd',
         'retailer_currency',
         'retailer_adv_payment',
         'retailer_approved',
@@ -38,5 +39,20 @@ class Retailer extends Model
     {
         $retailers = self::join('locations', 'retailer_country', 'location_id')
         ->join('currencies', 'retailer_currency', 'currency_id')->orderBy('retailer_created', 'DESC')->limit($limit);
+
+        if($lastId) $retailers->where('retailer_id', '<', $lastId);
+
+        if($params) $retailers->where($params);
+
+        if($id) $retailers->where('retailer_id', $id);
+
+        return $id ? $retailers->first() : $retailers->get();
+    }
+
+    public static function submit($param, $id)
+    {
+        if($id) return self::where('retailer_id', $id)->update($param) ? $id : false;
+        $status = self::create($param);
+        return $status ? $status->id : false;
     }
 }

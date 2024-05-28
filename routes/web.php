@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('dashboard');
-})->middleware('auth')->name('dashboard');
+})->middleware('auth');
 
 Route::middleware('auth')->group(function(){
     // locations
@@ -32,6 +32,13 @@ Route::middleware('auth')->group(function(){
         Route::get('/', 'CurrencyController@index');
         Route::post('load', 'CurrencyController@load');
         Route::match(['post', 'put'], 'submit', 'CurrencyController@submit');
+    });
+
+    // retailers
+    Route::prefix('retailers')->group(function(){
+        Route::get('/', 'RetailerController@index');
+        Route::post('load', 'RetailerController@load');
+        Route::match(['post', 'put'], 'submit', 'RetailerController@submit');
     });
 });
 

@@ -9,7 +9,7 @@
             <div class="me-auto">
                 <a class="h5 bi bi-list link-light p-2 m-0 me-3" role="button" data-bs-toggle="offcanvas"
                     data-bs-target="#navOffcanvas" aria-controls="navOffcanvas"></a>
-                <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">Dashboard</a>
+                <a class="navbar-brand fw-bold" href="/">Dashboard</a>
             </div>
             @yield('search')
         </div>

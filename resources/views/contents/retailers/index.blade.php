@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Currencies')
+@section('title', 'Reatilers')
 @section('search')
     <form id="nvSearch" role="search">
         <input type="search" name="q" class="form-control my-3 my-md-0 rounded-pill" placeholder="Search...">
@@ -22,11 +22,11 @@
                         <div class="d-flex">
                             <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
                                 <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
-                                    role="status"></span><span>CURRENCIES</span>
+                                    role="status"></span><span>RETAILERS</span>
                             </h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
-                                    data-ng-click="setCurrency(false)"></button>
+                                    data-ng-click="setRetailer(false)"></button>
                                 <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
                                     data-ng-click="dataLoader(true)"></button>
                             </div>
@@ -37,26 +37,53 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Code</th>
+                                        <th>Full Name</th>
+                                        <th class="text-center">Company Name</th>
+                                        <th class="text-center">Country</th>
+                                        <th class="text-center">City</th>
+                                        <th class="text-center">Address</th>
+                                        <th class="text-center">Currency</th>
+                                        <th class="text-center">Apperoved</th>
                                         <th class="text-center">Status</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="currency in list track by $index">
-                                        <td data-ng-bind="currency.currency_id"
+                                    <tr data-ng-repeat="retailer in list track by $index">
+                                        <td data-ng-bind="retailer.retailer_code"
                                             class="text-center small font-monospace text-uppercase"></td>
-                                        <td class="text-center" data-ng-bind="currency.currency_name"></td>
-                                        <td class="text-center" data-ng-bind="currency.currency_code"></td>
+                                        <td>
+                                            <span data-ng-bind="retailer.retailer_fullName" class="fw-bold"></span><br>
+                                            <small data-ng-if="+retailer.retailer_phone"
+                                                class="me-1 db-inline-block dir-ltr font-monospace badge bg-primary">
+                                                <i class="bi bi-phone me-1"></i>
+                                                <span data-ng-bind="retailer.retailer_phone" class="fw-normal"></span>
+                                            </small>
+                                            <small data-ng-if="retailer.retailer_email"
+                                                class="db-inline-block dir-ltr font-monospace badge bg-primary">
+                                                <i class="bi bi-envelope-at me-1"></i>
+                                                <span data-ng-bind="retailer.retailer_email" class="fw-normal"></span>
+                                            </small>
+                                        </td>
+                                        <td class="text-center" data-ng-bind="retailer.retailer_company"></td>
+                                        <td class="text-center" data-ng-bind="retailer.location_name"></td>
+                                        <td class="text-center" data-ng-bind="retailer.retailer_city"></td>
+                                        <td class="text-center" data-ng-bind="retailer.retailer_address"></td>
+                                        <td class="text-center" data-ng-bind="retailer.currency_name"></td>
+                                        <td class="text-center">
+                                            <span data-ng-if="retailer.retailer_approved == null">Not Approved</span>
+                                            <span data-ng-if="retailer.retailer_approved != null"
+                                                data-ng-bind="retailer.retailer_address"></span>
+                                        </td>
+
                                         <td class="text-center">
                                             <span
-                                                class="badge bg-<%statusObject.color[currency.currency_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[currency.currency_visible]%></span>
+                                                class="badge bg-<%statusObject.color[retailer.retailer_blocked]%> rounded-pill font-monospace p-2"><%statusObject.name[retailer.retailer_blocked]%></span>
 
                                         </td>
                                         <td class="col-fit">
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                data-ng-click="setCurrency($index)"></button>
+                                                data-ng-click="setRetailer($index)"></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -70,7 +97,7 @@
             </div>
         </div>
 
-        @include('contents.components.modal.currencies')
+        @include('contents.components.modal.retailers')
     </div>
 @endsection
 
@@ -91,11 +118,13 @@
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
-            $scope.updateCurrency = false;
+            $scope.updateRetailer = false;
             $scope.list = [];
             $scope.last_id = 0;
 
             $scope.jsonParse = (str) => JSON.parse(str);
+            $scope.locations = <?= json_encode($locations) ?>;
+            $scope.currencies = <?= json_encode($currencies) ?>;
             $scope.dataLoader = function(reload = false) {
                 if (reload) {
                     $scope.list = [];
@@ -114,7 +143,7 @@
                     _token: '{{ csrf_token() }}'
                 };
 
-                $.post("/currencies/load", request, function(data) {
+                $.post("/retailers/load", request, function(data) {
                     $('.loading-spinner').hide();
                     var ln = data.length;
                     $scope.$apply(() => {
@@ -123,15 +152,15 @@
                             $scope.noMore = ln < limit;
                             $scope.list = data;
                             console.log(data)
-                            $scope.last_id = data[ln - 1].currency_id;
+                            $scope.last_id = data[ln - 1].retailer_id;
                         }
                     });
                 }, 'json');
             }
 
-            $scope.setCurrency = (indx) => {
-                $scope.updateCurrency = indx;
-                $('#currencyForm').modal('show');
+            $scope.setRetailer = (indx) => {
+                $scope.updateRetailer = indx;
+                $('#retailerForm').modal('show');
             };
             $scope.dataLoader();
             scope = $scope;
