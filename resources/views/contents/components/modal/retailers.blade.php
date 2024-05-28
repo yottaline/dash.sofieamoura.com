@@ -28,7 +28,7 @@
                             <div class="mb-3">
                                 <label for="password">
                                     Password <b class="text-danger">&ast;</b></label>
-                                <input type="password" class="form-control" name="password" required id="password" />
+                                <input type="password" class="form-control" name="password" id="password" />
                             </div>
                         </div>
                         <div class="col-6">
@@ -143,6 +143,16 @@
                                     Address</label>
                                 <input type="text" class="form-control" name="address"
                                     data-ng-value="list[updateRetailer].retailer_address" id="address" />
+                            </div>
+                        </div>
+
+
+                        <div class="col-12">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" role="switch" name="status"
+                                    value="1" ng-checked="+list[updateRetailer].retailer_blocked"
+                                    id="retailerStatus">
+                                <label class="form-check-label" for="retailerStatus">Retailer Status</label>
                             </div>
                         </div>
 

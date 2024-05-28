@@ -111,7 +111,7 @@
 
         app.controller('myCtrl', function($scope) {
             $scope.statusObject = {
-                name: ['Un visible', 'Visible'],
+                name: ['Blacked', 'Available'],
                 color: ['danger', 'success']
             };
             $('.loading-spinner').hide();

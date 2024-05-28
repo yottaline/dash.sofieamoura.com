@@ -13,8 +13,6 @@
                  </a>
              </li>
 
-
-
              <li class="list-group-item nav-support">
                  <a class="link-dark d-block" href="/retailers/">
                      <i class="bi bi-person-lines-fill text-secondary me-2"></i><b>Retailers</b>

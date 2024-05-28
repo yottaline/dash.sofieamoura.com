@@ -79,6 +79,7 @@ class RetailerController extends Controller
             'retailer_address'      => $request?->address,
             'retailer_currency'     => $request->currency,
             'retailer_adv_payment'  => $request?->payment,
+            'retailer_blocked'      => intval($request->status)
         ];
 
         if(!$id)
