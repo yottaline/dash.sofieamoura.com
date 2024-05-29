@@ -32,7 +32,7 @@ class SeasonController extends Controller
 
         $param = [
             'season_name'     => $request->name,
-            'season_code'     => $this->uniqidReal(8),
+            'season_code'     => uniqidReal(8),
             'season_current'  => intval($request->current),
             'season_adv_payment' => $request?->adv_payment,
             'season_adv_context' => $request->description,
@@ -52,15 +52,4 @@ class SeasonController extends Controller
 
     }
 
-    private function uniqidReal($lenght = 12)
-    {
-        if (function_exists("random_bytes")) {
-            $bytes = random_bytes(ceil($lenght / 2));
-        } elseif (function_exists("openssl_random_pseudo_bytes")) {
-            $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
-        } else {
-            throw new \Exception("no cryptographically secure random function available");
-        }
-        return substr(bin2hex($bytes), 0, $lenght);
-    }
 }

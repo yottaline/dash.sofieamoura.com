@@ -10,7 +10,6 @@ class Products_media extends Model
     use HasFactory;
     public $timestamps = false;
 
-    // $table->bigInteger('media_id', true, true);
     protected $fillable = [
         'media_product',
         'media_color',
@@ -19,4 +18,13 @@ class Products_media extends Model
         'media_order',
         'media_visible'
     ];
+
+    public static function fetch($id = 0, $params = null)
+    {
+        $product_medias = self::join('ws_products', 'media_product', 'product_id');
+        if($params) $product_medias->where($params);
+        if($id) $product_medias->where('media_id', $id);
+
+        return $id ? $product_medias->first() : $product_medias->get();
+    }
 }

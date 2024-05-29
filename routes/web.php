@@ -67,6 +67,8 @@ Route::middleware('auth')->group(function(){
     Route::prefix('ws_products')->group(function(){
         Route::get('/', 'WsProductController@index');
         Route::post('load', 'WsProductController@load');
+        Route::post('/', 'WsProductController@submit');
+        Route::match(['post', 'put'], 'submit', 'WsProductController@submit');
     });
 });
 

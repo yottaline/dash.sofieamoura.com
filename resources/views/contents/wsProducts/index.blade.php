@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        {{-- @include('contents.components.modal.retailers') --}}
+        @include('contents.components.modal.ws_products')
     </div>
 @endsection
 
@@ -60,7 +60,7 @@
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
-            $scope.updateRetailer = false;
+            $scope.updateWProduct = false;
             $scope.list = [];
             $scope.last_id = 0;
 
@@ -101,8 +101,8 @@
             }
 
             $scope.setWsProduct = (indx) => {
-                $scope.updateRetailer = indx;
-                $('#retailerForm').modal('show');
+                $scope.updateWProduct = indx;
+                $('#wproductForm').modal('show');
             };
             $scope.dataLoader();
             scope = $scope;
