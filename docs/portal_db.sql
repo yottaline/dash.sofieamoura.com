@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS
     `product_order` INT UNSIGNED NOT NULL DEFAULT '0',
     `product_related` VARCHAR(1024) NOT NULL,
     `product_published` BOOLEAN NOT NULL DEFAULT FALSE,
-    `product_modified_by` DATETIME DEFAULT NULL,
+    `product_modified_by` INT UNSIGNED DEFAULT NULL,
     `product_modified` DATETIME DEFAULT NULL,
     `product_created_by` INT UNSIGNED NOT NULL,
     `product_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

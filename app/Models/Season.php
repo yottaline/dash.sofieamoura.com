@@ -48,4 +48,15 @@ class Season extends Model
     {
         return Carbon::parse($realTime)->addMonth($time);
     }
+
+
+    public function getSeasonStartAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getSeasonEndAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
 }
