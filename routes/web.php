@@ -62,6 +62,12 @@ Route::middleware('auth')->group(function(){
         Route::post('load', 'SizeController@load');
         Route::match(['post', 'put'], 'submit', 'SizeController@submit');
     });
+
+    // ws products
+    Route::prefix('ws_products')->group(function(){
+        Route::get('/', 'WsProductController@index');
+        Route::post('load', 'WsProductController@load');
+    });
 });
 
 

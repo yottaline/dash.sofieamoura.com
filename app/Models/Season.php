@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 class Season extends Model
 {
     use HasFactory;
@@ -27,6 +28,16 @@ class Season extends Model
     public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
     {
         $seasons = self::orderBy('season_id', 'DESC')->limit($limit);
+
+        if (isset($params['q'])) {
+            $seasons->where(function (Builder $query) use ($params) {
+                $query->where('season_code', 'like', '%' . $params['q'] . '%')
+                    ->orWhere('season_code', $params['q'])
+                    ->orWhere('season_adv_payment', $params['q']);
+            });
+
+            unset($params['q']);
+        }
 
         if($lastId) $seasons->where('season_id', '<', $lastId);
 

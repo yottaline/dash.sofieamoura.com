@@ -68,40 +68,12 @@
              </li>
 
 
-             {{-- <li class="list-group-item">
-                 <a class="link-dark d-block" data-bs-toggle="collapse" href="#reportsCollapse" role="button"
-                     aria-expanded="false" aria-controls="reportsCollapse">
-                     <i class="bi bi-receipt-cutoff text-secondary me-2"></i><b>Reports</b>
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/ws_products/">
+                     <i class="bi bi-box-seam text-secondary me-2"></i><b>WS Products</b>
                  </a>
-                 <div class="collapse" id="reportsCollapse">
-                     <ul class="list-group list-group-flush">
-                         <li class="list-group-item nav-rep-students">
-                             <a class="link-dark d-block" href="#">
-                                 <i class="bi bi-exclamation-circle text-secondary me-2"></i><b>Customers</b>
-                             </a>
-                         </li>
+             </li>
 
-                         <li class="list-group-item nav-rep-subsc">
-                             <a class="link-dark d-block" href="#">
-                                 <i class="bi bi-cart-check text-secondary me-2"></i><b>Subscriptions</b>
-                             </a>
-                         </li>
-
-                         <li class="list-group-item nav-rep-trans">
-                             <a class="link-dark d-block" href="#">
-                                 <i class="bi bi-credit-card text-secondary me-2"></i><b>Transactions</b>
-                             </a>
-                         </li>
-                     </ul>
-                 </div>
-                 <script>
-                     const reportsCollapse = new bootstrap.Collapse('#reportsCollapse', {
-                         toggle: false
-                     });
-                     if (['rep-customers', 'rep-trans', 'rep-subsc'].includes(navTarget))
-                         reportsCollapse.show();
-                 </script>
-             </li> --}}
 
              {{-- <li class="list-group-item nav-help">
                  <a class="link-dark d-block" href="#">

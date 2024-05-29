@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS
     UNIQUE (`product_code`),
     FOREIGN KEY (`product_season`) REFERENCES `seasons` (`season_id`),
     FOREIGN KEY (`product_category`) REFERENCES `categories` (`category_id`),
-    FOREIGN KEY (`product_created_by`) REFERENCES `users` (`user_id`),
+    FOREIGN KEY (`product_created_by`) REFERENCES `users` (`id`),
     CHECK (`product_discount` <= 100),
     CHECK (`product_type` BETWEEN 0 AND 4),
     CHECK (`product_gender` BETWEEN 0 AND 2),
