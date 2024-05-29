@@ -48,7 +48,7 @@
     <div class="d-flex h-100">
         {{ $slot }}
         <div class="bg-img-cover d-none d-md-block flex-grow-1 bg-dark"
-            style="background-image: url(/assets/img/login_bg.jpg)"></div>
+            style="background-image: url(/assets/img/login_bg.png)"></div>
     </div>
 </body>
 
