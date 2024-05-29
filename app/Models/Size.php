@@ -10,7 +10,7 @@ class Size extends Model
     use HasFactory;
 
     public $timestamps = false;
-    // $table->integer('', true, true);
+
     protected $fillable = [
         'size_name',
         'size_order',
@@ -19,7 +19,7 @@ class Size extends Model
 
     public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
     {
-        $sizes = self::orderBy('size_order')->limit($limit);
+        $sizes = self::orderBy('size_order', 'ASC')->limit($limit);
 
         if($lastId) $sizes->where('size_id', '<', $lastId);
 
@@ -30,9 +30,11 @@ class Size extends Model
         return $id ? $sizes->first() : $sizes->get();
     }
 
-    public function submit($param, $id)
+    public static function submit($param, $id)
     {
-
+        if($id) return self::where('size_id', $id)->update($param) ? $id : false;
+        $status = self::create($param);
+        return $status ? $status->id : false;
     }
 
 }

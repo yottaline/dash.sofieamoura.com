@@ -55,6 +55,13 @@ Route::middleware('auth')->group(function(){
         Route::post('load', 'SeasonController@load');
         Route::match(['post', 'put'], 'submit', 'SeasonController@submit');
     });
+
+    // sizes
+    Route::prefix('sizes')->group(function(){
+        Route::get('/', 'SizeController@index');
+        Route::post('load', 'SizeController@load');
+        Route::match(['post', 'put'], 'submit', 'SizeController@submit');
+    });
 });
 
 

@@ -41,7 +41,13 @@
 
                          <li class="list-group-item nav-trans">
                              <a class="link-dark d-block" href="/seasons/">
-                                 <i class="bi bi-arrows-fullscreen text-secondary me-2"></i><b>Seasons</b>
+                                 <i class="bi bi-brilliance text-secondary me-2"></i><b>Seasons</b>
+                             </a>
+                         </li>
+
+                         <li class="list-group-item nav-trans">
+                             <a class="link-dark d-block" href="/sizes/">
+                                 <i class="bi bi-arrows-fullscreen text-secondary me-2"></i><b>Sizes</b>
                              </a>
                          </li>
                      </ul>

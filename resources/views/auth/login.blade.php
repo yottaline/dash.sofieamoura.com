@@ -6,7 +6,7 @@
         <div id="cards-container" class="bg-muted-8 flex-grow-1 flex-md-grow-0">
             <div class="mt-5 text-center">
                 <div class="logo"></div>
-                <h6 class="m-0">Yottaline Market Dashboard</h6>
+                <h6 class="m-0">Sofieamoura Dashboard</h6>
             </div>
 
             <div id="login-card" class="card border-0 mt-5 bg-muted-8">
