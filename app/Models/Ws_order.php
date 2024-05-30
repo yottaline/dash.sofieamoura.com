@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Ws_order extends Model
 {
@@ -61,8 +62,24 @@ class Ws_order extends Model
         return $id ? $ws_orders->first() : $ws_orders->get();
     }
 
-    public static function submit()
+    public static function submit(int $id, array $orderParam = null, array $orderItemParam = null)
     {
+        try {
+            DB::beginTransaction();
+            $status = $id ? self::where('order_id', $id)->update($orderParam) : self::create($orderParam);
+            $id = $id ? $id : $status->id;
+            if (!empty($orderItemParam)) {
+                for ($i = 0; $i < count($orderItemParam); $i++) {
+                 $orderItemParam[$i]['ordprod_order'] = $id;
+                }
+                Ws_orders_product::insert($orderItemParam);
+            }
+            DB::commit();
+            return ['status' => true,'id' => $id];
 
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['status' => false,'message' => 'error: ' . $e->getMessage()];
+        }
     }
 }
