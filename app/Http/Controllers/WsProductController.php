@@ -43,9 +43,11 @@ class WsProductController extends Controller
         ];
 
         if (!$id) {
+            $order = Ws_product::maxOrder($request->season);
             $param = [
                 ...$param,
                 'product_ref' => uniqidReal(),
+                'product_order' => ++$order,
                 'product_created_by' => auth()->user()->id,
                 'product_created' => Carbon::now()
             ];
@@ -71,5 +73,11 @@ class WsProductController extends Controller
             'status'   => boolval($result),
             'data'     => $result ? Ws_product::fetch($result) : []
         ]);
+    }
+
+    function view(String $ref)
+    {
+        $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
+        return view('contents.wsProducts.view', compact('data'));
     }
 }

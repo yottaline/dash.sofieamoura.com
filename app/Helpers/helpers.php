@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('uniqidReal')) {
-     function uniqidReal($lenght = 12)
+    function uniqidReal($lenght = 12)
     {
         if (function_exists("random_bytes")) {
             $bytes = random_bytes(ceil($lenght / 2));

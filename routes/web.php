@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware('auth');
+Route::get('/', fn () => view('dashboard'))->middleware('auth');
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     // locations
-    Route::prefix('locations')->group(function(){
+    Route::prefix('locations')->group(function () {
         Route::get('/', 'LocationController@index');
         Route::post('load', 'LocationController@load');
         Route::match(['post', 'put'], 'submit', 'LocationController@submit');
@@ -28,14 +26,14 @@ Route::middleware('auth')->group(function(){
     });
 
     // currencies
-    Route::prefix('currencies')->group(function(){
+    Route::prefix('currencies')->group(function () {
         Route::get('/', 'CurrencyController@index');
         Route::post('load', 'CurrencyController@load');
         Route::match(['post', 'put'], 'submit', 'CurrencyController@submit');
     });
 
     // retailers
-    Route::prefix('retailers')->group(function(){
+    Route::prefix('retailers')->group(function () {
         Route::get('/', 'RetailerController@index');
         Route::post('load', 'RetailerController@load');
         Route::match(['post', 'put'], 'submit', 'RetailerController@submit');
@@ -43,31 +41,32 @@ Route::middleware('auth')->group(function(){
     });
 
     // categories
-    Route::prefix('categories')->group(function(){
+    Route::prefix('categories')->group(function () {
         Route::get('/', 'CategoryController@index');
         Route::post('load', 'CategoryController@load');
         Route::match(['post', 'put'], 'submit', 'CategoryController@submit');
     });
 
     // seasons
-    Route::prefix('seasons')->group(function(){
+    Route::prefix('seasons')->group(function () {
         Route::get('/', 'SeasonController@index');
         Route::post('load', 'SeasonController@load');
         Route::match(['post', 'put'], 'submit', 'SeasonController@submit');
     });
 
     // sizes
-    Route::prefix('sizes')->group(function(){
+    Route::prefix('sizes')->group(function () {
         Route::get('/', 'SizeController@index');
         Route::post('load', 'SizeController@load');
         Route::match(['post', 'put'], 'submit', 'SizeController@submit');
     });
 
     // ws products
-    Route::prefix('ws_products')->group(function(){
+    Route::prefix('ws_products')->group(function () {
         Route::get('/', 'WsProductController@index');
+        Route::get('view/{ref}', 'WsProductController@view');
         Route::post('load', 'WsProductController@load');
-        Route::post('/', 'WsProductController@submit');
+        // Route::post('/', 'WsProductController@submit');
         Route::match(['post', 'put'], 'submit', 'WsProductController@submit');
     });
 });
@@ -79,4 +78,4 @@ Route::middleware('auth')->group(function(){
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
