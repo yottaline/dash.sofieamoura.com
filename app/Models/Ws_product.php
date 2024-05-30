@@ -68,10 +68,11 @@ class Ws_product extends Model
         return $id ? $ws_products->first() : $ws_products->get();
     }
 
+
     public static function submit($param, $id)
     {
         if($id) return self::where('product_id', $id)->update($param) ? $id : false;
         $status = self::create($param);
-        return $status ? $status->id : false;
+        return $status ? $status->product_id : false;
     }
 }
