@@ -74,9 +74,6 @@ class WsProductController extends Controller
         ]);
     }
 
-}
-
-
     function order(Request $request)
     {
         $ids    = $request->ids;
@@ -94,4 +91,3 @@ class WsProductController extends Controller
     }
 
 }
-

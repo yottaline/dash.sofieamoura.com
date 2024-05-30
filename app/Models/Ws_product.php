@@ -63,7 +63,7 @@ class Ws_product extends Model
         if ($params) $ws_products->where($params);
         if ($id) $ws_products->where('product_id', $id);
 
-        if($ids) $ws_products->whereIn('product_id', $ids);
+        // if($ids) $ws_products->whereIn('product_id', $ids);
 
         return $id ? $ws_products->first() : $ws_products->get();
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Currency;
 use App\Models\Location;
 use App\Models\Retailer;
+use App\Models\Retailer_address;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -78,7 +79,7 @@ class RetailerController extends Controller
             'retailer_city'         => $request->city,
             'retailer_address'      => $request?->address,
             'retailer_currency'     => $request->currency,
-            'retailer_adv_payment'  => $request?->payment,
+            // 'retailer_adv_payment'  => $request?->payment,
             'retailer_blocked'      => intval($request->status)
         ];
 
@@ -107,6 +108,21 @@ class RetailerController extends Controller
 
         $result = Retailer::submit($param, $id);
 
+        if($result){
+            $paramAddress = [
+                'address_retailer'  => $result,
+                'address_country'   => $request->currency,
+                'address_province'  => $request->province,
+                'address_city'      => $request->city,
+                'address_zip'       => $request->zip,
+                'address_line1'     => $request->address,
+                'address_line2'     => $request->address,
+                'address_phone'     => $phone,
+                'address_note'      => $request->address,
+            ];
+
+            Retailer_address::submit($paramAddress, null);
+        };
         echo json_encode([
             'status' => boolval($result),
             'data'   => $result ? Retailer::fetch($result) : []
