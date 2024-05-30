@@ -4,16 +4,15 @@
             <div class="modal-body">
                 <form method="POST" action="/categories/submit">
                     @csrf
-                    <input data-ng-if="updateCategory !== false" type="hidden" name="_method" value="put">
-                    <input type="hidden" name="id" id="category_id"
-                        data-ng-value="list[updateCategory].category_id">
+                    <input ng-if="updateCategory !== false" type="hidden" name="_method" value="put">
+                    <input type="hidden" name="id" id="category_id" ng-value="list[updateCategory].category_id">
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="categoryName">
                                     Category Name <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="name" required
-                                    data-ng-value="list[updateCategory].category_name" id="categoryName" />
+                                    ng-value="list[updateCategory].category_name" id="categoryName" />
                             </div>
                         </div>
 
@@ -96,7 +95,7 @@
                     if (scope.updateCategory === false) {
                         scope.list.unshift(response
                             .data);
-                        scope.dataLoader();
+                        scope.load();
                         categoyreClsForm()
                     } else {
                         scope.list[scope

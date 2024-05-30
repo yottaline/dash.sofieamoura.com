@@ -4,16 +4,16 @@
             <div class="modal-body">
                 <form method="POST" action="/currencies/submit">
                     @csrf
-                    <input data-ng-if="updateCurrency !== false" type="hidden" name="_method" value="put">
+                    <input ng-if="updateCurrency !== false" type="hidden" name="_method" value="put">
                     <input type="hidden" name="currency_id" id="currency_id"
-                        data-ng-value="list[updateCurrency].currency_id">
+                        ng-value="list[updateCurrency].currency_id">
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="currencyName">
                                     Currency Name</label>
                                 <input type="text" class="form-control" name="name" required
-                                    data-ng-value="list[updateCurrency].currency_name" id="currencyName" />
+                                    ng-value="list[updateCurrency].currency_name" id="currencyName" />
                             </div>
                         </div>
                         <div class="col-6">
@@ -21,7 +21,7 @@
                                 <label for="currencyCode">
                                     Currency Code<b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="code" required
-                                    data-ng-value="list[updateCurrency].currency_code" id="currencyCode" />
+                                    ng-value="list[updateCurrency].currency_code" id="currencyCode" />
                             </div>
                         </div>
                         <div class="col-12">
@@ -29,7 +29,7 @@
                                 <label for="currencysymbol">
                                     Currency symbol <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="symbol" required
-                                    data-ng-value="list[updateCurrency].currency_symbol" id="currencysymbol" />
+                                    ng-value="list[updateCurrency].currency_symbol" id="currencysymbol" />
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
                     if (scope.updateCurrency === false) {
                         scope.list.unshift(response
                             .data);
-                        scope.dataLoader();
+                        scope.load();
                         categoyreClsForm()
                     } else {
                         scope.list[scope

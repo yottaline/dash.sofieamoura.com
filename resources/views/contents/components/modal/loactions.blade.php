@@ -4,16 +4,16 @@
             <div class="modal-body">
                 <form method="POST" action="/locations/submit">
                     @csrf
-                    <input data-ng-if="updaetLocation !== false" type="hidden" name="_method" value="put">
+                    <input ng-if="updaetLocation !== false" type="hidden" name="_method" value="put">
                     <input type="hidden" name="location_id" id="location_id"
-                        data-ng-value="list[updaetLocation].location_id">
+                        ng-value="list[updaetLocation].location_id">
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="locationName">
                                     Location Name<b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="name" required
-                                    data-ng-value="list[updaetLocation].location_name" id="locationName" />
+                                    ng-value="list[updaetLocation].location_name" id="locationName" />
                             </div>
                         </div>
                         <div class="col-6">
@@ -21,7 +21,7 @@
                                 <label for="locationCode">
                                     Location Code<b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="code" required
-                                    data-ng-value="list[updaetLocation].location_code" id="locationCode" />
+                                    ng-value="list[updaetLocation].location_code" id="locationCode" />
                             </div>
                         </div>
                         <div class="col-6">
@@ -29,7 +29,7 @@
                                 <label for="isoCode2">
                                     Location ISO code 2<b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="iso_code_2" required
-                                    data-ng-value="list[updaetLocation].location_iso_2" id="isoCode2" />
+                                    ng-value="list[updaetLocation].location_iso_2" id="isoCode2" />
                             </div>
                         </div>
 
@@ -38,7 +38,7 @@
                                 <label for="isoCode3">
                                     Location ISO code 3<b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="iso_code_3" required
-                                    data-ng-value="list[updaetLocation].location_iso_3" id="isoCode3" />
+                                    ng-value="list[updaetLocation].location_iso_3" id="isoCode3" />
                             </div>
                         </div>
 
@@ -87,7 +87,7 @@
                     if (scope.updaetLocation === false) {
                         scope.list.unshift(response
                             .data);
-                        scope.dataLoader();
+                        scope.load();
                         categoyreClsForm()
                     } else {
                         scope.list[scope

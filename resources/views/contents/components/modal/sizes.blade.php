@@ -4,15 +4,15 @@
             <div class="modal-body">
                 <form method="POST" id="sizeF" action="/sizes/submit">
                     @csrf
-                    <input data-ng-if="updateSize !== false" type="hidden" name="_method" value="put">
-                    <input type="hidden" name="id" id="size_id" data-ng-value="list[updateSize].size_id">
+                    <input ng-if="updateSize !== false" type="hidden" name="_method" value="put">
+                    <input type="hidden" name="id" id="size_id" ng-value="list[updateSize].size_id">
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="sizeName">
                                     Size Name <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="name"
-                                    data-ng-value="list[updateSize].size_name" id="sizeName" />
+                                    ng-value="list[updateSize].size_name" id="sizeName" />
                             </div>
                         </div>
 
@@ -21,7 +21,7 @@
                                 <label for="sizeOrder">
                                     Size Order </label>
                                 <input type="text" class="form-control" name="order" max="100"
-                                    data-ng-value="list[updateSize].size_order" id="sizeOrder" />
+                                    ng-value="list[updateSize].size_order" id="sizeOrder" />
                             </div>
                         </div>
 
