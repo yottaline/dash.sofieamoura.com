@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Ws_product extends Model
 {
@@ -41,11 +42,11 @@ class Ws_product extends Model
         'product_created'
     ];
 
-    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null, $ids = null)
     {
         $ws_products = self::join('seasons', 'product_season', 'season_id')
                         ->join('categories', 'product_category', 'category_id')
-                        ->orderBy('product_id', 'DESC')->limit($limit);
+                        ->orderBy('product_order', 'DESC')->limit($limit);
 
 
         if (isset($params['q'])) {
@@ -65,6 +66,8 @@ class Ws_product extends Model
 
         if($id) $ws_products->where('product_id', $id);
 
+        if($ids) $ws_products->whereIn('product_id', $ids);
+
         return $id ? $ws_products->first() : $ws_products->get();
     }
 
@@ -75,4 +78,5 @@ class Ws_product extends Model
         $status = self::create($param);
         return $status ? $status->product_id : false;
     }
+
 }
