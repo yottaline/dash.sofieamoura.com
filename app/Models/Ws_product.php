@@ -79,11 +79,4 @@ class Ws_product extends Model
         return $status ? $status->product_id : false;
     }
 
-    // create this because this el
-    // public static function whereIn($ids)
-    // {
-    //     $products = DB::whereIn('product_id', $ids);
-    //     return $products->get();
-    // }
-
 }
