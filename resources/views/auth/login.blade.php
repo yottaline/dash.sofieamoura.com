@@ -2,25 +2,22 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <div class="d-flex h-100">
-        <div id="cards-container" class="bg-muted-8 flex-grow-1 flex-md-grow-0">
-            <div class="mt-5 text-center">
-                <div class="logo"></div>
-                <h6 class="m-0">Sofieamoura Dashboard</h6>
-            </div>
+    <div class="d-flex h-100 w-100 justify-content-center py-5">
+        <div id="cards-container">
+            <h3 class="text-center">Sofie Amoura</h3>
 
-            <div id="login-card" class="card border-0 mt-5 bg-muted-8">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+            <div id="login-card" class="card mt-5">
                 <div class="card-body">
-                    <form id="login-form" id="loginFrom" action="#" method="post" role="form">
+                    @if ($errors->any())
+                        <div class="text-danger pb-3 small">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="#" method="post" role="form">
                         @csrf
                         <div class="mb-3 position-relative">
                             <label for="login-email">Email<b class="text-danger">&ast;</b></label>

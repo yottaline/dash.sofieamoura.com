@@ -25,7 +25,7 @@
 
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 
     <style>
         #cards-container {
@@ -36,7 +36,7 @@
             display: inline-block;
             height: 100px;
             width: 100px;
-            background-image: url(/favico.png);
+            /* background-image: url(/favico.png); */
             background-position: center;
             background-repeat: no-repeat;
             background-size: contain;
@@ -47,8 +47,6 @@
 <body class="font-sans text-gray-900 antialiased">
     <div class="d-flex h-100">
         {{ $slot }}
-        <div class="bg-img-cover d-none d-md-block flex-grow-1 bg-dark"
-            style="background-image: url(/assets/img/login_bg.png)"></div>
     </div>
 </body>
 
