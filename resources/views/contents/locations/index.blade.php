@@ -6,7 +6,7 @@
     </form>
 @endsection
 @section('content')
-    <div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
+    <div class="container-fluid" ng-app="ngApp" ng-controller="ngCtrl">
         <div class="row">
             <div class="col-12 col-sm-4 col-lg-3">
                 <div class="card card-box">
@@ -81,12 +81,12 @@
 @section('js')
     <script>
         var scope,
-            app = angular.module('myApp', [], function($interpolateProvider) {
+            app = angular.module('ngApp', [], function($interpolateProvider) {
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
             });
 
-        app.controller('myCtrl', function($scope) {
+        app.controller('ngCtrl', function($scope) {
             $scope.statusObject = {
                 name: ['Un visible', 'Visible'],
                 color: ['danger', 'success']

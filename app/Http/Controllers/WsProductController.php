@@ -44,9 +44,11 @@ class WsProductController extends Controller
         ];
 
         if (!$id) {
+            $order = Ws_product::maxOrder($request->season);
             $param = [
                 ...$param,
                 'product_ref' => uniqidReal(),
+                'product_order' => ++$order,
                 'product_created_by' => auth()->user()->id,
                 'product_created' => Carbon::now()
             ];
@@ -74,24 +76,24 @@ class WsProductController extends Controller
         ]);
     }
 
-}
-
+    function view(String $ref)
+    {
+        $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
+        return view('contents.wsProducts.view', compact('data'));
+    }
 
     function order(Request $request)
     {
         $ids    = $request->ids;
         $orders = $request->order;
         $products = Ws_product::fetch(0, null, null, null, $ids);
-        foreach($products as $p)
-        {
+        foreach ($products as $p) {
             $i = array_search($p->product_id, $ids);
-          $result = Ws_product::submit(['product_order' => $orders[$i]], $p->product_id);
+            $result = Ws_product::submit(['product_order' => $orders[$i]], $p->product_id);
         }
         echo json_encode([
             'status' => boolval($result),
             'data'   => $result ? Ws_product::fetch(0, null, null, null, $ids) : [],
         ]);
     }
-
 }
-

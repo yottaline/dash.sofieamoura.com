@@ -10,10 +10,13 @@
 @section('content')
     <div class="container-fluid" ng-app="ngApp" ng-controller="ngCtrl">
         <div class="row">
-            <div class="col-12 col-sm-4 col-lg-3">
+            <div class="col-12 col-sm-4 col-lg-3 col-xl-2">
                 <div class="card card-box">
                     <div class="card-body">
+                        <h5 class="fw-bold">Filters</h5>
+                        <div class="mb-3">
 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,8 +34,19 @@
                             </div>
                         </div>
 
-                        <div ng-if="list.length" class="table-responsive">
-
+                        <div ng-if="list.length" class="row">
+                            <div ng-repeat="p in list" class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="mb-3 text-center">
+                                    <a href="/ws_products/view/<% p.product_ref %>" class="card">
+                                        <img src="/assets/img/default_product_image.png" alt=""
+                                            class="card-img-top">
+                                        <div class="card-body">
+                                            <h6 class="card-title" ng-bind="p.product_name"></h6>
+                                            <h6 class="small font-monospace" ng-bind="p.product_code"></h6>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         @include('layouts.loader')
@@ -51,13 +65,14 @@
                                 <div class="col-12 col-sm-6">
                                     <div class="mb-3">
                                         <label for="productCode">Code<b class="text-danger">&ast;</b></label>
-                                        <input type="text" class="form-control" name="reference" id="productCode" />
+                                        <input type="text" class="form-control font-monospace" name="code"
+                                            id="productCode">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="mb-3">
                                         <label for="productName">Name<b class="text-danger">&ast;</b></label>
-                                        <input type="text" class="form-control" name="name" id="productName" />
+                                        <input type="text" class="form-control" name="name" id="productName">
                                     </div>
                                 </div>
 
@@ -66,8 +81,8 @@
                                     <div class="mb-3">
                                         <label for="season">Season<b class="text-danger">&ast;</b></label>
                                         <select name="season" id="season" class="form-select" required>
-                                            <option value="default"></option>
-                                            <option ng-repeat="season in seasons" ng-bind="season.season_name"></option>
+                                            <option ng-repeat="s in seasons" ng-bind="s.season_name" ng-value="s.season_id">
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -76,9 +91,8 @@
                                     <div class="mb-3">
                                         <label for="category">Category<b class="text-danger">&ast;</b></label>
                                         <select name="category" id="category" class="form-select" required>
-                                            <option value="default"></option>
-                                            <option ng-repeat="category in categories" ng-bind="category.category_name">
-                                            </option>
+                                            <option ng-repeat="c in categories" ng-bind="c.category_name"
+                                                ng-value="c.category_id"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -93,26 +107,26 @@
                                             <label class="form-check-label" for="orderType1">IN-STOCK</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="order_type" id="orderType2"
-                                                value="2" checked>
+                                            <input class="form-check-input" type="radio" name="order_type"
+                                                id="orderType2" value="2" checked>
                                             <label class="form-check-label" for="orderType2">PRE-ORDER</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="d-flex">
-                                <div class="me-auto">
-                                    <button type="submit" class="btn btn-outline-primary"
-                                        ng-disabled="submitting">Submit</button>
-                                    <div class="spinner-border spinner-border-sm" role="status" ng-show="submitting">
-                                        <span class="visually-hidden">Processing...</span>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
-                                    ng-disabled="submitting">Close</button>
-                            </div>
                         </form>
+                    </div>
+                    <div class="modal-footer d-flex">
+                        <div class="me-auto">
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary btn-sm"
+                                ng-disabled="submitting">Submit</button>
+                            <div class="spinner-border spinner-border-sm text-warning ms-2" role="status"
+                                ng-show="submitting">
+                                <span class="visually-hidden">Processing...</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
+                            ng-disabled="submitting">Close</button>
                     </div>
                 </div>
             </div>
