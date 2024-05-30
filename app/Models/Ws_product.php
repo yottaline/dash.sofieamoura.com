@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Ws_product extends Model
 {
@@ -46,6 +47,7 @@ class Ws_product extends Model
             ->join('categories', 'product_category', '=', 'category_id')
             ->orderBy('product_order', 'ASC')->limit($limit)->offset($offset);
 
+
         if (isset($params['q'])) {
             $ws_products->where(function (Builder $query) use ($params) {
                 $query->where('product_code', $params['q'])
@@ -60,6 +62,7 @@ class Ws_product extends Model
 
         if ($params) $ws_products->where($params);
         if ($id) $ws_products->where('product_id', $id);
+        // if ($ids) $ws_products->whereIn('product_id', $ids);
 
         return ($id || $limit == 1) ? $ws_products->first() : $ws_products->get();
     }

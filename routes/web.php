@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::post('load', 'WsProductController@load');
         // Route::post('/', 'WsProductController@submit');
         Route::match(['post', 'put'], 'submit', 'WsProductController@submit');
+        Route::post('orders', 'WsProductController@order');
     });
 });
 

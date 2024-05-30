@@ -7,6 +7,7 @@ use App\Models\Season;
 use App\Models\Ws_product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WsProductController extends Controller
 {
@@ -79,5 +80,20 @@ class WsProductController extends Controller
     {
         $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
         return view('contents.wsProducts.view', compact('data'));
+    }
+
+    function order(Request $request)
+    {
+        $ids    = $request->ids;
+        $orders = $request->order;
+        $products = Ws_product::fetch(0, null, null, null, $ids);
+        foreach ($products as $p) {
+            $i = array_search($p->product_id, $ids);
+            $result = Ws_product::submit(['product_order' => $orders[$i]], $p->product_id);
+        }
+        echo json_encode([
+            'status' => boolval($result),
+            'data'   => $result ? Ws_product::fetch(0, null, null, null, $ids) : [],
+        ]);
     }
 }
