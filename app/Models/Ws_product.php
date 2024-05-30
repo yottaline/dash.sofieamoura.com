@@ -10,7 +10,6 @@ class Ws_product extends Model
 {
     use HasFactory;
     protected $primaryKey = 'product_id';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -41,37 +40,34 @@ class Ws_product extends Model
         'product_created'
     ];
 
-    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    static function fetch($id = 0, $params = null, $limit = 24, $offset = 0)
     {
-        $ws_products = self::join('seasons', 'product_season', 'season_id')
-                        ->join('categories', 'product_category', 'category_id')
-                        ->orderBy('product_id', 'DESC')->limit($limit);
-
+        $ws_products = self::join('seasons', 'product_season', '=', 'season_id')
+            ->join('categories', 'product_category', '=', 'category_id')
+            ->orderBy('product_order', 'ASC')->limit($limit)->offset($offset);
 
         if (isset($params['q'])) {
             $ws_products->where(function (Builder $query) use ($params) {
-                $query->where('product_desc', 'like', '%' . $params['q'] . '%')
-                    ->orWhere('product_name', $params['q'])
+                $query->where('product_code', $params['q'])
+                    ->orWhere('product_ref', $params['q'])
+                    ->orWhere('product_desc', 'like', "%{$params['q']}%")
+                    ->orWhere('product_name', 'like', "%{$params['q']}%")
                     ->orWhere('season_name', $params['q'])
                     ->orWhere('category_name', $params['q']);
             });
-
             unset($params['q']);
         }
 
-        if($lastId) $ws_products->where('product_id', '<', $lastId);
-
-        if($params) $ws_products->where($params);
-
-        if($id) $ws_products->where('product_id', $id);
+        if ($params) $ws_products->where($params);
+        if ($id) $ws_products->where('product_id', $id);
 
         return $id ? $ws_products->first() : $ws_products->get();
     }
 
 
-    public static function submit($param, $id)
+    static function submit($param, $id)
     {
-        if($id) return self::where('product_id', $id)->update($param) ? $id : false;
+        if ($id) return self::where('product_id', $id)->update($param) ? $id : false;
         $status = self::create($param);
         return $status ? $status->product_id : false;
     }

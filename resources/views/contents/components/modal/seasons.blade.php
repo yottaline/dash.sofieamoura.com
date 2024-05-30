@@ -4,15 +4,15 @@
             <div class="modal-body">
                 <form method="POST" id="seasonF" action="/seasons/submit">
                     @csrf
-                    <input data-ng-if="updateSeason !== false" type="hidden" name="_method" value="put">
-                    <input type="hidden" name="id" id="season_id" data-ng-value="list[updateSeason].season_id">
+                    <input ng-if="updateSeason !== false" type="hidden" name="_method" value="put">
+                    <input type="hidden" name="id" id="season_id" ng-value="list[updateSeason].season_id">
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="seasonName">
                                     Season Name <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="name"
-                                    data-ng-value="list[updateSeason].season_name" id="seasonName" />
+                                    ng-value="list[updateSeason].season_name" id="seasonName" />
                             </div>
                         </div>
 
@@ -21,7 +21,7 @@
                                 <label for="AdvancePayment">
                                     Season Advance Payment </label>
                                 <input type="text" class="form-control" name="adv_payment" max="100"
-                                    data-ng-value="list[updateSeason].season_adv_payment" id="AdvancePayment" />
+                                    ng-value="list[updateSeason].season_adv_payment" id="AdvancePayment" />
                             </div>
                         </div>
 
@@ -53,7 +53,7 @@
                             <div class="mb-3">
                                 <label>Season Start<b class="text-danger">&ast;</b></label>
                                 <input id="seasonStart" type="text" class="form-control text-center" name="start"
-                                    maxlength="10" data-ng-value="list[updateSeason].season_start" />
+                                    maxlength="10" ng-value="list[updateSeason].season_start" />
                             </div>
                         </div>
 
@@ -61,7 +61,7 @@
                             <div class="mb-3">
                                 <label>Season End<b class="text-danger">&ast;</b></label>
                                 <input id="seasonEnd" type="text" class="form-control text-center" name="end"
-                                    maxlength="10" data-ng-value="list[updateSeason].season_end" />
+                                    maxlength="10" ng-value="list[updateSeason].season_end" />
                             </div>
                         </div>
 
@@ -70,7 +70,7 @@
                                 <label for="Lookbook">
                                     Season Lookbook</label>
                                 <input type="text" class="form-control" name="Lookbook"
-                                    data-ng-value="list[updateSeason].season_lookbook" id="Lookbook" />
+                                    ng-value="list[updateSeason].season_lookbook" id="Lookbook" />
                             </div>
                         </div>
 
@@ -148,7 +148,7 @@
                                         if (scope.updateSeason === false) {
                                             scope.list.unshift(response
                                                 .data);
-                                            scope.dataLoader();
+                                            scope.load();
                                             categoyreClsForm()
                                         } else {
                                             scope.list[scope

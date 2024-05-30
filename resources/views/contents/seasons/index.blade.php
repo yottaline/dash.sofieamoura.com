@@ -6,7 +6,7 @@
     </form>
 @endsection
 @section('content')
-    <div class="container-fluid" data-ng-app="myApp" data-ng-controller="myCtrl">
+    <div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
         <div class="row">
             <div class="col-12 col-sm-4 col-lg-3">
                 <div class="card card-box">
@@ -26,13 +26,13 @@
                             </h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
-                                    data-ng-click="setSeason(false)"></button>
+                                    ng-click="setSeason(false)"></button>
                                 <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
-                                    data-ng-click="dataLoader(true)"></button>
+                                    ng-click="load(true)"></button>
                             </div>
                         </div>
 
-                        <div data-ng-if="list.length" class="table-responsive">
+                        <div ng-if="list.length" class="table-responsive">
                             <table class="table table-hover" id="example">
                                 <thead>
                                     <tr>
@@ -47,13 +47,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="season in list track by $index">
-                                        <td data-ng-bind="season.season_code"
+                                    <tr ng-repeat="season in list track by $index">
+                                        <td ng-bind="season.season_code"
                                             class="text-center small font-monospace text-uppercase"></td>
-                                        <td class="text-center" data-ng-bind="season.season_name"></td>
-                                        <td class="text-center" data-ng-bind="season.season_adv_payment"></td>
-                                        <td class="text-center" data-ng-bind="season.season_start"></td>
-                                        <td class="text-center" data-ng-bind="season.season_end"></td>
+                                        <td class="text-center" ng-bind="season.season_name"></td>
+                                        <td class="text-center" ng-bind="season.season_adv_payment"></td>
+                                        <td class="text-center" ng-bind="season.season_start"></td>
+                                        <td class="text-center" ng-bind="season.season_end"></td>
                                         <td class="text-center">
                                             <span
                                                 class="badge bg-<%currentObject.color[season.season_visible]%> rounded-pill font-monospace p-2"><%currentObject.name[season.season_visible]%></span>
@@ -66,14 +66,14 @@
                                         </td>
                                         <td class="col-fit">
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                data-ng-click="setSeason($index)"></button>
+                                                ng-click="setSeason($index)"></button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        @include('layouts.loade')
+                        @include('layouts.loader')
 
                     </div>
                 </div>
@@ -110,7 +110,7 @@
             $scope.last_id = 0;
 
             $scope.jsonParse = (str) => JSON.parse(str);
-            $scope.dataLoader = function(reload = false) {
+            $scope.load = function(reload = false) {
                 if (reload) {
                     $scope.list = [];
                     $scope.last_id = 0;
@@ -147,14 +147,14 @@
                 $scope.updateSeason = indx;
                 $('#seasonForm').modal('show');
             };
-            $scope.dataLoader();
+            $scope.load();
             scope = $scope;
         });
 
         $('#nvSearch').on('submit', function(e) {
             e.preventDefault();
             scope.$apply(() => scope.q = $(this).find('input').val());
-            scope.dataLoader(true);
+            scope.load(true);
         });
     </script>
 @endsection

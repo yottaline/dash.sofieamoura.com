@@ -6,7 +6,7 @@
     </form>
 @endsection
 @section('content')
-    <div class="container-fluid" data-ng-app="myApp" data-ng-controller="myCtrl">
+    <div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
         <div class="row">
             <div class="col-12 col-sm-4 col-lg-3">
                 <div class="card card-box">
@@ -26,13 +26,13 @@
                             </h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
-                                    data-ng-click="setSize(false)"></button>
+                                    ng-click="setSize(false)"></button>
                                 <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
-                                    data-ng-click="dataLoader(true)"></button>
+                                    ng-click="load(true)"></button>
                             </div>
                         </div>
 
-                        <div data-ng-if="list.length" class="table-responsive">
+                        <div ng-if="list.length" class="table-responsive">
                             <table class="table table-hover" id="example">
                                 <thead>
                                     <tr>
@@ -44,11 +44,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="size in list track by $index">
-                                        <td data-ng-bind="size.size_id"
-                                            class="text-center small font-monospace text-uppercase"></td>
-                                        <td class="text-center" data-ng-bind="size.size_name"></td>
-                                        <td class="text-center" data-ng-bind="size.size_order"></td>
+                                    <tr ng-repeat="size in list track by $index">
+                                        <td ng-bind="size.size_id" class="text-center small font-monospace text-uppercase">
+                                        </td>
+                                        <td class="text-center" ng-bind="size.size_name"></td>
+                                        <td class="text-center" ng-bind="size.size_order"></td>
                                         <td class="text-center">
                                             <span
                                                 class="badge bg-<%statusObject.color[size.size_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[size.size_visible]%></span>
@@ -56,14 +56,14 @@
                                         </td>
                                         <td class="col-fit">
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                data-ng-click="setSize($index)"></button>
+                                                ng-click="setSize($index)"></button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        @include('layouts.loade')
+                        @include('layouts.loader')
 
                     </div>
                 </div>
@@ -96,7 +96,7 @@
             $scope.last_id = 0;
 
             $scope.jsonParse = (str) => JSON.parse(str);
-            $scope.dataLoader = function(reload = false) {
+            $scope.load = function(reload = false) {
                 if (reload) {
                     $scope.list = [];
                     $scope.last_id = 0;
@@ -133,14 +133,14 @@
                 $scope.updateSize = indx;
                 $('#sizeForm').modal('show');
             };
-            $scope.dataLoader();
+            $scope.load();
             scope = $scope;
         });
 
         $('#nvSearch').on('submit', function(e) {
             e.preventDefault();
             scope.$apply(() => scope.q = $(this).find('input').val());
-            scope.dataLoader(true);
+            scope.load(true);
         });
     </script>
 @endsection

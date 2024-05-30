@@ -4,9 +4,8 @@
             <div class="modal-body">
                 <form method="POST" id="wProductF" action="/ws_products/submit">
                     @csrf
-                    <input data-ng-if="updateWProduct !== false" type="hidden" name="_method" value="put">
-                    <input type="hidden" name="id" id="product_id"
-                        data-ng-value="list[updateWProduct].product_id">
+                    <input ng-if="updateWProduct !== false" type="hidden" name="_method" value="put">
+                    <input type="hidden" name="id" id="product_id" ng-value="list[updateWProduct].product_id">
                     <div class="row">
 
                         <div class="col-6">
@@ -14,7 +13,7 @@
                                 <label for="productName">
                                     Product Name <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="name"
-                                    data-ng-value="list[updateWProduct].product_name" id="productName" />
+                                    ng-value="list[updateWProduct].product_name" id="productName" />
                             </div>
                         </div>
 
@@ -23,7 +22,7 @@
                                 <label for="productReference">
                                     Product Reference <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="reference"
-                                    data-ng-value="list[updateWProduct].product_ref" id="productReference" />
+                                    ng-value="list[updateWProduct].product_ref" id="productReference" />
                             </div>
                         </div>
 
@@ -33,8 +32,8 @@
                                     Season <b class="text-danger">&ast;</b></label>
                                 <select name="season" id="season" class="form-select" required>
                                     <option value="default">-- SELECT SEASON --</option>
-                                    <option data-ng-repeat="season in seasons" data-ng-value="season.season_id"
-                                        data-ng-bind="season.season_name">
+                                    <option ng-repeat="season in seasons" ng-value="season.season_id"
+                                        ng-bind="season.season_name">
                                     </option>
                                 </select>
                             </div>
@@ -46,8 +45,8 @@
                                     Category <b class="text-danger">&ast;</b></label>
                                 <select name="category" id="category" class="form-select" required>
                                     <option value="default">-- SELECT CATEGORY --</option>
-                                    <option data-ng-repeat="category in categories" data-ng-value="category.category_id"
-                                        data-ng-bind="category.category_name">
+                                    <option ng-repeat="category in categories" ng-value="category.category_id"
+                                        ng-bind="category.category_name">
                                     </option>
                                 </select>
                             </div>
@@ -78,7 +77,7 @@
                                 <label for="productMinQty">
                                     Product Min Qty <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="minqty"
-                                    data-ng-value="list[updateWProduct].product_minqty" id="productMinQty" />
+                                    ng-value="list[updateWProduct].product_minqty" id="productMinQty" />
                             </div>
                         </div>
 
@@ -87,7 +86,7 @@
                                 <label for="productMaxQty">
                                     Product Max Qty <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="maxqty"
-                                    data-ng-value="list[updateWProduct].product_maxqty" id="productMaxQty" />
+                                    ng-value="list[updateWProduct].product_maxqty" id="productMaxQty" />
                             </div>
                         </div>
 
@@ -96,7 +95,7 @@
                                 <label for="productMinOrder">
                                     Product Min Order </label>
                                 <input type="text" class="form-control" name="minorder"
-                                    data-ng-value="list[updateWProduct].product_minorder" id="productMinOrder" />
+                                    ng-value="list[updateWProduct].product_minorder" id="productMinOrder" />
                             </div>
                         </div>
 
@@ -105,7 +104,7 @@
                                 <label for="productDiscount">
                                     Product Discount <b class="text-danger">&ast;</b></label>
                                 <input type="text" class="form-control" name="discount"
-                                    data-ng-value="list[updateWProduct].product_discount" id="productDiscount" />
+                                    ng-value="list[updateWProduct].product_discount" id="productDiscount" />
                             </div>
                         </div>
 
@@ -114,7 +113,7 @@
                                 <label for="productDelivery">
                                     Product Delivery Details </label>
                                 <input type="text" class="form-control" name="delivery"
-                                    data-ng-value="list[updateWProduct].product_delivery" id="productDelivery" />
+                                    ng-value="list[updateWProduct].product_delivery" id="productDelivery" />
                             </div>
                         </div>
 
