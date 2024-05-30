@@ -46,7 +46,7 @@ class Ws_product extends Model
     {
         $ws_products = self::join('seasons', 'product_season', 'season_id')
                         ->join('categories', 'product_category', 'category_id')
-                        ->orderBy('product_id', 'DESC')->limit($limit);
+                        ->orderBy('product_order', 'DESC')->limit($limit);
 
 
         if (isset($params['q'])) {
