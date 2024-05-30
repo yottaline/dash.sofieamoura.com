@@ -19,10 +19,10 @@
 
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="productReference">
-                                    Product Reference <b class="text-danger">&ast;</b></label>
-                                <input type="text" class="form-control" name="reference"
-                                    ng-value="list[updateWProduct].product_ref" id="productReference" />
+                                <label for="productCode">
+                                    Product Code <b class="text-danger">&ast;</b></label>
+                                <input type="text" class="form-control" name="code"
+                                    ng-value="list[updateWProduct].product_code" id="productCode" />
                             </div>
                         </div>
 

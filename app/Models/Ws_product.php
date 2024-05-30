@@ -62,10 +62,9 @@ class Ws_product extends Model
 
         if ($params) $ws_products->where($params);
         if ($id) $ws_products->where('product_id', $id);
+        if ($ids) $ws_products->whereIn('product_id', $ids);
+        return ($id || $limit == 1) ? $ws_products->first() : $ws_products->get();
 
-        // if($ids) $ws_products->whereIn('product_id', $ids);
-
-        return $id ? $ws_products->first() : $ws_products->get();
     }
 
     static function submit($param, $id)
@@ -73,6 +72,12 @@ class Ws_product extends Model
         if ($id) return self::where('product_id', $id)->update($param) ? $id : false;
         $status = self::create($param);
         return $status ? $status->product_id : false;
+    }
+
+
+    static function maxOrder($season): int
+    {
+        return  self::where('product_season', $season)->max('product_order') ?? 0;
     }
 
 }
