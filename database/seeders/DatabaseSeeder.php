@@ -9,19 +9,28 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-// dash.sofieamoura.com
         \App\Models\User::create([
-            'user_code' => Str::random(7),
-            'user_name' => 'Sof.Support',
-            'user_email' => 'support@sofieamoura.com',
-            'user_password' => Hash::make('Support@sofieamoura'),
+            'user_code' => Str::random(8),
+            'user_name' => 'Tech.Support',
+            'user_email' => 'support@yottaline.com',
+            'user_password' => Hash::make('Support@Yottaline'),
             'user_created' => now()
+        ]);
+
+        \App\Models\Currency::insert([
+            [
+                'currency_id' => '1',
+                'currency_name' => 'Euro',
+                'currency_code' => 'EUR',
+                'currency_symbol' => '&euro;',
+            ], [
+                'currency_id' => '2',
+                'currency_name' => 'US Doller',
+                'currency_code' => 'USD',
+                'currency_symbol' => '&dollar;',
+            ],
         ]);
     }
 }
