@@ -75,6 +75,11 @@ Route::middleware('auth')->group(function () {
         Route::post('load', 'WsProductsSizeController@load');
         Route::match(['post', 'put'], 'submit', 'WsProductsSizeController@submit');
     });
+
+    Route::prefix('product_medias')->group(function(){
+        Route::post('load', 'ProductsMediaController@load');
+        Route::match(['post', 'put'], 'submit', 'ProductsMediaController@submit');
+    });
 });
 
 

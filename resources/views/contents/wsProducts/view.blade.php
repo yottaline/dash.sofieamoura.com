@@ -8,8 +8,7 @@
 @section('content')
     <div class="container-fluid" ng-app="ngApp" ng-controller="ngCtrl">
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col-12 col-sm-8 col-lg-11">
+            <div class="col-12 col-sm-8 col-lg-12">
                 <div class="card card-box">
                     <div class="card-body">
                         {{-- ref name --}}
@@ -248,6 +247,7 @@
 
             </div>
 
+            {{-- start siezs section --}}
             <div class="mt-4">
                 <div class="card card-box">
                     <div class="card-body">
@@ -495,6 +495,125 @@
                     {{-- end  size model --}}
                 </div>
             </div>
+            {{-- end siezs section --}}
+
+            {{-- start media section --}}
+            <div class="mt-5">
+                <div class="card card-box">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">MEDIAS</h5>
+                            <div>
+                                <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus"
+                                    data-bs-toggle="modal" data-bs-target="#mediaModal"></button>
+                                <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
+                                    ng-click="loadProductMedia(true)"></button>
+                            </div>
+                        </div>
+
+                        <div ng-if="medails.length" class="row">
+                            <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="mb-3 text-center">
+                                    <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
+                                        class="card-img-top">
+                                    <div class="card-body">
+                                        <h6 class="card-title" ng-bind="m.media_color"></h6>
+                                        <h6 class="small font-monospace" ng-bind="m.product_code"></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="!medails.length" class="py-5 text-center text-secondary">
+                            <i class="bi bi-exclamation-circle display-3"></i>
+                            <h5>No Data</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <form method="post" id="mediaForm" action="/product_medias/submit">
+                                @csrf
+                                <input type="hidden" name="product_id" ng-value="data.product_id">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="color">Color</label>
+                                            <input type="text" class="form-control font-monospace" name="color"
+                                                id="color">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="order">Order<b class="text-danger">&ast;</b></label>
+                                            <input type="text" class="form-control" name="order" id="order">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="media">Name<b class="text-danger">&ast;</b></label>
+                                            <input type="file" class="form-control" name="media[]" multiple
+                                                id="media">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer d-flex">
+                            <div class="me-auto">
+                                <button type="submit" form="mediaForm" class="btn btn-outline-primary btn-sm"
+                                    ng-disabled="submitting">Submit</button>
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
+                                ng-disabled="submitting">Close</button>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $('#mediaForm').on('submit', e => e.preventDefault()).validate({
+                        submitHandler: function(form) {
+                            var formData = new FormData(form),
+                                action = $(form).attr('action'),
+                                method = $(form).attr('method');
+
+                            scope.$apply(() => scope.submitting = true);
+                            $.ajax({
+                                url: action,
+                                type: method,
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                            }).done(function(data, textStatus, jqXHR) {
+                                var response = JSON.parse(data);
+                                scope.$apply(function() {
+                                    scope.submitting = false;
+                                    if (response.status) {
+                                        toastr.success('Data processed successfully');
+                                        $('#mediaModal').modal('hide');
+                                        scope.$apply(() => {
+                                            if (scope.updateMedails === false) {
+                                                scope.medails.unshift(response
+                                                    .data);
+                                                scope.load();
+                                            } else {
+                                                scope.siezs[scope
+                                                    .updateMedails] = response.data;
+                                            }
+                                        });
+                                    } else toastr.error(response.message);
+                                });
+                            }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
+                        }
+                    });
+                </script>
+            </div>
+            {{-- end media section --}}
         </div>
 
     </div>
@@ -517,7 +636,9 @@
             $scope.q = '';
             $scope.updateSize = false;
             $scope.siezs = [];
-            $scope.last_id = 0;
+
+            $scope.medails = [];
+            $scope.updateMedails = false;
 
             $scope.jsonParse = (str) => JSON.parse(str);
             $scope.data = <?= json_encode($data) ?>;
@@ -525,17 +646,9 @@
             $scope.categories = <?= json_encode($categories) ?>;
             $scope.allsizes = <?= json_encode($sizes) ?>;
             $scope.load = function(reload = false) {
-                if (reload) {
-                    $scope.siezs = [];
-                }
-
-                if ($scope.noMore) return;
-                $scope.loading = true;
-
                 $('.loading-spinner').show();
                 var request = {
                     q: $scope.q,
-                    limit: limit,
                     product_id: $scope.data.product_id,
                     _token: '{{ csrf_token() }}'
                 };
@@ -557,7 +670,26 @@
                 $scope.updateSize = indx;
                 $('#sizeModal').modal('show');
             };
+
+            $scope.loadProductMedia = function(reload = false) {
+                $('.loading-spinner').show();
+                var request = {
+                    product_id: $scope.data.product_id,
+                    _token: '{{ csrf_token() }}'
+                };
+                $.post("/product_medias/load", request, function(data) {
+                    $('.loading-spinner').hide();
+                    var ln = data.length;
+                    $scope.$apply(() => {
+                        if (ln) {
+                            $scope.medails = data;
+                        }
+                    });
+                }, 'json');
+            }
+
             $scope.load();
+            $scope.loadProductMedia();
             scope = $scope;
         });
 
