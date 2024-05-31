@@ -98,4 +98,5 @@ class WsProductController extends Controller
             'data'   => $result ? Ws_product::fetch(0, null, null, null, $ids) : [],
         ]);
     }
+
 }
