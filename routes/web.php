@@ -66,9 +66,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'WsProductController@index');
         Route::get('view/{ref}', 'WsProductController@view');
         Route::post('load', 'WsProductController@load');
-        // Route::post('/', 'WsProductController@submit');
         Route::match(['post', 'put'], 'submit', 'WsProductController@submit');
         Route::post('orders', 'WsProductController@order');
+    });
+
+    // ws product sizes
+    Route::prefix('product_sizes')->group(function(){
+        Route::post('load', 'WsProductsSizeController@load');
+        Route::match(['post', 'put'], 'submit', 'WsProductsSizeController@submit');
     });
 });
 

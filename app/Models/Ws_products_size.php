@@ -34,4 +34,11 @@ class Ws_products_size extends Model
 
         return $id ? $ws_products_sizes->first() : $ws_products_sizes->get();
     }
+
+    public static function submit($param, $id)
+    {
+        if($id) return self::where('prodsize_id', $id)->update($param) ? $id : false;
+        $status = self::create($param);
+        return $status ? $status->id : false;
+    }
 }

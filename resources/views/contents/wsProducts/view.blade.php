@@ -223,10 +223,10 @@
                                             toastr.success('Data processed successfully');
                                             scope.$apply(() => {
                                                 if (scope.updateWProduct === false) {
-                                                    scope.list.unshift(response
+                                                    scope.siezs.unshift(response
                                                         .data);
                                                 } else {
-                                                    scope.list[scope
+                                                    scope.siezs[scope
                                                         .updateWProduct] = response.data;
                                                 }
                                             });
@@ -244,6 +244,255 @@
                         <hr class="mt-4 text-body-tertiary">
 
                     </div>
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+                <div class="card card-box">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
+                                <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
+                                    role="status"></span><span>SIZES</span>
+                            </h5>
+                            <div>
+                                <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
+                                    ng-click="setSiez(false)"></button>
+                                <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
+                                    ng-click="load(true)"></button>
+                            </div>
+                        </div>
+
+                        <div ng-if="siezs.length" class="table-responsive">
+                            <table class="table table-hover" id="example">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Size Name</th>
+                                        <th class="text-center">Color Code</th>
+                                        <th class="text-center">Color Name</th>
+                                        <th class="text-center">Size Cost</th>
+                                        <th class="text-center">Wholesale Price</th>
+                                        <th class="text-center">Recommanded Retail Price</th>
+                                        <th class="text-center">Size Qty </th>
+                                        <th class="text-center">AVAILABLE QUANTITY</th>
+                                        <th class="text-center">Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="si in siezs track by $index">
+                                        <td ng-bind="si.prodsize_id"
+                                            class="text-center small font-monospace text-uppercase">
+                                        </td>
+                                        <td class="text-center" ng-bind="si.size_name"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_colorid"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_color"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_cost"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_wsp"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_rrp"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_qty"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_stock"></td>
+                                        <td class="text-center">
+                                            <span
+                                                class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[si.prodsize_visible]%></span>
+
+                                        </td>
+                                        <td class="col-fit">
+                                            <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
+                                                ng-click="setSiez($index)"></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-if="!siezs.length" class="py-5 text-center text-secondary">
+                            <i class="bi bi-exclamation-circle display-3"></i>
+                            <h5>No Data</h5>
+                        </div>
+                    </div>
+
+                    {{-- start size model --}}
+                    <div class="modal fade" id="sizeModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <form method="post" id="sizeForm" action="/product_sizes/submit">
+                                        @csrf
+                                        <div class="row">
+                                            <input type="hidden" name="p_id" ng-value="data.product_id">
+                                            <input ng-if="updateSize !== false" type="hidden" name="_method"
+                                                value="put">
+                                            <input type="hidden" name="id" id="prodsizeId"
+                                                ng-value="siezs[updateSize].prodsize_id">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="size">Size<b class="text-danger">&ast;</b></label>
+                                                    <select name="size" id="size" class="form-select" required>
+                                                        <option ng-repeat="s in allsizes" ng-bind="s.size_name"
+                                                            ng-value="s.size_id">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="colorCode">Color Code<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control font-monospace"
+                                                        name="code" id="colorCode"
+                                                        ng-value="siezs[updateSize].prodsize_colorid">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="colorName">Color Name<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_color" name="name"
+                                                        id="colorName">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="sizeCost">Size Cost<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_cost" name="cost"
+                                                        id="sizeCost">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="Wholesale">Size Wholesale Price<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
+                                                        id="Wholesale">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="Qty">Size Quantity<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_qty" name="qty"
+                                                        id="Qty">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="QUANTITY">Available Quantity<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_stock" name="stock"
+                                                        id="QUANTITY">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="Recommanded">Recommanded Retail Price<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_rrp" name="rrp"
+                                                        id="Recommanded">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="form-check form-switch mb-3">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="visible" value="1"
+                                                        ng-checked="+siezs[updateSize].prodsize_visible" id="sizeS">
+                                                    <label class="form-check-label" for="sizeS">Size Status</label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer d-flex">
+                                    <div class="me-auto">
+                                        <button type="submit" form="sizeForm" class="btn btn-outline-primary btn-sm"
+                                            ng-disabled="submitting">Submit</button>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-bs-dismiss="modal" ng-disabled="submitting">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            $('#sizeForm').on('submit', e => e.preventDefault()).validate({
+                                rules: {
+                                    name: {
+                                        required: true
+                                    },
+                                    code: {
+                                        required: true,
+                                    },
+                                    cost: {
+                                        digits: true,
+                                    },
+                                    wholesale: {
+                                        digits: true,
+                                    },
+                                    qty: {
+                                        digits: true,
+                                    },
+                                    stock: {
+                                        digits: true,
+                                    },
+                                    rrp: {
+                                        digits: true,
+                                    }
+                                },
+                                submitHandler: function(form) {
+                                    var formData = new FormData(form),
+                                        action = $(form).attr('action'),
+                                        method = $(form).attr('method');
+
+                                    scope.$apply(() => scope.submitting = true);
+                                    $.ajax({
+                                        url: action,
+                                        type: method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                    }).done(function(data, textStatus, jqXHR) {
+                                        var response = JSON.parse(data);
+                                        scope.$apply(function() {
+                                            scope.submitting = false;
+                                            if (response.status) {
+                                                toastr.success('Data processed successfully');
+                                                $('#sizeModal').modal('hide');
+                                                scope.$apply(() => {
+                                                    if (scope.updateSize === false) {
+                                                        scope.siezs.unshift(response
+                                                            .data);
+                                                        scope.load();
+                                                    } else {
+                                                        scope.siezs[scope
+                                                            .updateSize] = response.data;
+                                                    }
+                                                });
+                                                $('#sizeModal').modal('hide');
+                                            } else toastr.error(response.message);
+                                        });
+                                    }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
+                                }
+                            });
+                        </script>
+                    </div>
+                    {{-- end  size model --}}
                 </div>
             </div>
         </div>
@@ -264,27 +513,20 @@
                 name: ['Un visible', 'Visible'],
                 color: ['danger', 'success']
             };
-            $scope.currentObject = {
-                name: ['Not current', 'Current'],
-                color: ['danger', 'success']
-            };
             $('.loading-spinner').hide();
-            $scope.noMore = false;
-            $scope.loading = false;
             $scope.q = '';
-            $scope.updateSeason = false;
-            $scope.list = [];
+            $scope.updateSize = false;
+            $scope.siezs = [];
             $scope.last_id = 0;
 
             $scope.jsonParse = (str) => JSON.parse(str);
             $scope.data = <?= json_encode($data) ?>;
             $scope.seasons = <?= json_encode($seasons) ?>;
             $scope.categories = <?= json_encode($categories) ?>;
+            $scope.allsizes = <?= json_encode($sizes) ?>;
             $scope.load = function(reload = false) {
                 if (reload) {
-                    $scope.list = [];
-                    $scope.last_id = 0;
-                    $scope.noMore = false;
+                    $scope.siezs = [];
                 }
 
                 if ($scope.noMore) return;
@@ -293,29 +535,27 @@
                 $('.loading-spinner').show();
                 var request = {
                     q: $scope.q,
-                    last_id: $scope.last_id,
                     limit: limit,
+                    product_id: $scope.data.product_id,
                     _token: '{{ csrf_token() }}'
                 };
 
-                $.post("/seasons/load", request, function(data) {
+                $.post("/product_sizes/load", request, function(data) {
                     $('.loading-spinner').hide();
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;
                         if (ln) {
-                            $scope.noMore = ln < limit;
-                            $scope.list = data;
+                            $scope.siezs = data;
                             console.log(data)
-                            $scope.last_id = data[ln - 1].season_id;
                         }
                     });
                 }, 'json');
             }
 
-            $scope.setSeason = (indx) => {
-                $scope.updateSeason = indx;
-                $('#seasonForm').modal('show');
+            $scope.setSiez = (indx) => {
+                $scope.updateSize = indx;
+                $('#sizeModal').modal('show');
             };
             $scope.load();
             scope = $scope;
