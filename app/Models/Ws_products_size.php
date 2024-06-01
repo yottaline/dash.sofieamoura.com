@@ -14,14 +14,17 @@ class Ws_products_size extends Model
     protected $fillable = [
         'prodsize_product',
         'prodsize_size',
-        'prodsize_colorid',
         'prodsize_color',
         'prodsize_cost',
         'prodsize_wsp',
         'prodsize_rrp',
         'prodsize_qty',
         'prodsize_stock',
-        'prodsize_visible'
+        'prodsize_visible',
+        'prodsize_modified_by',
+        'prodsize_modified',
+        'prodsize_created_by',
+        'prodsize_created'
     ];
 
 
