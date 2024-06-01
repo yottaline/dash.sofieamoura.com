@@ -50,8 +50,7 @@ class Ws_order extends Model
     public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
     {
         $ws_orders = self::join('seasons', 'order_season', 'season_id')->join('retailers', 'order_retailer', 'retailer_id')
-                        ->join('currencies', 'order_currency', 'currency_id')->join('locations', 'order_bill_country', 'location_id')
-                        ->join('locations', 'order_ship_country', 'location_id');
+                        ->join('currencies', 'order_currency', 'currency_id')->join('locations', 'order_bill_country', 'location_id');
 
         if($lastId) $ws_orders->where('order_id', '<', $lastId);
 

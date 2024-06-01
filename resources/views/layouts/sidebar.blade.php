@@ -74,12 +74,13 @@
                  </a>
              </li>
 
-
-             {{-- <li class="list-group-item nav-help">
-                 <a class="link-dark d-block" href="#">
-                     <i class="bi bi-info-lg text-secondary me-2"></i><b>Help</b>
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/ws_orders/">
+                     <i class="bi bi-clipboard2-check-fill text-secondary me-2"></i><b>WS
+                         Orders</b>
                  </a>
-             </li> --}}
+             </li>
+
          </ul>
      </div>
      <div class="d-flex">
