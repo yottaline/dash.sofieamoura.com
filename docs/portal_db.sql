@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS
   `users` (
-    `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `user_code` VARCHAR(8) NOT NULL,
     `user_name` VARCHAR(120) NOT NULL,
     `user_email` VARCHAR(120) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS
     `user_login` DATETIME DEFAULT NULL,
     `user_modified` DATETIME DEFAULT NULL,
     `user_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`),
+    PRIMARY KEY (`id`),
     UNIQUE (`user_code`),
     UNIQUE (`user_email`)
   ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
@@ -155,23 +155,11 @@ CREATE TABLE IF NOT EXISTS
     `product_code` VARCHAR(24) NOT NULL,
     `product_name` VARCHAR(255) NOT NULL,
     `product_desc` VARCHAR(1024) DEFAULT NULL,
-    `product_media` BIGINT UNSIGNED DEFAULT NULL COMMENT 'default media',
     `product_season` TINYINT UNSIGNED NOT NULL,
     `product_type` TINYINT UNSIGNED NOT NULL DEFAULT '2' COMMENT '1:Babies, 2:Kids, 3:Teens, 4:Adults',
     `product_gender` TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '0:Both, 1:Girl, 2:Boy',
     `product_category` INT UNSIGNED NOT NULL,
-    `product_ordertype` TINYINT UNSIGNED NOT NULL DEFAULT '2' COMMENT '1:IN-STOCK, 2:PRE-ORDER',
-    `product_minqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'MIN ORDER QUANTITY',
-    `product_maxqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'MAX ORDER QUANTITY',
-    `product_mincolorqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'MIN QTY PER COLOR PER SIZE',
-    `product_minorder` DECIMAL(9, 2) NOT NULL DEFAULT '0.00',
-    `product_discount` TINYINT UNSIGNED NOT NULL DEFAULT '0',
-    `product_freeshipping` BOOLEAN NOT NULL DEFAULT FALSE,
     `product_delivery` VARCHAR(120) DEFAULT NULL,
-    `product_views` INT UNSIGNED NOT NULL DEFAULT '0',
-    `product_order` INT UNSIGNED NOT NULL DEFAULT '0',
-    `product_related` VARCHAR(1024) DEFAULT NULL,
-    `product_published` BOOLEAN NOT NULL DEFAULT FALSE,
     `product_modified_by` INT UNSIGNED DEFAULT NULL,
     `product_modified` DATETIME DEFAULT NULL,
     `product_created_by` INT UNSIGNED NOT NULL,
@@ -181,10 +169,37 @@ CREATE TABLE IF NOT EXISTS
     FOREIGN KEY (`product_season`) REFERENCES `seasons` (`season_id`),
     FOREIGN KEY (`product_category`) REFERENCES `categories` (`category_id`),
     FOREIGN KEY (`product_created_by`) REFERENCES `users` (`id`),
-    CHECK (`product_discount` <= 100),
     CHECK (`product_type` BETWEEN 0 AND 4),
-    CHECK (`product_gender` BETWEEN 0 AND 2),
-    CHECK (`product_ordertype` IN (1, 2))
+    CHECK (`product_gender` BETWEEN 0 AND 2)
+  ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- --------------------------------------
+CREATE TABLE IF NOT EXISTS
+  `ws_products_colors` (
+    `prodcolor_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `prodcolor_ref` VARCHAR(24) NOT NULL,
+    `prodcolor_code` VARCHAR(12) NOT NULL,
+    `prodcolor_name` VARCHAR(24) NOT NULL,
+    `prodcolor_product` INT UNSIGNED NOT NULL,
+    `prodcolor_mincolorqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+    `prodcolor_minqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'MIN ORDER QUANTITY',
+    `prodcolor_maxqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'MAX ORDER QUANTITY',
+    `prodcolor_minorder` DECIMAL(9, 2) NOT NULL DEFAULT '0.00',
+    `prodcolor_media` BIGINT UNSIGNED DEFAULT NULL,
+    `prodcolor_ordertype` TINYINT UNSIGNED NOT NULL DEFAULT '2' COMMENT '1:IN-STOCK, 2:PRE-ORDER',
+    `prodcolor_discount` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+    `prodcolor_freeshipping` BOOLEAN NOT NULL DEFAULT FALSE,
+    `prodcolor_related` VARCHAR(1024) DEFAULT NULL,
+    `prodcolor_views` INT UNSIGNED NOT NULL DEFAULT '0',
+    `prodcolor_order` INT UNSIGNED NOT NULL,
+    `prodcolor_published` BOOLEAN NOT NULL DEFAULT FALSE,
+    `prodcolor_modified_by` INT UNSIGNED DEFAULT NULL,
+    `prodcolor_modified` DATETIME DEFAULT NULL,
+    `prodcolor_created_by` INT UNSIGNED NOT NULL,
+    `prodcolor_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`prodcolor_id`),
+    UNIQUE (`prodcolor_ref`),
+    FOREIGN KEY (`prodcolor_product`) REFERENCES `ws_products` (`product_id`)
   ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------
@@ -193,17 +208,22 @@ CREATE TABLE IF NOT EXISTS
     `prodsize_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `prodsize_product` INT UNSIGNED NOT NULL,
     `prodsize_size` TINYINT UNSIGNED NOT NULL,
-    `prodsize_colorid` VARCHAR(8) NOT NULL,
-    `prodsize_color` VARCHAR(45) NOT NULL,
+    `prodsize_color` VARCHAR(24) NOT NULL,
     `prodsize_cost` DECIMAL(9, 2) DEFAULT '0.00',
     `prodsize_wsp` DECIMAL(9, 2) DEFAULT '0.00' COMMENT 'Wholesale Price',
     `prodsize_rrp` DECIMAL(9, 2) DEFAULT '0.00' COMMENT 'Recommanded Retail Price',
     `prodsize_qty` INT UNSIGNED NOT NULL DEFAULT '0',
     `prodsize_stock` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'AVAILABLE QUANTITY',
     `prodsize_visible` BOOLEAN NOT NULL DEFAULT TRUE,
+    `prodsize_modified_by` INT UNSIGNED DEFAULT NULL,
+    `prodsize_modified` DATETIME DEFAULT NULL,
+    `prodsize_created_by` INT UNSIGNED NOT NULL,
+    `prodsize_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`prodsize_id`),
     FOREIGN KEY (`prodsize_product`) REFERENCES `ws_products` (`product_id`),
     FOREIGN KEY (`prodsize_size`) REFERENCES `sizes` (`size_id`),
+    FOREIGN KEY (`prodsize_color`) REFERENCES `ws_products_colors` (`prodcolor_ref`),
+    FOREIGN KEY (`prodsize_created_by`) REFERENCES `users` (`id`),
     CHECK (`prodsize_qty` >= `prodsize_stock`)
   ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -212,13 +232,14 @@ CREATE TABLE IF NOT EXISTS
   `products_media` (
     `media_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `media_product` INT UNSIGNED NOT NULL,
-    `media_color` VARCHAR(8) NOT NULL DEFAULT '',
+    `media_color` VARCHAR(24) NOT NULL,
     `media_file` VARCHAR(64) DEFAULT NULL,
     `media_type` TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '1:PHOTO, 2:VIDEO',
     `media_order` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
     `media_visible` BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`media_id`),
     FOREIGN KEY (`media_product`) REFERENCES `ws_products` (`product_id`),
+    FOREIGN KEY (`media_color`) REFERENCES `ws_products_colors` (`prodcolor_ref`),
     CHECK (`media_type` IN (1, 2))
   ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
