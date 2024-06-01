@@ -99,7 +99,7 @@
                                         <td data-ng-bind="order.order_code"
                                             class="text-center small font-monospace text-uppercase">
                                         </td>
-                                        <td class="text-center" data-ng-bind="order.retailer_name">
+                                        <td class="text-center" data-ng-bind="order.retailer_fullName">
                                         </td>
                                         <td data-ng-bind="order.order_create" class="text-center"></td>
                                         <td class="text-center"><% order.order_disc %>%</td>
@@ -216,7 +216,7 @@
                                     </tr>
                                     <tr class="record-item " data-ng-repeat="p in products"
                                         id="invitem-<%p.product_id%>">
-                                        <input type="hidden" class="record-id" ng-value="p.product_id">
+                                        <input type="hidden" class="record-id" ng-value="p.prodsize_id">
                                         <td><a href="#del" class="inv-item-del text-danger"
                                                 data-ng-click="delProduct($index)"><i class="bi bi-x-circle"></i></a></td>
                                         <td colspan="1">
@@ -232,6 +232,9 @@
                                         <td><input type="number" step="1" min="1" name="qty"
                                                 class="record-amount font-monospace text-center w-100"
                                                 ng-change="clTotal()" ng-model="p.product_mincolorqty">
+                                        </td>
+                                        <td hidden><input class="record-qty" ng-change="clTotal()"
+                                                ng-model="p.product_mincolorqty">
                                         </td>
                                         <td><input type="number" disabled
                                                 class="record-maxqty font-monospace text-center w-100"
@@ -269,30 +272,23 @@
                                 </div>
                             </div>
 
-
-                            <div class="col-6">
+                            <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="d-block mb-2">Order Type<b
+                                    <label for="orderType" class="d-block mb-2">Order Type<b
                                             class="text-danger">&ast;</b></label>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="order_type" id="orderType1"
-                                            value="1">
-                                        <label class="form-check-label" for="orderType1">IN-STOCK</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="order_type" id="orderType2"
-                                            value="2" checked>
-                                        <label class="form-check-label" for="orderType2">PRE-ORDER</label>
-                                    </div>
+                                    <select name="order_type" id="orderType" class="form-select" required>
+                                        <option value="1">IN-STOCK</option>
+                                        <option value="2">PRE-ORDER</option>
+                                    </select>
                                 </div>
                             </div>
 
-
                             <div class="col-12">
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" role="switch" name="visible"
-                                        value="1" ng-checked="+list[updateSeason].season_visible" id="seasonS">
-                                    <label class="form-check-label" for="seasonS">Bill and Shipping Address is the same
+                                    <input class="form-check-input" id="checkbox" value="1"
+                                        ng-checked="+list[updateOrder].order_status" type="checkbox">
+                                    <label class="form-check-label">Bill and Shipping Address is
+                                        the same
                                         as the retailer address ?</label>
                                 </div>
                             </div>
@@ -333,17 +329,17 @@
 
                             <div class="col-12 col-md-3">
                                 <div class="mb-3">
-                                    <label for="Anumber">
+                                    <label for="billLine2">
                                         Apartment number </label>
-                                    <input type="text" class="form-control" name="line2" id="Anumber" />
+                                    <input type="text" class="form-control" name="line2" id="billLine2" />
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="streetN">
+                                    <label for="billLine1">
                                         Street number or street name</label>
-                                    <input type="text" class="form-control" name="line1" id="streetN" />
+                                    <input type="text" class="form-control" name="line1" id="billLine1" />
                                 </div>
                             </div>
 
@@ -469,25 +465,52 @@
                                         id: [],
                                         pck: [],
                                         qty: [],
+                                        amount: [],
                                         disc: []
                                     },
                                     retailer = $('#retailer').val(),
                                     note = $('#note').val(),
                                     orderD = $('#order_disc').val(),
+                                    season = $('#season').val(),
+                                    currencies = $('#currencies').val(),
+                                    cost = $('#cost').val(),
+                                    check = document.getElementById('checkbox'),
+                                    location = $('#locations').val(),
+                                    bill_province = $('#billP').val(),
+                                    city = $('#billC').val(),
+                                    zip = $('#billZ').val(),
+                                    line2 = $('#billLine2').val(),
+                                    line1 = $('#billLine1').val(),
+                                    phone = $('#billP').val(),
+                                    orderT = $('#orderType').val(),
                                     orderTotal = $('#ordertotal').text();
                                 orderDate = $('#orderDate').val();
                                 $('.record-item').not('.d-none').map((i, e) => {
                                     cart.id.push($(e).find('.record-id').val());
-                                    cart.qty.push($(e).find('.record-amount').val());
+                                    cart.qty.push($(e).find('.record-qty').val());
+                                    cart.amount.push($(e).find('.record-amount').val());
                                     cart.disc.push($(e).find('.record-disc').val());
                                 });
 
                                 $(this).prop('disabled', true);
-                                $.post('/orders/submit/', {
+                                $.post('/ws_orders/submit', {
                                     id: cart.id.join(),
                                     qty: cart.qty.join(),
                                     disc: cart.disc.join(),
+                                    amount: cart.amount.join(),
                                     retailer_id: retailer,
+                                    season: season,
+                                    currencies: currencies,
+                                    cost: cost,
+                                    zip: zip,
+                                    checkbox: check.checked,
+                                    location: location,
+                                    bill_province: bill_province,
+                                    order_type: orderT,
+                                    city: city,
+                                    line1: line1,
+                                    line2: line2,
+                                    phone: phone,
                                     note: note,
                                     orderdisc: orderD,
                                     total: orderTotal,

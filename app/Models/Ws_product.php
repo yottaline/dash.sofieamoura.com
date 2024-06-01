@@ -41,7 +41,7 @@ class Ws_product extends Model
         'product_created'
     ];
 
-    static function fetch($id = 0, $params = null, $limit = 24, $offset = 0)
+    static function fetch($id = 0, $params = null, $limit = 24, $offset = 0, $ids = 0)
     {
         $ws_products = self::join('seasons', 'product_season', '=', 'season_id')
             ->join('categories', 'product_category', '=', 'category_id')
@@ -62,7 +62,7 @@ class Ws_product extends Model
 
         if ($params) $ws_products->where($params);
         if ($id) $ws_products->where('product_id', $id);
-        // if ($ids) $ws_products->whereIn('product_id', $ids);
+        if ($ids) $ws_products->whereIn('product_id', $ids);
 
         return ($id || $limit == 1) ? $ws_products->first() : $ws_products->get();
 
