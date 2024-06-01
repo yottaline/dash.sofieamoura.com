@@ -86,14 +86,14 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        {{-- <div class="col-6">
                             <div class="mb-3">
                                 <label for="Payment">
                                     Advance Payment </label>
                                 <input type="text" class="form-control" name="payment"
                                     ng-value="list[updateRetailer].retailer_adv_payment" id="Payment" />
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-6">
                             <div class="mb-3">
@@ -136,6 +136,36 @@
                                     ng-value="list[updateRetailer].retailer_city" id="city" />
                             </div>
                         </div>
+
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="zipCode">
+                                    city zip code</label>
+                                <input type="text" class="form-control" name="zip"
+                                    ng-value="list[updateRetailer].address_zip" id="zipCode" />
+                            </div>
+                        </div>
+                        {{--
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="streetN">
+                                    Street number or street name</label>
+                                <input type="text" class="form-control" name="line1"
+                                    ng-value="list[updateRetailer].address_line1" id="streetN" />
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="Anumber">
+                                    Apartment number </label>
+                                <input type="text" class="form-control" name="line2"
+                                    ng-value="list[updateRetailer].address_line2" id="Anumber" />
+                            </div>
+                        </div> --}}
 
                         <div class="col-6">
                             <div class="mb-3">
@@ -226,6 +256,9 @@
         $('#city').val('');
         $('#shipAdd').val('');
         $('#billAdd').val('');
+        $('#zipCode').val('');
+        $('#streetN').val('');
+        $('#streetN').val('');
         $('#address').val('');
     }
 </script>

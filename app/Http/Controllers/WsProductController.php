@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Season;
+use App\Models\Size;
 use App\Models\Ws_product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -78,8 +79,11 @@ class WsProductController extends Controller
 
     function view(String $ref)
     {
+        $seasons = Season::fetch(0, [['season_visible', 1]]);
+        $sizes = Size::fetch(0, [['size_visible', 1]]);
+        $categories = Category::fetch(0, [['category_visible', 1]]);
         $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
-        return view('contents.wsProducts.view', compact('data'));
+        return view('contents.wsProducts.view', compact('data', 'seasons', 'categories', 'sizes'));
     }
 
     function order(Request $request)
@@ -96,4 +100,5 @@ class WsProductController extends Controller
             'data'   => $result ? Ws_product::fetch(0, null, null, null, $ids) : [],
         ]);
     }
+
 }

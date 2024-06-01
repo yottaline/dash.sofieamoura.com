@@ -18,7 +18,6 @@ class Ws_orders_product extends Model
         'ordprod_price',
         'ordprod_subtotal',
         'ordprod_discount',
-        'ordprod_price'
     ];
 
     public static function fetch($id = 0, $params = null)

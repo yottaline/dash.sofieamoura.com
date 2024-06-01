@@ -27,4 +27,11 @@ class Products_media extends Model
 
         return $id ? $product_medias->first() : $product_medias->get();
     }
+
+    public static function submit($param, $id)
+    {
+        if($id) return self::where('media_id', $id)->update($param) ? $id : false;
+        $status = self::create($param);
+        return $status ? $status->id : false;
+    }
 }

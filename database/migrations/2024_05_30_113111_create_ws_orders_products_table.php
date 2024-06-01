@@ -21,7 +21,6 @@ return new class extends Migration
             $table->decimal('ordprod_price', 9, 2);
             $table->decimal('ordprod_subtotal', 9, 2)->default('0');
             $table->tinyInteger('ordprod_discount')->unsigned()->default('0');
-            $table->decimal('ordprod_price', 9, 2);
             // $table->timestamps();
         });
     }

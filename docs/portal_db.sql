@@ -83,8 +83,9 @@ CREATE TABLE IF NOT EXISTS
   ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------
+
 CREATE TABLE IF NOT EXISTS
-  `retailers_addresses` (
+  `retailer_addresses` (
     `address_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `address_retailer` INT UNSIGNED NOT NULL,
     `address_type` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:Both, 1:Billing, 2:Shipping',
