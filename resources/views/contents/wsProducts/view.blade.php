@@ -446,7 +446,7 @@
                                                 <label for="size">Sizes<b class="text-danger">&ast;</b></label>
                                                 <div class="form-check form-switch mb-5" style="display: inline-block"
                                                     name=""ng-repeat="s in allsizes">
-                                                    <input type="checkbox" name="size" ng-value="s.size_id">
+                                                    <input type="checkbox" name="size[]" ng-value="s.size_id">
                                                     <label for="size" ng-bind="s.size_name">Size<b
                                                             class="text-danger">&ast;</b></label>
                                                 </div>
@@ -495,7 +495,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <script>
+                    <script>
                         $('#sizeForm').on('submit', e => e.preventDefault()).validate({
                             rules: {
                                 name: {
@@ -560,6 +560,7 @@
                                     contentType: false,
                                 }).done(function(data, textStatus, jqXHR) {
                                     var response = JSON.parse(data);
+                                    console.log(response);
                                     scope.$apply(function() {
                                         scope.submitting = false;
                                         if (response.status) {
@@ -569,10 +570,11 @@
                                                 if (scope.updateSize === false) {
                                                     scope.siezs.unshift(response
                                                         .data);
-                                                    scope.load();
+                                                    scope.load(true);
                                                 } else {
                                                     scope.siezs[scope
                                                         .updateSize] = response.data;
+                                                    scope.load(true);
                                                 }
                                             });
                                             $('#sizeModal').modal('hide');
@@ -581,7 +583,7 @@
                                 }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
                             }
                         });
-                    </script> --}}
+                    </script>
                 </div>
                 {{-- end  size model --}}
             </div>

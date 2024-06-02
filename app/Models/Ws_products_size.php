@@ -10,6 +10,7 @@ class Ws_products_size extends Model
     use HasFactory;
 
     public $timestamps = false;
+    // public primaryKp
 
     protected $fillable = [
         'prodsize_product',

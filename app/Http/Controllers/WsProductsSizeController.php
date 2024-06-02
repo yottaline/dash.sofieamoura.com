@@ -18,7 +18,7 @@ class WsProductsSizeController extends Controller
     public function load(Request $request)
     {
         $param = $request->q ? ['q' => $request->q] : [];
-        $param[] = ['prodcolor_product', $request->product_id];
+        $param[] = ['prodsize_product', $request->product_id];
 
         echo json_encode(Ws_products_size::fetch(0,$param));
     }
@@ -26,21 +26,25 @@ class WsProductsSizeController extends Controller
     public function submit(Request $request)
     {
         $color_name = explode(',', $request->name);
-        $sizes      = explode(',', $request->size);
+        // return $color_name;
+        $sizes      = $request->size;
         $orders     = explode(',', $request->order);
 
         $colorParam = [];
         $sizeParam  = [];
 
+        // return $sizes;
+
         // colors
         foreach($color_name as $color)
         {
+
             $i = 0;
             $color_ref = uniqidReal(14);
             $colorParam[] = [
                 'prodcolor_ref'         => $color_ref,
                 'prodcolor_code'        => $request->code,
-                'prodcolor_name'        => $color[$i],
+                'prodcolor_name'        => $color,
                 'prodcolor_product'     => $request->p_id,
                 'prodcolor_mincolorqty' => $request->mincolorqty,
                 'prodcolor_minqty'      => $request->minqty,
@@ -55,30 +59,33 @@ class WsProductsSizeController extends Controller
                 'prodcolor_created_by'   => auth()->user()->id,
                 'prodcolor_created'      => Carbon::now()
             ];
+
+            // sizes
+            foreach($sizes as $size)
+            {
+                $index = 0;
+                $sizeParam[] = [
+                    'prodsize_product' => $request->p_id,
+                    'prodsize_size'    => $size[$index],
+                    'prodsize_color'   => $color_ref,
+                    'prodsize_cost'    => $request->cost,
+                    'prodsize_wsp'     => $request->wholesale,
+                    'prodsize_rrp'     => $request->rrp,
+                    'prodsize_qty'     => $request->qty,
+                    'prodsize_stock'   => $request->stock,
+                    'prodsize_visible' => $request->visible ?? 1,
+                    'prodsize_created_by' => auth()->user()->id,
+                    'prodsize_created'    => Carbon::now()
+                ];
+            };
         }
-        // sizes
-        foreach($sizes as $size)
-        {
-            $index = 0;
-            $sizeParam[] = [
-                'prodsize_product' => $request->p_id,
-                'prodsize_size'    => $size[$index],
-                'prodsize_color'   => $color_ref,
-                'prodsize_cost'    => $request->cost,
-                'prodsize_wsp'     => $request->wholesale,
-                'prodsize_rrp'     => $request->rrp,
-                'prodsize_qty'     => $request->qty,
-                'prodsize_stock'   => $request->stock,
-                'prodsize_visible' => $request->visible ?? 1,
-                'prodsize_created_by' => auth()->user()->id,
-                'prodsize_created'    => Carbon::now()
-            ];
-        };
+
         $id = $request->id;
         $result = Ws_products_color::createUpdateColorSize($colorParam, $sizeParam);
+
         echo json_encode([
-            'status'  => boolval($result),
-            'data'    => $result ? Ws_products_size::fetch($result, [['prodsize_product', $request->p_id]]) : []
+            'status' => boolval($result),
+            'data'   => $result ?  Ws_products_size::fetch($result, [['prodsize_product', $request->p_id]]) : []
         ]);
     }
 }

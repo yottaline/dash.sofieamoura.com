@@ -43,15 +43,23 @@ class Ws_products_color extends Model
     {
         try {
             DB::beginTransaction();
+
             if (self::insert($colorParam)) {
-               $status = Ws_products_size::insert($sizeParam);
+                $status = Ws_products_size::insert($sizeParam);
+            } else {
+                DB::rollBack();
+                return ['status' => false, 'message' => 'Failed to insert colors'];
             }
+
             DB::commit();
-            return ['status' => boolval($status),'id' => $status->id];
+            return ['status' => boolval($status), 'id' => $status ? $status->id : false];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return ['status' => false,'message' => 'error: ' . $e->getMessage()];
+            return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
         }
+
     }
+
+
 }
