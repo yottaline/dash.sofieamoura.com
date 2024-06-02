@@ -39,8 +39,9 @@ class Ws_products_color extends Model
 
     // }
 
-    public static function createUpdateColorSize($colorParam, $sizeParam)
+    public static function createUpdateColorSize($id, $colorParam, $sizeParam)
     {
+        if($id) return Ws_products_size::where('prodsize_id', $id)->update($sizeParam) ? $id : false;
         try {
             DB::beginTransaction();
 

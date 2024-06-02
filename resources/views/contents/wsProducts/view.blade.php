@@ -232,39 +232,18 @@
                                         </td>
                                         <td class="text-center" ng-bind="si.prodcolor_code"></td>
                                         <td class="text-center" ng-bind="si.prodcolor_name"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_cost"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_wsp"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_rrp"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_qty"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_stock"></td>
                                         <td class="text-center">
-                                            <span ng-if="si.prodsize_cost" ng-bind="si.prodsize_cost"></span>
-                                            <span ng-if="si.prodsize_cost == null" class="text-warning">Not added
-                                                yet</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span ng-if="si.prodsize_wsp" ng-bind="si.prodsize_wsp"></span>
-                                            <span ng-if="si.prodsize_wsp == null" class="text-warning">Not added
-                                                yet</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span ng-if="si.prodsize_rrp" ng-bind="si.prodsize_rrp"></span>
-                                            <span ng-if="si.prodsize_rrp == null" class="text-warning">Not added
-                                                yet</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span ng-if="si.prodsize_qty" ng-bind="si.prodsize_qty"></span>
-                                            <span ng-if="si.prodsize_qty == null" class="text-warning">Not added
-                                                yet</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span ng-if="si.prodsize_stock" ng-bind="si.prodsize_stock"></span>
-                                            <span ng-if="si.prodsize_stock == null" class="text-warning">Not added
-                                                yet</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span ng-if="si.prodsize_visible"
+                                            <span
                                                 class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[si.prodsize_visible]%></span>
-
-                                            <span ng-if="si.prodsize_visible == null" class="text-warning">Not added
-                                                yet</span>
                                         </td>
                                         <td class="col-fit">
+                                            <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
+                                                ng-click="editStatus($index)"></button>
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
                                                 ng-click="setSiez($index)"></button>
                                         </td>
@@ -442,6 +421,8 @@
                                                 </div>
                                             </div>
 
+                                            <input type="hidden" name="ps_size"
+                                                ng-value="siezs[updateSize].prodsize_size">
                                             <div class="col-12 col-sm-12">
                                                 <label for="size">Sizes<b class="text-danger">&ast;</b></label>
                                                 <div class="form-check form-switch mb-5" style="display: inline-block"
@@ -452,7 +433,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="form-check form-switch mb-3">
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="freeshipping" value="1"
@@ -461,7 +442,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="form-check form-switch mb-3">
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="color_status" value="1"
@@ -469,16 +450,6 @@
                                                     <label class="form-check-label">Color product status </label>
                                                 </div>
                                             </div>
-
-                                            <div class="col-4">
-                                                <div class="form-check form-switch mb-3">
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        name="visible" value="1"
-                                                        ng-checked="+siezs[updateSize].prodsize_visible">
-                                                    <label class="form-check-label">Size Status </label>
-                                                </div>
-                                            </div>
-
                                         </div>
 
                                 </div>
@@ -566,17 +537,7 @@
                                         if (response.status) {
                                             toastr.success('Data processed successfully');
                                             $('#sizeModal').modal('hide');
-                                            scope.$apply(() => {
-                                                if (scope.updateSize === false) {
-                                                    scope.siezs.unshift(response
-                                                        .data);
-                                                    scope.load(true);
-                                                } else {
-                                                    scope.siezs[scope
-                                                        .updateSize] = response.data;
-                                                    scope.load(true);
-                                                }
-                                            });
+                                            scope.load(true);
                                             $('#sizeModal').modal('hide');
                                         } else toastr.error(response.message);
                                     });
@@ -585,6 +546,79 @@
                         });
                     </script>
                 </div>
+
+                <div class="modal fade" id="editStatus" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <form method="POST" action="/product_sizes/edit_status">
+                                    @csrf
+                                    <input data-ng-if="updateSize !== false" type="hidden" name="_method"
+                                        value="put">
+                                    <input type="hidden" name="size_id" data-ng-value="+siezs[updateSize].prodsize_id">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check form-switch mb-3">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    name="visible" value="1"
+                                                    ng-checked="+siezs[updateSize].prodsize_visible">
+                                                <label class="form-check-label">Size Status </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <button type="button" class="btn btn-outline-secondary me-auto"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $('#editStatus form').on('submit', function(e) {
+                        e.preventDefault();
+                        var form = $(this),
+                            formData = new FormData(this),
+                            action = form.attr('action'),
+                            method = form.attr('method'),
+                            controls = form.find('button, input'),
+                            spinner = $('#locationModal .loading-spinner');
+                        spinner.show();
+                        controls.prop('disabled', true);
+                        $.ajax({
+                            url: action,
+                            type: method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data, textStatus, jqXHR) {
+                            var response = JSON.parse(data);
+                            if (response.status) {
+                                toastr.success('Actived successfully');
+                                $('#editStatus').modal('hide');
+                                scope.$apply(() => {
+                                    if (scope.updateSize === false) {
+                                        scope.siezs = response.data;
+                                        scope.load(true);
+                                    } else {
+                                        scope.siezs[scope.updateSize] = response.data;
+                                    }
+                                });
+                            } else toastr.error("Error");
+                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                            toastr.error("error");
+                            controls.log(jqXHR.responseJSON.message);
+                            $('#useForm').modal('hide');
+                        }).always(function() {
+                            spinner.hide();
+                            controls.prop('disabled', false);
+                        });
+
+                    })
+                </script>
+
                 {{-- end  size model --}}
             </div>
         </div>
@@ -763,6 +797,11 @@
                 $scope.updateSize = indx;
                 $('#sizeModal').modal('show');
             };
+
+            $scope.editStatus = (index) => {
+                $scope.updateSize = index;
+                $('#editStatus').modal('show');
+            }
 
             $scope.loadProductMedia = function(reload = false) {
                 $('.loading-spinner').show();
