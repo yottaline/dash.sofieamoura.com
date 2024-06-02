@@ -222,21 +222,47 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="si in siezs track by $index">
-                                        <td ng-bind="si.prodsize_id"
+                                        <td ng-bind="si.prodcolor_ref"
                                             class="text-center small font-monospace text-uppercase">
                                         </td>
-                                        <td class="text-center" ng-bind="si.size_name"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_colorid"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_color"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_cost"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_wsp"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_rrp"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_qty"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_stock"></td>
                                         <td class="text-center">
-                                            <span
+                                            <span ng-if="si.size_name" ng-bind="si.size_name"></span>
+                                            <span ng-if="si.size_name == null" class="text-warning">Not added
+                                                yet</span>
+                                        </td>
+                                        <td class="text-center" ng-bind="si.prodcolor_code"></td>
+                                        <td class="text-center" ng-bind="si.prodcolor_name"></td>
+                                        <td class="text-center">
+                                            <span ng-if="si.prodsize_cost" ng-bind="si.prodsize_cost"></span>
+                                            <span ng-if="si.prodsize_cost == null" class="text-warning">Not added
+                                                yet</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-if="si.prodsize_wsp" ng-bind="si.prodsize_wsp"></span>
+                                            <span ng-if="si.prodsize_wsp == null" class="text-warning">Not added
+                                                yet</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-if="si.prodsize_rrp" ng-bind="si.prodsize_rrp"></span>
+                                            <span ng-if="si.prodsize_rrp == null" class="text-warning">Not added
+                                                yet</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-if="si.prodsize_qty" ng-bind="si.prodsize_qty"></span>
+                                            <span ng-if="si.prodsize_qty == null" class="text-warning">Not added
+                                                yet</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-if="si.prodsize_stock" ng-bind="si.prodsize_stock"></span>
+                                            <span ng-if="si.prodsize_stock == null" class="text-warning">Not added
+                                                yet</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-if="si.prodsize_visible"
                                                 class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[si.prodsize_visible]%></span>
 
+                                            <span ng-if="si.prodsize_visible == null" class="text-warning">Not added
+                                                yet</span>
                                         </td>
                                         <td class="col-fit">
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"

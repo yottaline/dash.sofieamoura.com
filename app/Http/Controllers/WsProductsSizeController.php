@@ -18,7 +18,7 @@ class WsProductsSizeController extends Controller
     public function load(Request $request)
     {
         $param = $request->q ? ['q' => $request->q] : [];
-        $param[] = ['prodsize_product', $request->product_id];
+        $param[] = ['prodcolor_product', $request->product_id];
 
         echo json_encode(Ws_products_size::fetch(0,$param));
     }
