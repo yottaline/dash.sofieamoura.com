@@ -34,7 +34,8 @@ class Ws_product extends Model
     {
         $ws_products = self::join('seasons', 'product_season', '=', 'season_id')
             ->join('categories', 'product_category', '=', 'category_id')
-            ->orderBy('product_order', 'ASC')->limit($limit)->offset($offset);
+            ->leftJoin('ws_products_colors', 'product_id', '=', 'prodcolor_product')
+            ->orderBy('product_id', 'ASC')->limit($limit)->offset($offset);
 
 
         if (isset($params['q'])) {

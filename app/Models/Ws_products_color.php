@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Ws_products_color extends Model
 {
@@ -32,4 +33,25 @@ class Ws_products_color extends Model
         'prodcolor_created_by',
         'prodcolor_created'
     ];
+
+    // public static function fetch($id = 0, $params = null)
+    // {
+
+    // }
+
+    public static function createUpdateColorSize($colorParam, $sizeParam)
+    {
+        try {
+            DB::beginTransaction();
+            if (self::insert($colorParam)) {
+               $status = Ws_products_size::insert($sizeParam);
+            }
+            DB::commit();
+            return ['status' => boolval($status),'id' => $status->id];
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['status' => false,'message' => 'error: ' . $e->getMessage()];
+        }
+    }
 }
