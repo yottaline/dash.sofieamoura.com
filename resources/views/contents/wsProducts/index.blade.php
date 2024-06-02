@@ -43,6 +43,7 @@
                                         <div class="card-body">
                                             <h6 class="card-title" ng-bind="p.product_name"></h6>
                                             <h6 class="small font-monospace" ng-bind="p.product_code"></h6>
+                                            <h6 class="small font-monospace" ng-bind="p.prodcolor_name"></h6>
                                         </div>
                                     </a>
                                 </div>
@@ -102,8 +103,8 @@
                                         <label for="" class="d-block mb-2">Order Type<b
                                                 class="text-danger">&ast;</b></label>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="order_type" id="orderType1"
-                                                value="1">
+                                            <input class="form-check-input" type="radio" name="order_type"
+                                                id="orderType1" value="1">
                                             <label class="form-check-label" for="orderType1">IN-STOCK</label>
                                         </div>
                                         <div class="form-check form-check-inline">
@@ -205,6 +206,7 @@
                         if (ln) {
                             $scope.noMore = ln < limit;
                             $scope.list = data;
+                            console.log(data);
                             $scope.offset += ln;
                         }
                     });

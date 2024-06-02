@@ -207,7 +207,11 @@
                                                     <div class="items-list">
                                                         <a href="#add" class="d-none">
                                                             <small class="record-name fw-bold"></small><br>
-                                                            <small class="record-sn text-secondary font-monospace"></small>
+                                                            <small
+                                                                class="record-sn text-secondary font-monospace"></small><br>
+                                                            <small class="record-size text-warning font-monospace"></small>
+                                                            <small
+                                                                class="record-color text-danger-emphasis font-monospace"></small>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -227,26 +231,26 @@
                                         <td class="text-center">
                                             <small class="fw-bold" data-ng-bind="p.size_name"></small><br>
                                             <small class="text-secondary font-monospace"
-                                                data-ng-bind="p.prodsize_color"></small>
+                                                data-ng-bind="p.prodcolor_name"></small>
                                         </td>
                                         <td><input type="number" step="1" min="1" name="qty"
                                                 class="record-amount font-monospace text-center w-100"
-                                                ng-change="clTotal()" ng-model="p.product_mincolorqty">
+                                                ng-change="clTotal()" ng-model="p.prodcolor_mincolorqty">
                                         </td>
                                         <td hidden><input class="record-qty" ng-change="clTotal()"
-                                                ng-model="p.product_mincolorqty">
+                                                ng-model="p.prodcolor_mincolorqty">
                                         </td>
                                         <td><input type="number" disabled
                                                 class="record-maxqty font-monospace text-center w-100"
-                                                ng-value="p.product_maxqty">
+                                                ng-value="p.prodcolor_maxqty">
                                         </td>
                                         <td hidden><input type="number" step="1" min="0" name="qty"
                                                 class="record-disc font-monospace text-center w-100" ng-change="clTotal()"
-                                                ng-model="p.product_discount">
+                                                ng-model="p.prodcolor_discount">
                                         </td>
                                         <td class="text-center" data-ng-bind="p.prodsize_wsp"></td>
                                         <td class="text-center"><span
-                                                data-ng-bind="to (p.prodsize_wsp , p.product_mincolorqty, p.product_discount)"></span>
+                                                data-ng-bind="to (p.prodsize_wsp , p.prodcolor_mincolorqty, p.prodcolor_discount)"></span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -406,6 +410,8 @@
                                             var elem = $("#items-selector > .items-list > a.d-none").clone();
                                             elem.removeClass('d-none').find('.record-name').text(item.product_name);
                                             elem.find('.record-sn').text(item.product_code);
+                                            elem.find('.record-size').text(item.size_name);
+                                            elem.find('.record-color').text(item.prodcolor_name);
                                             elem.on('click', function(e) {
                                                 // invRecord(item);
                                                 $("#items-selector").hide();
@@ -706,13 +712,13 @@
 
             $scope.clTotal = function() {
                 var total = 0;
-                $scope.products.map(p => total += p.product_mincolorqty * p.prodsize_wsp);
+                $scope.products.map(p => total += p.prodcolor_mincolorqty * p.prodsize_wsp);
                 var totals = total - (total * $scope.orderDisc / 100);
                 return totals.toFixed();
             }
 
-            $scope.to = function(product_price, pecAmount) {
-                return (pecAmount * product_price).toFixed();
+            $scope.to = function(prodcolor_price, pecAmount) {
+                return (pecAmount * prodcolor_price).toFixed();
             };
 
             $scope.dataLoader();
