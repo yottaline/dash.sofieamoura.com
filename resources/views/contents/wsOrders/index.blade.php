@@ -101,22 +101,30 @@
                                         </td>
                                         <td class="text-center" data-ng-bind="order.retailer_fullName">
                                         </td>
-                                        <td data-ng-bind="order.order_create" class="text-center"></td>
-                                        <td class="text-center"><% order.order_disc %>%</td>
+                                        <td data-ng-bind="order.order_created" class="text-center"></td>
+                                        <td class="text-center"><% order.order_discount %>%</td>
                                         <td data-ng-bind="order.order_subtotal" class="text-center"></td>
                                         <td class="text-center">
-                                            <button ng-if="order.order_status == 1"
+                                            <button ng-if="order.order_status == 0"
                                                 class="btn btn-outline-danger btn-circle bi bi-x"
-                                                ng-click="opt($index, 2)"></button>
-                                            <button ng-if="order.order_status == 1"
+                                                ng-click="opt($index, 1)"></button>
+                                            <button ng-if="order.order_status == 0"
                                                 class="btn btn-outline-primary btn-circle bi bi-check"
+                                                ng-click="opt($index, 2)"></button>
+                                            <button ng-if="order.order_status == 2"
+                                                class="btn btn-outline-success btn-circle bi bi-check"
                                                 ng-click="opt($index, 3)"></button>
                                             <button ng-if="order.order_status == 3"
-                                                class="btn btn-outline-success btn-circle bi bi-check"
+                                                class="btn btn-outline-warning btn-circle bi bi-cash-stack"
+                                                ng-click="opt($index, 4)"></button>
+                                            <button ng-if="order.order_status == 3"
+                                                class="btn btn-outline-warning btn-circle bi bi-credit-card"
                                                 ng-click="opt($index, 4)"></button>
                                             <button ng-if="order.order_status == 4"
                                                 class="btn btn-outline-success btn-circle bi bi-truck"
                                                 ng-click="opt($index, 5)"></button>
+                                            <button ng-if="order.order_status == 6"
+                                                class="btn btn-outline-success btn-circle bi bi-clipboard2-check"></button>
                                         </td>
                                         <td class="col-fit">
                                             <button class="btn btn-outline-dark btn-circle bi bi-eye"
@@ -149,7 +157,8 @@
                                     <label for="retailer">Retailer<b class="text-danger">&ast;</b></label>
                                     <select name="retailer" id="retailer" class="form-select" required>
                                         <option value="">-- SELECT RETAILER NAME --</option>
-                                        <option data-ng-repeat="retailer in retailers" data-ng-value="retailer.retailer_id"
+                                        <option data-ng-repeat="retailer in retailers"
+                                            data-ng-value="retailer.retailer_id"
                                             data-ng-bind="retailer.retailer_fullName">
                                         </option>
                                     </select>
@@ -219,7 +228,7 @@
                                         </td>
                                     </tr>
                                     <tr class="record-item " data-ng-repeat="p in products"
-                                        id="invitem-<%p.product_id%>">
+                                        id="invitem-<%p.prodsize_id%>">
                                         <input type="hidden" class="record-id" ng-value="p.prodsize_id">
                                         <td><a href="#del" class="inv-item-del text-danger"
                                                 data-ng-click="delProduct($index)"><i class="bi bi-x-circle"></i></a></td>
@@ -416,7 +425,7 @@
                                                 // invRecord(item);
                                                 $("#items-selector").hide();
 
-                                                if ($(`#invitem-${item.product_id}`).length) {
+                                                if ($(`#invitem-${item.prodsize_id}`).length) {
                                                     toastr.info(
                                                         'This item has already been added, modify the quantity on the added item'
                                                     );
@@ -456,7 +465,7 @@
                             });
 
                             function invRecord(item) {
-                                if ($(`#invitem-${item.product_id}`).length) {
+                                if ($(`#invitem-${item.prodsize_id}`).length) {
                                     toastr.info('This item has already been added, modify the quantity on the added item');
                                     return;
                                 }
@@ -560,43 +569,6 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="modal fade" id="edit_disc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Product Name</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-ng-repeat="details in orderDetails">
-                                    <th scope="row"></th>
-                                    <td data-ng-bind="details.product_name"></td>
-                                    <td data-ng-bind="details.orderItem_qty"></td>
-                                    <td data-ng-bind="details.orderItem_subtotal"></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="3">
-                                        Total amount
-                                    </th>
-                                    <th data-ng-bind="orDe.order_subtotal"></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 @section('js')
@@ -673,7 +645,7 @@
                     showCancelButton: true,
                 }).then((result) => {
                     if (!result.isConfirmed) return;
-                    $.post('/orders/change_status', {
+                    $.post('/ws_orders/change_status', {
                         id: $scope.list[indx].order_id,
                         status: status,
                         _token: "{{ csrf_token() }}",
@@ -695,18 +667,18 @@
                 });
             }
 
-            $scope.viewDetails = (order) => {
-                $.get("/orders/view/" + order.order_id, function(data) {
-                    $('.perm').show();
-                    scope.$apply(() => {
+            // $scope.viewDetails = (order) => {
+            //     $.get("/orders/view/" + order.order_id, function(data) {
+            //         $('.perm').show();
+            //         scope.$apply(() => {
 
-                        scope.orderDetails = data.items;
-                        scope.orDe = data.order;
-                        console.log(data)
-                        $('#edit_disc').modal('show');
-                    });
-                }, 'json');
-            }
+            //             scope.orderDetails = data.items;
+            //             scope.orDe = data.order;
+            //             console.log(data)
+            //             $('#edit_disc').modal('show');
+            //         });
+            //     }, 'json');
+            // }
 
             $scope.delProduct = (index) => $scope.products.splice(index, 1);
 

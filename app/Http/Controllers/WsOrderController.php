@@ -65,8 +65,8 @@ class WsOrderController extends Controller
                     'ordprod_size'          => $p->prodsize_id,
                     'ordprod_price'         => $p->prodsize_wsp,
                     'ordprod_request_qty'   => $amount[$indx],
-                    'ordprod_subtotal'    => $subtotal,
-                    'ordprod_discount'      => $p->product_discount,
+                    'ordprod_subtotal'      => $subtotal,
+                    'ordprod_discount'      => $p->prodcolor_discount,
                     'ordprod_served_qty'    => $qty[$indx]
                 ];
                 $ordSubtotal    += $subtotal;
@@ -81,7 +81,7 @@ class WsOrderController extends Controller
             'order_retailer'        => $request->retailer_id,
             'order_shipping'        => $request->cost,
             'order_subtotal'        => $ordSubtotal,
-            'order_discount'        => intval($request->orderdisc),
+            'order_discount'        => $request->orderdisc ?? 0,
             'order_total'           => $ordTotal,
             'order_currency'        => $request->currencies,
             'order_type'            => $request->order_type,
@@ -140,5 +140,18 @@ class WsOrderController extends Controller
         if($result['status']) $result['data'] = Ws_order::fetch($result['id']);
 
         echo json_encode($result);
+    }
+
+
+    public function updateStatus(Request $request)
+    {
+        $param = [
+            'order_status' => $request->status,
+        ];
+        if($request->status == 2) $param['order_placed'] = Carbon::now();
+        $result =  Ws_order::submit($request->id, $param);
+        echo json_encode([
+            'status'  => boolval($result),
+        ]);
     }
 }

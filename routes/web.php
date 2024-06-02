@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::post('load', 'WsOrderController@load');
         Route::post('get_product', 'WsOrderController@getProduct');
         Route::match(['post', 'put'], 'submit', 'WsOrderController@submit');
+        Route::post('change_status', 'WsOrderController@updateStatus');
     });
 });
 
