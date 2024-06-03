@@ -640,7 +640,7 @@
 
                     <div ng-if="medails.length" class="row">
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2">
-                            <div class="mb-3 text-center">
+                            <div class="mb-3 text-center" id="sortable">
                                 <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
                                     class="card-img-top">
                                 <div class="card-body">
@@ -727,7 +727,7 @@
                                         if (scope.updateMedails === false) {
                                             scope.medails.unshift(response
                                                 .data);
-                                            scope.load();
+                                            scope.loadProductMedia();
                                         } else {
                                             scope.siezs[scope
                                                 .updateMedails] = response.data;
@@ -829,6 +829,10 @@
             e.preventDefault();
             scope.$apply(() => scope.q = $(this).find('input').val());
             scope.load(true);
+        });
+        $(function() {
+            $("#sortable").sortable();
+            $("#sortable").disableSelection();
         });
     </script>
 @endsection

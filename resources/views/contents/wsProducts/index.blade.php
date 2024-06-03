@@ -35,8 +35,8 @@
                         </div>
 
                         <div ng-if="list.length" class="row">
-                            <div ng-repeat="p in list" class="col-6 col-sm-4 col-md-3 col-xl-2">
-                                <div class="mb-3 text-center">
+                            <div ng-repeat="p in list" class="col-6 col-sm-4 col-md-3 col-xl-2" id="swapDemo">
+                                <div class="mb-3 text-center" id="items">
                                     <a href="/ws_products/view/<% p.product_ref %>" class="card">
                                         <img src="/assets/img/default_product_image.png" alt=""
                                             class="card-img-top">
@@ -222,5 +222,8 @@
             scope.$apply(() => scope.q = $(this).find('input').val());
             scope.load(true);
         });
+
+        var el = document.getElementById('items');
+        var sortable = Sortable.create(el);
     </script>
 @endsection

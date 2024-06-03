@@ -145,7 +145,6 @@
                 <td> Retailer Phone</td>
                 <td>{{ $retailer->retailer_phone }}</td>
             </tr>
-
             <tr>
                 <td>Order status</td>
                 <td>
@@ -174,6 +173,17 @@
 
                 <td> Retailer Code </td>
                 <td>{{ $retailer->retailer_code }}</td>
+            </tr>
+
+            <tr>
+                <td>Bill Address</td>
+                <td> {{ $order->order_bill_province }},{{ $order->order_bill_zip }} ,{{ $order->order_bill_city }},
+                    {{ $order->order_bill_line1 }}, {{ $order->order_bill_line2 }}</td>
+            </tr>
+            <tr>
+                <td>Sipping Address</td>
+                <td> {{ $order->order_ship_province }},{{ $order->order_ship_zip }} ,{{ $order->order_ship_city }},
+                    {{ $order->order_ship_line1 }}, {{ $order->order_ship_line2 }}</td>
             </tr>
         </tbody>
     </table>

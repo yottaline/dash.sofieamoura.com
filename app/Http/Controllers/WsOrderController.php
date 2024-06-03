@@ -161,6 +161,7 @@ class WsOrderController extends Controller
     {
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
+        // return $order;
         $orderData = Ws_orders_product::fetch(0,[['ordprod_order', $id]]);
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
