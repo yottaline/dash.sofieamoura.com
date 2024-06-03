@@ -127,8 +127,8 @@
                                                 class="btn btn-outline-success btn-circle bi bi-clipboard2-check"></button>
                                         </td>
                                         <td class="col-fit">
-                                            <button class="btn btn-outline-dark btn-circle bi bi-eye"
-                                                data-ng-click="viewDetails(order)"></button>
+                                            <a href="ws_orders/view/<%order.order_id%>" target="_blank"
+                                                class="btn btn-outline-dark btn-circle bi bi-eye"></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -196,7 +196,7 @@
                                         <th class="text-center" width="200">Product name</th>
                                         <th class="text-center" width="300">Size and Color names</th>
                                         <th class="text-center" width="90">Amount</th>
-                                        <th class="text-center" width="200">MAX Order QTY</th>
+                                        <th class="text-center" width="200">MAX QTY</th>
                                         <th class="text-center" width="90">Price</th>
                                         <th class="text-center" width="120">Totle</th>
                                     </tr>
@@ -246,7 +246,7 @@
                                                 class="record-amount font-monospace text-center w-100"
                                                 ng-change="clTotal()" ng-model="p.prodcolor_mincolorqty">
                                         </td>
-                                        <td hidden><input class="record-qty" ng-change="clTotal()"
+                                        <td hidden><input class="record-qty" disabled ng-change="clTotal()"
                                                 ng-model="p.prodcolor_mincolorqty">
                                         </td>
                                         <td><input type="number" disabled

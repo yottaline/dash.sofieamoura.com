@@ -8,6 +8,7 @@ use App\Models\Retailer;
 use App\Models\Retailer_address;
 use App\Models\Season;
 use App\Models\Ws_order;
+use App\Models\Ws_orders_product;
 use App\Models\Ws_product;
 use App\Models\Ws_products_size;
 use Illuminate\Http\Request;
@@ -91,7 +92,7 @@ class WsOrderController extends Controller
             'order_proformatime'    => Carbon::now(),
             'order_invoice'         => uniqidReal(30),
             'order_invoicetime'     => Carbon::now(),
-            'order_status'          => 1
+            'order_status'          => 0
         ];
         if($request->checkbox == 'false')
         {
@@ -153,5 +154,15 @@ class WsOrderController extends Controller
         echo json_encode([
             'status'  => boolval($result),
         ]);
+    }
+
+
+    public function view($id)
+    {
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $orderData = Ws_orders_product::fetch(0,[['ordprod_order', $id]]);
+
+        return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 }

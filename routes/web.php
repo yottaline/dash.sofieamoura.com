@@ -89,6 +89,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get_product', 'WsOrderController@getProduct');
         Route::match(['post', 'put'], 'submit', 'WsOrderController@submit');
         Route::post('change_status', 'WsOrderController@updateStatus');
+        Route::get('view/{id}', 'WsOrderController@view');
     });
 });
 
