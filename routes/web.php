@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('product_medias')->group(function(){
         Route::post('load', 'ProductsMediaController@load');
         Route::match(['post', 'put'], 'submit', 'ProductsMediaController@submit');
+        Route::post('order', 'ProductsMediaController@updateOrder');
     });
 
     // ws-orders

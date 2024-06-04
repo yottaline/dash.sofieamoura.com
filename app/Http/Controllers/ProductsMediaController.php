@@ -46,4 +46,12 @@ class ProductsMediaController extends Controller
 
 
     }
+    public function updateOrder(Request $request)
+    {
+        $orders = $request->orders;
+        foreach ($orders as $order => $id) {
+           $result =  Products_media::submit(['media_order' => $order], $id);
+        }
+        echo json_encode(['status' => boolval($result)]);
+    }
 }

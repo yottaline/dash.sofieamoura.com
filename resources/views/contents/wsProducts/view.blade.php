@@ -1,5 +1,7 @@
 @extends('index')
-@section('title', 'Product #{{ $data->product_code }}')
+@section('title')
+    Product #{{ $data->product_code }}
+@endsection
 @section('search')
     <form id="nvSearch" role="search">
         <input type="search" name="q" class="form-control my-3 my-md-0 rounded-pill" placeholder="Search...">
@@ -638,9 +640,9 @@
                         </div>
                     </div>
 
-                    <div ng-if="medails.length"class="row">
-                        <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2">
-                            <div class="mb-3 text-center" id="sortable">
+                    <div ng-if="medails.length"class="row" id="sortable">
+                        <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2" data-id="<%m.media_id%>">
+                            <div class="mb-3 text-center">
                                 <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
                                     class="card-img-top">
                                 <div class="card-body">
@@ -833,9 +835,31 @@
             scope.load(true);
         });
 
-        $( function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
-  } );
+        $(function() {
+            setTimeout(() => {
+                // $("#sortable").sortable();
+                $("#sortable").disableSelection();
+                $('#sortable').sortable({
+                    connectWith: '#sortable',
+                    update: function(event, ui) {
+                        var orders = [];
+                        $('#sortable').children().each(function(index, element) {
+                            orders.push($(element).data('id'));
+                        });
+                        $.post('/product_medias/order', {
+                            orders: orders,
+                            _token: '{{ csrf_token() }}'
+                        }, function(data) {
+                            var response = JSON.parse(data);
+                            if (response.status) {
+                                toastr.success('Media Ordered successfully');
+
+                            } else toastr.error(response.message);
+                        });
+                    }
+                });
+            }, 5000);
+
+        });
     </script>
 @endsection

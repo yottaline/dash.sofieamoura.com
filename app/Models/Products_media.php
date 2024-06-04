@@ -21,7 +21,7 @@ class Products_media extends Model
 
     public static function fetch($id = 0, $params = null)
     {
-        $product_medias = self::join('ws_products', 'media_product', 'product_id');
+        $product_medias = self::join('ws_products', 'media_product', 'product_id')->orderBy('media_order');
         if($params) $product_medias->where($params);
         if($id) $product_medias->where('media_id', $id);
 
