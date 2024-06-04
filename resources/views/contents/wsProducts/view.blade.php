@@ -7,6 +7,31 @@
         <input type="search" name="q" class="form-control my-3 my-md-0 rounded-pill" placeholder="Search...">
     </form>
 @endsection
+<style>
+    .image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 4%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .image-container:hover {
+        transform: scale(1);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .beautiful-image {
+        width: 100%;
+        height: 50%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .image-container:hover .beautiful-image {
+        transform: scale(1.1);
+    }
+</style>
 @section('content')
     <div class="container-fluid" ng-app="ngApp" ng-controller="ngCtrl">
         <div class="row">
@@ -650,12 +675,12 @@
 
                     <div ng-if="medails.length"class="row" id="sortable">
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2" data-id="<%m.media_id%>">
-                            <div class="mb-3 text-center">
+                            <div class="mb-3 text-center image-container">
                                 <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
-                                    class="card-img-top">
+                                    class="card-img-top beautiful-image">
                                 <div class="card-body">
                                     <h6 class="card-title" ng-bind="m.media_color"></h6>
-                                    <h6 class="small font-monospace" ng-bind="m.product_code"></h6>
+                                    {{-- <h6 class="small font-monospace" ng-bind="m.product_code"></h6> --}}
                                 </div>
                             </div>
                         </div>
