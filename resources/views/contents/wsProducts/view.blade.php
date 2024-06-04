@@ -22,83 +22,91 @@
                             <input type="hidden" name="_method" value="put">
                             <input type="hidden" name="id" id="product_id" ng-value="data.product_id">
                             <div class="row">
-
                                 <div class="col-6">
-                                    <div class="mb-3">
-                                        <label for="productName">
-                                            Product Name <b class="text-danger">&ast;</b></label>
-                                        <input type="text" class="form-control" name="name"
-                                            ng-value="data.product_name" id="productName" />
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="productName">
+                                                    Product Name <b class="text-danger">&ast;</b></label>
+                                                <input type="text" class="form-control" name="name"
+                                                    ng-value="data.product_name" id="productName" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="productCode">
+                                                    Product Code <b class="text-danger">&ast;</b></label>
+                                                <input type="text" class="form-control" name="code"
+                                                    ng-value="data.product_code" id="productCode" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="season">
+                                                    Season <b class="text-danger">&ast;</b></label>
+                                                <select name="season" id="season" class="form-select" required>
+                                                    <option ng-value="data.season_id" ng-bind="data.season_name"></option>
+                                                    <option ng-repeat="season in seasons" ng-value="season.season_id"
+                                                        ng-bind="season.season_name">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="productDelivery">
+                                                    Product Delivery Details </label>
+                                                <input type="text" class="form-control" name="delivery"
+                                                    ng-value="data.product_delivery" id="productDelivery" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="category">
+                                                    Category <b class="text-danger">&ast;</b></label>
+                                                <select name="category" id="category" class="form-select" required>
+                                                    <option ng-value="data.category_id" ng-bind="data.category_name">
+                                                    </option>
+                                                    <option ng-repeat="category in categories"
+                                                        ng-value="category.category_id" ng-bind="category.category_name">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="orderType">
+                                                    Product Order Type <b class="text-danger">&ast;</b></label>
+                                                <select name="order_type" id="orderType" class="form-select" required>
+                                                    <option value="default">-- SELECT ORDER TYPE --</option>
+                                                    <option value="1">IN-STOCK</option>
+                                                    <option value="2">PRE-ORDER</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div class="col-3">
-                                    <div class="mb-3">
-                                        <label for="productCode">
-                                            Product Code <b class="text-danger">&ast;</b></label>
-                                        <input type="text" class="form-control" name="code"
-                                            ng-value="data.product_code" id="productCode" />
-                                    </div>
-                                </div>
-
-                                <div class="col-3">
-                                    <div class="mb-3">
-                                        <label for="season">
-                                            Season <b class="text-danger">&ast;</b></label>
-                                        <select name="season" id="season" class="form-select" required>
-                                            <option ng-value="data.season_id" ng-bind="data.season_name"></option>
-                                            <option ng-repeat="season in seasons" ng-value="season.season_id"
-                                                ng-bind="season.season_name">
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div class="col-6">
-                                    <div class="mb-3">
-                                        <label for="productDelivery">
-                                            Product Delivery Details </label>
-                                        <input type="text" class="form-control" name="delivery"
-                                            ng-value="data.product_delivery" id="productDelivery" />
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <label for="desc">
+                                                Product Description <b class="text-danger">&ast;</b></label>
+                                            <textarea class="form-control" name="description" id="desc" cols="30" rows="7"><%data.product_desc%></textarea>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-3">
-                                    <div class="mb-3">
-                                        <label for="category">
-                                            Category <b class="text-danger">&ast;</b></label>
-                                        <select name="category" id="category" class="form-select" required>
-                                            <option ng-value="data.category_id" ng-bind="data.category_name"></option>
-                                            <option ng-repeat="category in categories" ng-value="category.category_id"
-                                                ng-bind="category.category_name">
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
 
-                                <div class="col-3">
-                                    <div class="mb-3">
-                                        <label for="orderType">
-                                            Product Order Type <b class="text-danger">&ast;</b></label>
-                                        <select name="order_type" id="orderType" class="form-select" required>
-                                            <option value="default">-- SELECT ORDER TYPE --</option>
-                                            <option value="1">IN-STOCK</option>
-                                            <option value="2">PRE-ORDER</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="mb-3">
-                                        <label for="desc">
-                                            Product Description <b class="text-danger">&ast;</b></label>
-                                        <textarea class="form-control" name="description" id="desc" cols="30" rows="5"><%data.product_desc%></textarea>
-                                    </div>
-                                </div>
 
                                 <div class="d-flex">
-                                    <button type="submit"
-                                        class="btn btn-outline-primary text-justify-start">Update</button>
+                                    <div class="me-auto">
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-primary text-end me-auto">Update</button>
                                 </div>
                         </form>
                         <script>
