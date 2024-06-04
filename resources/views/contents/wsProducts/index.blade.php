@@ -222,8 +222,5 @@
             scope.$apply(() => scope.q = $(this).find('input').val());
             scope.load(true);
         });
-
-        var el = document.getElementById('items');
-        var sortable = Sortable.create(el);
     </script>
 @endsection

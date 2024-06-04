@@ -638,7 +638,7 @@
                         </div>
                     </div>
 
-                    <div ng-if="medails.length" class="row">
+                    <div ng-if="medails.length"class="row">
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2">
                             <div class="mb-3 text-center" id="sortable">
                                 <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
@@ -650,6 +650,8 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div ng-if="!medails.length" class="py-5 text-center text-secondary">
                         <i class="bi bi-exclamation-circle display-3"></i>
                         <h5>No Data</h5>
@@ -830,9 +832,10 @@
             scope.$apply(() => scope.q = $(this).find('input').val());
             scope.load(true);
         });
-        $(function() {
-            $("#sortable").sortable();
-            $("#sortable").disableSelection();
-        });
+
+        $( function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+  } );
     </script>
 @endsection

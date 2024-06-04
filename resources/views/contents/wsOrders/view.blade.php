@@ -228,11 +228,14 @@
                     <td> <i class="bi bi-exclamation-circle display-3"></i></td>
                 </tr>
             @endforelse
-
+            <tr>
+                <td colspan="6">Shipping fees :</td>
+                <td>{{ $order->order_shipping }}</td>
+            </tr>
 
             <tr>
                 <td colspan="6" class="total-heading">Total :</td>
-                <td class="total-heading">{{ $order->order_subtotal }}</td>
+                <td class="total-heading">{{ $order->order_subtotal + $order->order_shipping }}</td>
             </tr>
         </tbody>
     </table>

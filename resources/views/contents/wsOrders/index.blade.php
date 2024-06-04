@@ -127,7 +127,7 @@
                                                 class="btn btn-outline-success btn-circle bi bi-clipboard2-check"></button>
                                         </td>
                                         <td class="col-fit">
-                                            <a href="ws_orders/view/<%order.order_id%>" target="_blank"
+                                            <a href="/ws_orders/view/<%order.order_id%>" target="_blank"
                                                 class="btn btn-outline-dark btn-circle bi bi-eye"></a>
                                         </td>
                                     </tr>
