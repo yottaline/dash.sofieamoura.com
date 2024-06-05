@@ -15,6 +15,7 @@ class Ws_orders_product extends Model
         'ordprod_size',
         'ordprod_request_qty',
         'ordprod_served_qty',
+        'ordprod_total',
         'ordprod_price',
         'ordprod_subtotal',
         'ordprod_discount',

@@ -67,6 +67,7 @@ class WsOrderController extends Controller
                     'ordprod_price'         => $p->prodsize_wsp,
                     'ordprod_request_qty'   => $amount[$indx],
                     'ordprod_subtotal'      => $subtotal,
+                    'ordprod_total'         => $total,
                     'ordprod_discount'      => $p->prodcolor_discount,
                     'ordprod_served_qty'    => $qty[$indx]
                 ];

@@ -201,8 +201,10 @@
                 <th class="text-center">Product Color</th>
                 <th class="text-center">Product Size</th>
                 <th class="text-center">Product Price</th>
+                <th class="text-center">Product Discount</th>
                 <th class="text-center">QTY</th>
-                <th>Total</th>
+                <th>Before discount</th>
+                <th>After discount</th>
             </tr>
         </thead>
         <tbody>
@@ -216,8 +218,10 @@
                     <td width="10%">{{ $o->prodcolor_name }}</td>
                     <td width="10%">{{ $o->size_name }}</td>
                     <td width="10%">{{ $o->prodsize_wsp }}</td>
+                    <td width="10%">{{ $o->prodcolor_discount }}</td>
                     <td width="10%">{{ $o->ordprod_request_qty }}</td>
                     <td width="15%" class="fw-bold">{{ $o->ordprod_subtotal }}</td>
+                    <td width="15%" class="fw-bold">{{ $o->ordprod_total }}</td>
                 </tr>
             @empty
                 <tr>
@@ -229,13 +233,23 @@
                 </tr>
             @endforelse
             <tr>
-                <td colspan="6">Shipping fees :</td>
+                <td colspan="8">Order Discount :</td>
+                <td>{{ $order->order_discount }}</td>
+            </tr>
+            <tr>
+                <td colspan="8">Shipping fees :</td>
                 <td>{{ $order->order_shipping }}</td>
             </tr>
 
             <tr>
-                <td colspan="6" class="total-heading">Total :</td>
-                <td class="total-heading">{{ $order->order_subtotal + $order->order_shipping }}</td>
+                <td colspan="8" class="total-heading">Total :</td>
+                <td class="total-heading">
+                    @if ($order->order_total !== '0.00')
+                        {{ $order->order_total + $order->order_shipping }}
+                    @else
+                        {{ $order->order_subtotal + $order->order_shipping }}
+                    @endif
+                </td>
             </tr>
         </tbody>
     </table>

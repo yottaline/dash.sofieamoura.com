@@ -128,7 +128,7 @@
 
 
 
-                                <div class="d-flex">
+                                <div class="d-flex mt-2">
                                     <div class="me-auto">
                                     </div>
                                     <button type="submit" class="btn btn-outline-primary text-end me-auto">Update</button>
