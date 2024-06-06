@@ -25,7 +25,7 @@ class ProductsMediaController extends Controller
 
         $param = [
             'media_product'  => $request->product_id,
-            'media_color'    => $request->color ?? '',
+            'media_color'    => $request->color,
             'media_order'    => $request->order,
         ];
 

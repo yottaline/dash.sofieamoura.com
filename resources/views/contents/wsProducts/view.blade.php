@@ -746,11 +746,21 @@
                             <input type="hidden" name="product_id" ng-value="data.product_id">
                             <div class="row">
                                 <div class="col-12 col-sm-6">
+
                                     <div class="mb-3">
+                                        <label for="category">
+                                            Color <b class="text-danger">&ast;</b></label>
+                                        <select name="color" id="color" class="form-select" required>
+                                            <option ng-repeat="color in siezs" ng-value="color.prodcolor_ref">
+                                                <%color.prodcolor_name%> / <%color.size_name%>
+                                            </option>
+                                        </select>
+                                    </div>
+                                    {{-- <div class="mb-3">
                                         <label for="color">Color</label>
                                         <input type="text" class="form-control font-monospace" name="color"
                                             id="color">
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <div class="col-12 col-sm-6">

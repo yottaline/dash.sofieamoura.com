@@ -22,6 +22,8 @@ class CategoryController extends Controller
         $param  = $request->q ? ['q' => $request->q] : [];
         $limit  = $request->limit;
         $lastId = $request->last_id;
+
+        if($request->status) $param[] = ['category_visible', $request->status - 1];
         echo json_encode(Category::fetch(0, $param, $limit, $lastId));
     }
 

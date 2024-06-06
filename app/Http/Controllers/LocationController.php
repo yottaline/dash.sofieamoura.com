@@ -23,6 +23,7 @@ class LocationController extends Controller
         $param  = $request->q ? ['q' => $request->q] : [];
         $limit  = $request->limit;
         $lastId = $request->last_id;
+        if($request->code) $param[] = ['location_code', $request->code];
         echo json_encode(Location::fetch(0, $param, $limit, $lastId));
     }
 

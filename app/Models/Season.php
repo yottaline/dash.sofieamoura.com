@@ -32,8 +32,10 @@ class Season extends Model
         if (isset($params['q'])) {
             $seasons->where(function (Builder $query) use ($params) {
                 $query->where('season_code', 'like', '%' . $params['q'] . '%')
-                    ->orWhere('season_code', $params['q'])
-                    ->orWhere('season_adv_payment', $params['q']);
+                ->orWhere('season_code', $params['q'])
+                ->orWhere('season_start', $params['q'])
+                ->orWhere('season_end', $params['q'])
+                ->orWhere('season_adv_payment', $params['q']);
             });
 
             unset($params['q']);
