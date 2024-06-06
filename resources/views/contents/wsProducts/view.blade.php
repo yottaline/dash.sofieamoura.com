@@ -675,14 +675,56 @@
 
                     <div ng-if="medails.length"class="row" id="sortable">
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2" data-id="<%m.media_id%>">
-                            <div class="mb-3 text-center image-container">
-                                <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
-                                    class="card-img-top beautiful-image">
-                                <div class="card-body">
-                                    <h6 class="card-title" ng-bind="m.media_color"></h6>
-                                    {{-- <h6 class="small font-monospace" ng-bind="m.product_code"></h6> --}}
+                            <form action="/product_medias/image_default" method="post">
+                                @csrf
+                                <div class="mb-3 text-center image-container">
+                                    <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
+                                        class="card-img-top beautiful-image">
+                                    <div class="card-body" style="display:ruby-text">
+                                        <input type="hidden" name="c_id" ng-value="m.prodcolor_id">
+                                        <input type="hidden" name="m_id" ng-value="m.media_id">
+                                        <input type="hidden" name="s" ng-value="m.prodcolor_media">
+                                        <h6 class="card-title" ng-bind="m.prodcolor_name"></h6>
+                                        <button class="btn" style="padding-top:1px"
+                                            ng-if="m.prodcolor_media == null"><i class="bi bi-bookmark"></i></button>
+                                        <button class="btn" style="padding-top:1px" ng-if="+m.prodcolor_media"><i
+                                                class="bi bi-bookmark-star-fill"></i></button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
+                            <script>
+                                $('#sortable form').on('submit', function(e) {
+                                    e.preventDefault();
+                                    var form = $(this),
+                                        formData = new FormData(this),
+                                        action = form.attr('action'),
+                                        method = form.attr('method'),
+                                        controls = form.find('button, input'),
+                                        spinner = $('#locationModal .loading-spinner');
+                                    spinner.show();
+                                    controls.prop('disabled', true);
+                                    $.ajax({
+                                        url: action,
+                                        type: method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                    }).done(function(data, textStatus, jqXHR) {
+                                        var response = JSON.parse(data);
+                                        if (response.status) {
+                                            toastr.success('Actived successfully');
+                                            scope.loadProductMedia(true)
+                                        } else toastr.error("Error");
+                                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                                        toastr.error("error");
+                                        $('#useForm').modal('hide');
+                                    }).always(function() {
+                                        spinner.hide();
+                                        controls.prop('disabled', false);
+                                    });
+
+                                })
+                            </script>
                         </div>
                     </div>
 

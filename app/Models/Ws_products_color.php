@@ -34,10 +34,10 @@ class Ws_products_color extends Model
         'prodcolor_created'
     ];
 
-    // public static function fetch($id = 0, $params = null)
-    // {
-
-    // }
+    public static function submit($id = 0, $params = null)
+    {
+        return self::where('prodcolor_id', $id)->update($params) ? $id : false;
+    }
 
     public static function createUpdateColorSize($id, $colorParam, $sizeParam)
     {
