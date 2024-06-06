@@ -35,6 +35,8 @@ class WsOrderController extends Controller
         $param = $request->q ? ['q' => $request->q] : [];
         $limit = $request->limit;
         $lastId = $request->last_id;
+        if($request->date)   $param[] = ['order_created', 'like', '%' . $request->date . '%'];
+        if($request->r_name) $param[] = ['retailer_fullName', 'like', '%' . $request->r_name . '%'];
 
         echo json_encode(Ws_order::fetch(0, $param, $limit, $lastId));
     }

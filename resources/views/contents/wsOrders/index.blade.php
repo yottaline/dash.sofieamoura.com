@@ -58,8 +58,7 @@
 
                         <div class="mb-3">
                             <label for="roleFilter">Order Date</label>
-                            <input type="text" id="filterOrderDate" class="form-control text-center text-monospace"
-                                id="filter-date">
+                            <input type="text" id="filterOrderDate" class="form-control text-center text-monospace">
                         </div>
                     </div>
                 </div>
@@ -581,10 +580,6 @@
 
         app.controller('myCtrl', function($scope) {
             $('.loading-spinner').hide();
-            $scope.statusObject = {
-                name: ['غير مفعل', 'مفعل'],
-                color: ['danger', 'success']
-            };
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
@@ -612,8 +607,8 @@
 
                 $('.loading-spinner').show();
                 var request = {
-                    date: $('#filter-date').val(),
-                    c_name: $('#filter-name').val(),
+                    date: $('#filterOrderDate').val(),
+                    r_name: $('#filter-name').val(),
                     q: $scope.q,
                     last_id: $scope.last_id,
                     limit: limit,

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class Ws_order extends Model
 {
@@ -53,6 +54,16 @@ class Ws_order extends Model
                         ->join('currencies', 'order_currency', 'currency_id')->join('locations', 'order_bill_country', 'location_id');
 
         if($lastId) $ws_orders->where('order_id', '<', $lastId);
+
+        if (isset($params['q'])) {
+            $ws_orders->where(function (Builder $query) use ($params) {
+                $query->where('order_code', 'like', '%' . $params['q'] . '%')
+                ->orWhere('order_discount', 'like', '%' . $params['q'] . '%')
+                ->orWhere('order_created', 'like', '%' . $params['q'] . '%');
+            });
+
+            unset($params['q']);
+        }
 
         if($params) $ws_orders->where($params);
 

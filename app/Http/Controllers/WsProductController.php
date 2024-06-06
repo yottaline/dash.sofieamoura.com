@@ -30,6 +30,10 @@ class WsProductController extends Controller
         $limit  = $request->limit;
         $offset = $request->offset;
 
+        if($request->season) $params[] = ['product_season', $request->season];
+        if($request->p_name) $params[] = ['product_name', $request->p_name];
+        if($request->color) $params[]  = ['prodcolor_name', $request->color];
+
         echo json_encode(Ws_product::fetch(0, $params, $limit, $offset));
     }
 

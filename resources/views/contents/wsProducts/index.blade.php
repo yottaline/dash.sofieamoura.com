@@ -15,7 +15,20 @@
                     <div class="card-body">
                         <h5 class="fw-bold">Filters</h5>
                         <div class="mb-3">
-
+                            <label for="season-filter">Seasons Name</label>
+                            <select class="form-select" id="season-filter">
+                                <option value="0">-- SELECT NAME --</option>
+                                <option ng-repeat="season in seasons" ng-value="season.season_id"
+                                    ng-bind="season.season_name"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="season-filter">Product Name</label>
+                            <input type="text" class="form-control" id="product-name-filter">
+                        </div>
+                        <div class="mb-3">
+                            <label for="season-filter">Color Name</label>
+                            <input type="text" class="form-control" id="color-name-filter">
                         </div>
                     </div>
                 </div>
@@ -85,7 +98,8 @@
                                     <div class="mb-3">
                                         <label for="season">Season<b class="text-danger">&ast;</b></label>
                                         <select name="season" id="season" class="form-select" required>
-                                            <option ng-repeat="s in seasons" ng-bind="s.season_name" ng-value="s.season_id">
+                                            <option ng-repeat="s in seasons" ng-bind="s.season_name"
+                                                ng-value="s.season_id">
                                             </option>
                                         </select>
                                     </div>
@@ -199,6 +213,9 @@
                     q: $scope.q,
                     offset: $scope.offset,
                     limit: limit,
+                    season: $('#season-filter').val(),
+                    p_name: $('#product-name-filter').val(),
+                    color: $('#color-name-filter').val(),
                     _token: '{{ csrf_token() }}'
                 };
 
