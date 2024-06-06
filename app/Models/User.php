@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -47,4 +48,34 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    {
+        $users = self::limit($limit);
+
+        if($lastId) $users->where('id', '<', $lastId);
+
+        if (isset($params['q'])) {
+            $users->where(function (Builder $query) use ($params) {
+                $query->where('user_code', 'like', '%' . $params['q'] . '%')
+                ->orWhere('user_email', 'like', '%' . $params['q'] . '%')
+                ->orWhere('user_name', $params['q']);
+            });
+
+            unset($params['q']);
+        }
+
+        if($params) $users->where($params);
+
+        if($id) $params->where('id', $id);
+
+        return $id ? $users->first() : $users->get();
+    }
+
+    public static function submit($param, $id)
+    {
+        if($id) return self::where('id', $id)->update($param) ? $id : false;
+        $status = self::create($param);
+        return $status ? $status->id : false;
+    }
 }

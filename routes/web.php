@@ -93,6 +93,12 @@ Route::middleware('auth')->group(function () {
         Route::post('change_status', 'WsOrderController@updateStatus');
         Route::get('view/{id}', 'WsOrderController@view');
     });
+
+    Route::prefix('users')->group(function(){
+        Route::get('/', 'UserController@index');
+        Route::post('load', 'UserController@load');
+        Route::match(['post', 'put'], 'submit', 'UserController@submit');
+    });
 });
 
 

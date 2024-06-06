@@ -70,14 +70,20 @@
 
              <li class="list-group-item nav-support">
                  <a class="link-dark d-block" href="/ws_products/">
-                     <i class="bi bi-box-seam text-secondary me-2"></i><b>WS Products</b>
+                     <i class="bi bi-box-seam text-secondary me-2"></i><b>Whole Sale Products</b>
                  </a>
              </li>
 
              <li class="list-group-item nav-support">
                  <a class="link-dark d-block" href="/ws_orders/">
-                     <i class="bi bi-clipboard2-check-fill text-secondary me-2"></i><b>WS
+                     <i class="bi bi-clipboard2-check-fill text-secondary me-2"></i><b>Whole Sale
                          Orders</b>
+                 </a>
+             </li>
+
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/users/">
+                     <i class="bi bi-people-fill text-secondary me-2"></i><b>Users</b>
                  </a>
              </li>
 
