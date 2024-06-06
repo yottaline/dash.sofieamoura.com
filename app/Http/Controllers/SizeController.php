@@ -22,6 +22,7 @@ class SizeController extends Controller
         $params = $request->q ? ['q' => $request->q] : [];
         $limit  = $request->limit;
         $lastId = $request->last_id;
+        if($request->status) $params[] = ['size_visible', $request->status - 1];
 
         echo json_encode(Size::fetch(0, $params, $limit, $lastId));
     }
