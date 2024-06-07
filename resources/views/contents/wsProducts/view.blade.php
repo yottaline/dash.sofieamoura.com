@@ -677,6 +677,7 @@
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2" data-id="<%m.media_id%>">
                             <form action="/product_medias/image_default" method="post">
                                 @csrf
+                                {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
                                 <div class="mb-3 text-center image-container">
                                     <img src="{{ asset('media/product/') }}/<%m.media_product%>/<%m.media_file%>"
                                         class="card-img-top beautiful-image">
@@ -686,8 +687,10 @@
                                         <input type="hidden" name="s" ng-value="m.prodcolor_media">
                                         <h6 class="card-title" ng-bind="m.prodcolor_name"></h6>
                                         <button class="btn" style="padding-top:1px"
-                                            ng-if="m.prodcolor_media == null"><i class="bi bi-bookmark"></i></button>
-                                        <button class="btn" style="padding-top:1px" ng-if="+m.prodcolor_media"><i
+                                            ng-if="m.prodcolor_media == null || m.prodcolor_media !== m.media_id"><i
+                                                class="bi bi-bookmark"></i></button>
+                                        <button class="btn" style="padding-top:1px"
+                                            ng-if="+m.prodcolor_media == m.media_id"><i
                                                 class="bi bi-bookmark-star-fill"></i></button>
                                     </div>
                                 </div>
@@ -699,10 +702,7 @@
                                         formData = new FormData(this),
                                         action = form.attr('action'),
                                         method = form.attr('method'),
-                                        controls = form.find('button, input'),
-                                        spinner = $('#locationModal .loading-spinner');
-                                    spinner.show();
-                                    controls.prop('disabled', true);
+                                        controls = form.find('button, input');
                                     $.ajax({
                                         url: action,
                                         type: method,
@@ -714,14 +714,10 @@
                                         if (response.status) {
                                             toastr.success('Actived successfully');
                                             scope.loadProductMedia(true)
-                                        } else toastr.error("Error");
+                                        }
                                     }).fail(function(jqXHR, textStatus, errorThrown) {
-                                        toastr.error("error");
-                                        $('#useForm').modal('hide');
-                                    }).always(function() {
-                                        spinner.hide();
-                                        controls.prop('disabled', false);
-                                    });
+                                        // toastr.error("error");
+                                    }).always(function() {});
 
                                 })
                             </script>
@@ -812,16 +808,7 @@
                                 if (response.status) {
                                     toastr.success('Data processed successfully');
                                     $('#mediaModal').modal('hide');
-                                    scope.$apply(() => {
-                                        if (scope.updateMedails === false) {
-                                            scope.medails.unshift(response
-                                                .data);
-                                            scope.loadProductMedia();
-                                        } else {
-                                            scope.siezs[scope
-                                                .updateMedails] = response.data;
-                                        }
-                                    });
+                                    scope.loadProductMedia(true);
                                 } else toastr.error(response.message);
                             });
                         }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
@@ -904,6 +891,7 @@
                     $scope.$apply(() => {
                         if (ln) {
                             $scope.medails = data;
+                            console.log(data)
                         }
                     });
                 }, 'json');

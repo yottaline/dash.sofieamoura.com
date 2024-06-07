@@ -54,7 +54,7 @@
                                         <img ng-if="p.prodcolor_media == null" src="/assets/img/default_product_image.png"
                                             alt="" class="card-img-top">
                                         <img ng-if="p.prodcolor_media"
-                                            src="{{ asset('media/product/') }}/<%p.media_product%>/<%p.media_file%>"
+                                            src="{{ asset('media/product/') }}/<%p.product_id%>/<%p.media_file%>"
                                             alt="" class="card-img-top">
                                         <div class="card-body">
                                             <h6 class="card-title" ng-bind="p.product_name"></h6>

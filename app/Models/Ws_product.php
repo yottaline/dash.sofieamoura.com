@@ -18,7 +18,6 @@ class Ws_product extends Model
         'product_code',
         'product_name',
         'product_desc',
-        'product_media',
         'product_season',
         'product_type',
         'product_gender',
@@ -35,7 +34,7 @@ class Ws_product extends Model
         $ws_products = self::join('seasons', 'product_season', '=', 'season_id')
             ->join('categories', 'product_category', '=', 'category_id')
             ->leftJoin('ws_products_colors', 'product_id', '=', 'prodcolor_product')
-            ->leftJoin('products_media', 'ws_products_colors.prodcolor_ref', 'media_color')
+            ->leftJoin('products_media', 'ws_products_colors.prodcolor_media', 'products_media.media_id')
             ->orderBy('prodcolor_order', 'ASC')->limit($limit)->offset($offset);
 
 
