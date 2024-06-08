@@ -76,8 +76,7 @@
             formData = new FormData(this),
             action = form.attr('action'),
             method = form.attr('method'),
-            controls = form.find('button, input'),
-            spinner = $('#locationModal .loading-spinner');
+            controls = form.find('button, input');
         spinner.show();
         controls.prop('disabled', true);
         $.ajax({

@@ -60,7 +60,7 @@
             action = form.attr('action'),
             method = form.attr('method'),
             controls = form.find('button, input'),
-            spinner = $('#locationModal .loading-spinner');
+            spinner = $('#currencyForm .loading-spinner');
         spinner.show();
         controls.prop('disabled', true);
         $.ajax({
