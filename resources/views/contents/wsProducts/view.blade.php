@@ -246,7 +246,7 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-center">Size Name</th>
-                                        <th class="text-center">Color Code</th>
+                                        {{-- <th class="text-center">Color Code</th> --}}
                                         <th class="text-center">Color Name</th>
                                         <th class="text-center">Size Cost</th>
                                         <th class="text-center">Wholesale Price</th>
@@ -267,7 +267,7 @@
                                             <span ng-if="si.size_name == null" class="text-warning">Not added
                                                 yet</span>
                                         </td>
-                                        <td class="text-center" ng-bind="si.prodcolor_code"></td>
+                                        {{-- <td class="text-center" ng-bind="si.prodcolor_code"></td> --}}
                                         <td class="text-center" ng-bind="si.prodcolor_name"></td>
                                         <td class="text-center" ng-bind="si.prodsize_cost"></td>
                                         <td class="text-center" ng-bind="si.prodsize_wsp"></td>
@@ -898,7 +898,7 @@
             }
 
             $scope.to = function(wsp, rrp) {
-                if (wsp == 0) return 0;
+                if (wsp == null) return 0;
                 return (wsp * rrp).toFixed(2);
             };
 

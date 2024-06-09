@@ -62,7 +62,7 @@ class WsProductsSizeController extends Controller
                     'prodcolor_discount'    => $request->discount,
                     'prodcolor_freeshipping' => intval($request->freeshipping),
                     'prodcolor_related'      => $request->related ?? 'null',
-                    'prodcolor_code'        => '111',
+                    // 'prodcolor_code'        => '111',
                 ];
                 foreach($sizes as $size)
                 {
@@ -114,7 +114,7 @@ class WsProductsSizeController extends Controller
                     'prodcolor_discount'    => $request->discount,
                     'prodcolor_freeshipping' => intval($request->freeshipping),
                     'prodcolor_related'      => $request->related ?? 'null',
-                    'prodcolor_code'        => $request->code,
+                    // 'prodcolor_code'        => $request->code,
                 ];
                 foreach($sizes as $size)
                 {

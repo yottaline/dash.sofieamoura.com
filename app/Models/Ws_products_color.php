@@ -13,7 +13,7 @@ class Ws_products_color extends Model
 
     protected $fillable = [
         'prodcolor_ref',
-        'prodcolor_code',
+        // 'prodcolor_code',
         'prodcolor_name',
         'prodcolor_product',
         'prodcolor_mincolorqty',
