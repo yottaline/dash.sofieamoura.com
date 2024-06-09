@@ -170,6 +170,7 @@
                                 toastr.success('Data processed successfully');
                                 $('#locationForm').modal('hide');
                                 scope.$apply(() => {
+                                    scope.submitting = false;
                                     if (scope.updaetLocation === false) {
                                         scope.list.unshift(response
                                             .data);
