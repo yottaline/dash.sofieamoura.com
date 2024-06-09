@@ -38,6 +38,12 @@ class ProductsMediaController extends Controller
             }
         }
 
+        if($result)
+        {
+            if( Ws_products_color::where('prodcolor_ref', $request->color)->where('prodcolor_media', null)->get()){
+                Ws_products_color::where('prodcolor_ref', $request->color)->update(['prodcolor_media' => $result]);
+            }
+        }
 
         echo json_encode([
             'status' => boolval($result),
