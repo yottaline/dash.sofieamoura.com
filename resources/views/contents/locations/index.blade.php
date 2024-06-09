@@ -31,10 +31,7 @@
                 <div class="card card-box">
                     <div class="card-body">
                         <div class="d-flex">
-                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
-                                <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
-                                    role="status"></span><span>LOCATIONS</span>
-                            </h5>
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">LOCATIONS</h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
                                     ng-click="setLocation(false)"></button>
@@ -152,45 +149,42 @@
             </div>
 
             <script>
-                $('#locationForm form').on('submit', function(e) {
-                    e.preventDefault();
-                    var form = $(this),
-                        formData = new FormData(this),
-                        action = form.attr('action'),
-                        method = form.attr('method'),
-                        controls = form.find('button, input'),
-                        spinner = $('#locationForm .loading-spinner');
-                    spinner.show();
-                    controls.prop('disabled', true);
-                    $.ajax({
-                        url: action,
-                        type: method,
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                    }).done(function(data, textStatus, jqXHR) {
-                        var response = JSON.parse(data);
-                        if (response.status) {
-                            toastr.success('Data processed successfully');
-                            $('#locationForm').modal('hide');
-                            scope.$apply(() => {
-                                if (scope.updaetLocation === false) {
-                                    scope.list.unshift(response
-                                        .data);
-                                    scope.load();
-                                    categoyreClsForm()
-                                } else {
-                                    scope.list[scope
-                                        .updaetLocation] = response.data;
-                                }
-                            });
-                        } else toastr.error("Error");
-                    }).fail(function(jqXHR, textStatus, errorThrown) {
-                        // error msg
-                    }).always(function() {
-                        spinner.hide();
-                        controls.prop('disabled', false);
-                    });
+                $(function() {
+                    $('#locationForm form').on('submit', function(e) {
+                        e.preventDefault();
+                        var form = $(this),
+                            formData = new FormData(this),
+                            action = form.attr('action'),
+                            method = form.attr('method');
+
+                        scope.$apply(() => scope.submitting = true);
+                        $.ajax({
+                            url: action,
+                            type: method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data, textStatus, jqXHR) {
+                            var response = JSON.parse(data);
+                            if (response.status) {
+                                toastr.success('Data processed successfully');
+                                $('#locationForm').modal('hide');
+                                scope.$apply(() => {
+                                    if (scope.updaetLocation === false) {
+                                        scope.list.unshift(response
+                                            .data);
+                                        scope.load();
+                                        categoyreClsForm()
+                                    } else {
+                                        scope.list[scope
+                                            .updaetLocation] = response.data;
+                                    }
+                                });
+                            } else toastr.error("Error");
+                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                            // error msg
+                        });
+                    })
                 })
 
                 function categoyreClsForm() {
@@ -219,7 +213,8 @@
                 name: ['Un visible', 'Visible'],
                 color: ['danger', 'success']
             };
-            $('.loading-spinner').hide();
+
+            $scope.submitting = false;
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
@@ -237,8 +232,6 @@
 
                 if ($scope.noMore) return;
                 $scope.loading = true;
-
-                $('.loading-spinner').show();
                 var request = {
                     q: $scope.q,
                     last_id: $scope.last_id,
@@ -248,7 +241,6 @@
                 };
 
                 $.post("/locations/load", request, function(data) {
-                    $('.loading-spinner').hide();
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;
