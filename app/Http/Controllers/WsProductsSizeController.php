@@ -35,11 +35,14 @@ class WsProductsSizeController extends Controller
         $colorParam = [];
         $sizeParam  = [];
 
+        $color_name = array_values(array_filter($color_name, function($e) {
+            $e = trim($e);
+            return !empty($e);
+        }));
         if( count($color_name) > 1){
 
             foreach($color_name as $color)
             {
-
                 $i = 0;
                 $color_ref = uniqidReal(14);
                 $colorParam[] = [
@@ -58,20 +61,20 @@ class WsProductsSizeController extends Controller
                     'prodcolor_discount'    => $request->discount,
                     'prodcolor_freeshipping' => intval($request->freeshipping),
                     'prodcolor_related'      => $request->related ?? 'null',
-                    'prodcolor_code'        => $request->code,
+                    'prodcolor_code'        => '111',
                 ];
                 foreach($sizes as $size)
                 {
                     $index = 0;
                     $sizeParam[] = [
                         'prodsize_size'    => $size[$index],
-                        'prodsize_color'   => $color_ref,
+                        'prodsize_color'   => '111',
                         'prodsize_product' => $request->p_id,
-                        'prodsize_cost'    => $request->cost,
+                        'prodsize_cost'    => '0.00',
                         'prodsize_wsp'     => $request->wholesale,
                         'prodsize_rrp'     => $request->rrp,
                         'prodsize_qty'     => $request->qty,
-                        'prodsize_stock'   => $request->stock,
+                        'prodsize_stock'   => $request->qty,
                         'prodsize_visible' => $request->visible ?? 1,
                         'prodsize_created_by' => $user,
                         'prodsize_created'    => $time
@@ -83,11 +86,11 @@ class WsProductsSizeController extends Controller
             if($id){
                 $sizeParam = [
                 'prodsize_product'     => $request->p_id,
-                'prodsize_cost'        => $request->cost,
+                'prodsize_cost'        => '0.00',
                 'prodsize_wsp'         => $request->wholesale,
                 'prodsize_rrp'         => $request->rrp,
                 'prodsize_qty'         => $request->qty,
-                'prodsize_stock'       => $request->stock,
+                'prodsize_stock'       => $request->qty,
                 'prodsize_visible'     => $request->visible ?? 1,
                 'prodsize_modified_by' => $user,
                 'prodsize_modified'    => $time
@@ -119,11 +122,11 @@ class WsProductsSizeController extends Controller
                         'prodsize_size'    => $size[$index],
                         'prodsize_color'   => $color_ref,
                         'prodsize_product' => $request->p_id,
-                        'prodsize_cost'    => $request->cost,
+                        'prodsize_cost'    => '0.00',
                         'prodsize_wsp'     => $request->wholesale,
                         'prodsize_rrp'     => $request->rrp,
                         'prodsize_qty'     => $request->qty,
-                        'prodsize_stock'   => $request->stock,
+                        'prodsize_stock'   => $request->qty,
                         'prodsize_visible' => $request->visible ?? 1,
                         'prodsize_created_by' => $user,
                         'prodsize_created'    => $time
@@ -131,6 +134,7 @@ class WsProductsSizeController extends Controller
                 };
             }
         }
+
         $result = Ws_products_color::createUpdateColorSize($id, $colorParam, $sizeParam);
 
         echo json_encode([

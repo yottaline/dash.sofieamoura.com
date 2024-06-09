@@ -548,9 +548,6 @@
                                     },
                                     stock: {
                                         digits: true,
-                                    },
-                                    rrp: {
-                                        digits: true,
                                     }
                                 },
                                 submitHandler: function(form) {
