@@ -340,7 +340,7 @@
                                             <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="minQtyForColor">
-                                                        Mini order quantity per-order<b
+                                                        Mini order quantity per-order <b
                                                             class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control" name="mincolorqty"
                                                         ng-value="siezs[updateSize].prodcolor_mincolorqty"
@@ -414,7 +414,7 @@
                                             <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
                                                     <label for="Wholesale">SWP <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" ng-model="wsp"
                                                         ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
                                                         id="Wholesale">
                                                 </div>
@@ -443,9 +443,8 @@
                                             <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
                                                     <label for="Recommanded">RRP <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
-                                                        ng-value="siezs[updateSize].prodsize_rrp" name="rrp"
-                                                        id="Recommanded">
+                                                    <input type="text" class="form-control" ng-value="to(wsp , 2.4)"
+                                                        name="rrp" id="Recommanded">
                                                 </div>
                                             </div>
 
@@ -503,82 +502,84 @@
                         </div>
                     </div>
                     <script>
-                        $('#sizeForm').on('submit', e => e.preventDefault()).validate({
-                            rules: {
-                                name: {
-                                    required: true
+                        $(function() {
+                            $('#sizeForm').on('submit', e => e.preventDefault()).validate({
+                                rules: {
+                                    name: {
+                                        required: true
+                                    },
+                                    code: {
+                                        required: true,
+                                    },
+                                    cost: {
+                                        digits: true,
+                                        required: true,
+                                    },
+                                    mincolorqty: {
+                                        digits: true,
+                                        required: true,
+                                    },
+                                    minqty: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    maxqty: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    minorder: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    discount: {
+                                        digits: true
+                                    },
+                                    order: {
+                                        required: true
+                                    },
+                                    size: {
+                                        required: true
+                                    },
+                                    wholesale: {
+                                        digits: true,
+                                    },
+                                    qty: {
+                                        digits: true,
+                                    },
+                                    stock: {
+                                        digits: true,
+                                    },
+                                    rrp: {
+                                        digits: true,
+                                    }
                                 },
-                                code: {
-                                    required: true,
-                                },
-                                cost: {
-                                    digits: true,
-                                    required: true,
-                                },
-                                mincolorqty: {
-                                    digits: true,
-                                    required: true,
-                                },
-                                minqty: {
-                                    digits: true,
-                                    required: true
-                                },
-                                maxqty: {
-                                    digits: true,
-                                    required: true
-                                },
-                                minorder: {
-                                    digits: true,
-                                    required: true
-                                },
-                                discount: {
-                                    digits: true
-                                },
-                                order: {
-                                    required: true
-                                },
-                                size: {
-                                    required: true
-                                },
-                                wholesale: {
-                                    digits: true,
-                                },
-                                qty: {
-                                    digits: true,
-                                },
-                                stock: {
-                                    digits: true,
-                                },
-                                rrp: {
-                                    digits: true,
-                                }
-                            },
-                            submitHandler: function(form) {
-                                var formData = new FormData(form),
-                                    action = $(form).attr('action'),
-                                    method = $(form).attr('method');
+                                submitHandler: function(form) {
+                                    var formData = new FormData(form),
+                                        action = $(form).attr('action'),
+                                        method = $(form).attr('method');
 
-                                scope.$apply(() => scope.submitting = true);
-                                $.ajax({
-                                    url: action,
-                                    type: method,
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                }).done(function(data, textStatus, jqXHR) {
-                                    var response = JSON.parse(data);
-                                    console.log(response);
-                                    scope.$apply(function() {
-                                        scope.submitting = false;
-                                        if (response.status) {
-                                            toastr.success('Data processed successfully');
-                                            $('#sizeModal').modal('hide');
-                                            scope.load(true);
-                                            $('#sizeModal').modal('hide');
-                                        } else toastr.error(response.message);
-                                    });
-                                }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
-                            }
+                                    scope.$apply(() => scope.submitting = true);
+                                    $.ajax({
+                                        url: action,
+                                        type: method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                    }).done(function(data, textStatus, jqXHR) {
+                                        var response = JSON.parse(data);
+                                        console.log(response);
+                                        scope.$apply(function() {
+                                            scope.submitting = false;
+                                            if (response.status) {
+                                                toastr.success('Data processed successfully');
+                                                $('#sizeModal').modal('hide');
+                                                scope.load(true);
+                                                $('#sizeModal').modal('hide');
+                                            } else toastr.error(response.message);
+                                        });
+                                    }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
+                                }
+                            });
                         });
                     </script>
                 </div>
@@ -674,7 +675,7 @@
                         </div>
                     </div>
 
-                    <div ng-if="medails.length"class="row" id="sortable">
+                    <div ng-if="medails.length" class="row" id="sortable">
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2" data-id="<%m.media_id%>">
                             <form action="/product_medias/image_default" method="post">
                                 @csrf
@@ -897,6 +898,11 @@
                     });
                 }, 'json');
             }
+
+            $scope.to = function(wsp, rrp) {
+                if (wsp == 0) return 0;
+                return (wsp * rrp).toFixed(2);
+            };
 
             $scope.load();
             $scope.loadProductMedia();
