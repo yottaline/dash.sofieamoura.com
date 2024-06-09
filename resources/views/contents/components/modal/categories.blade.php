@@ -76,7 +76,8 @@
             formData = new FormData(this),
             action = form.attr('action'),
             method = form.attr('method'),
-            controls = form.find('button, input');
+            controls = form.find('button, input'),
+            spinner = $('#categoryForm .loading-spinner');
         spinner.show();
         controls.prop('disabled', true);
         $.ajax({
