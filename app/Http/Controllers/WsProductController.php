@@ -78,6 +78,7 @@ class WsProductController extends Controller
         $sizes = Size::fetch(0, [['size_visible', 1]]);
         $categories = Category::fetch(0, [['category_visible', 1]]);
         $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
+        // return $data;
         return view('contents.wsProducts.view', compact('data', 'seasons', 'categories', 'sizes'));
     }
 

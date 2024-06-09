@@ -18,13 +18,14 @@ class WsProductsSizeController extends Controller
     public function load(Request $request)
     {
         $param = $request->q ? ['q' => $request->q] : [];
-        $param[] = ['prodsize_product', $request->product_id];
-
+        $param[] = ['prodsize_product', '=', $request->product_id];
+        // return $param;
         echo json_encode(Ws_products_size::fetch(0,$param));
     }
 
     public function submit(Request $request)
     {
+        // return
         $color_name = explode(',', $request->name);
         $id = $request->id;
         $sizes      = $request->size;
@@ -68,7 +69,7 @@ class WsProductsSizeController extends Controller
                     $index = 0;
                     $sizeParam[] = [
                         'prodsize_size'    => $size[$index],
-                        'prodsize_color'   => '111',
+                        'prodsize_color'   => $color_ref,
                         'prodsize_product' => $request->p_id,
                         'prodsize_cost'    => '0.00',
                         'prodsize_wsp'     => $request->wholesale,

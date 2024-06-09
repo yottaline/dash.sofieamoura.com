@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('media_color', 24);
             $table->string('media_file', 64);
             $table->unsignedTinyInteger('media_type')->default('1');
-            $table->unsignedSmallInteger('media_order')->default('0');
+            $table->unsignedSmallInteger('media_order')->default('0')->generatedAs();
             $table->boolean('media_visible')->default('1');
             // $table->timestamps();
         });

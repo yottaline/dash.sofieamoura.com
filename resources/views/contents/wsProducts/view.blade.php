@@ -740,7 +740,7 @@
                             @csrf
                             <input type="hidden" name="product_id" ng-value="data.product_id">
                             <div class="row">
-                                <div class="col-12 col-sm-6">
+                                <div class="col-12 col-sm-12">
 
                                     <div class="mb-3">
                                         <label for="category">
@@ -757,13 +757,13 @@
                                             id="color">
                                     </div> --}}
                                 </div>
-
+                                {{--
                                 <div class="col-12 col-sm-6">
                                     <div class="mb-3">
                                         <label for="order">Order<b class="text-danger">&ast;</b></label>
                                         <input type="text" class="form-control" name="order" id="order">
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-12 col-sm-12">
                                     <div class="mb-3">
@@ -847,6 +847,7 @@
             $scope.seasons = <?= json_encode($seasons) ?>;
             $scope.categories = <?= json_encode($categories) ?>;
             $scope.allsizes = <?= json_encode($sizes) ?>;
+            console.log($scope.data);
             $scope.load = function(reload = false) {
                 $('.loading-spinner').show();
                 var request = {
