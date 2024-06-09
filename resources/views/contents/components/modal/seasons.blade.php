@@ -69,7 +69,7 @@
                             <div class="mb-3">
                                 <label for="Lookbook">
                                     Season Lookbook</label>
-                                <input type="text" class="form-control" name="Lookbook"
+                                <input type="file" class="form-control" name="Lookbook"
                                     ng-value="list[updateSeason].season_lookbook" id="Lookbook" />
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" role="switch" name="visible"
                                     value="1" ng-checked="+list[updateSeason].season_visible" id="seasonS">
-                                <label class="form-check-label" for="seasonS">Category Status</label>
+                                <label class="form-check-label" for="seasonS">Season Status</label>
                             </div>
                         </div>
                     </div>
@@ -121,10 +121,7 @@
                             },
                             per_order: {
                                 required: true,
-                            },
-                            Lookbook: {
-                                required: true
-                            },
+                            }
                         },
                         submitHandler: function(form) {
                             console.log(form);

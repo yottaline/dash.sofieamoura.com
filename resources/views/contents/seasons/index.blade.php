@@ -71,7 +71,7 @@
                                         <td class="text-center" ng-bind="season.season_end"></td>
                                         <td class="text-center">
                                             <span
-                                                class="badge bg-<%currentObject.color[season.season_visible]%> rounded-pill font-monospace p-2"><%currentObject.name[season.season_visible]%></span>
+                                                class="badge bg-<%currentObject.color[season.season_current]%> rounded-pill font-monospace p-2"><%currentObject.name[season.season_current]%></span>
 
                                         </td>
                                         <td class="text-center">

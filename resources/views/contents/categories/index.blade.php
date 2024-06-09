@@ -31,14 +31,11 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-8 col-lg-9">
+            <div class="col">
                 <div class="card card-box">
                     <div class="card-body">
                         <div class="d-flex">
-                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
-                                <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
-                                    role="status"></span><span>CATEGORIES</span>
-                            </h5>
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">CATEGORIES</h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
                                     ng-click="setCategory(false)"></button>
@@ -89,13 +86,134 @@
                         </div>
 
                         @include('layouts.loader')
-
                     </div>
                 </div>
             </div>
         </div>
 
-        @include('contents.components.modal.categories')
+        <div class="modal fade" id="categoryForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form id="modalForm" method="POST" action="/categories/submit">
+                            @csrf
+                            <input ng-if="updateCategory !== false" type="hidden" name="_method" value="put">
+                            <input type="hidden" name="id" id="category_id"
+                                ng-value="list[updateCategory].category_id">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="categoryName">
+                                            Category Name <b class="text-danger">&ast;</b></label>
+                                        <input type="text" class="form-control" name="name" required
+                                            ng-value="list[updateCategory].category_name" id="categoryName" />
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="type">
+                                            Category Type <b class="text-danger">&ast;</b></label>
+                                        <select name="type" id="type" class="form-select" required>
+                                            <option value="default">--
+                                                SELECT CATEGORY TYPE --</option>
+                                            <option value="0">All</option>
+                                            <option value="1">Babies</option>
+                                            <option value="2">Kids</option>
+                                            <option value="3">Teens</option>
+                                            <option value="4">Adults</option>
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="gender">
+                                            Category Gender <b class="text-danger">&ast;</b></label>
+                                        <select name="gender" id="gender" class="form-select" required>
+                                            <option value="default">--
+                                                SELECT CATEGORY GENDER --</option>
+                                            <option value="2">Boy</option>
+                                            <option value="1">Girl</option>
+                                            <option value="0">Both</option>
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" role="switch" name="visible"
+                                            value="1" ng-checked="+list[updateCategory].category_visible"
+                                            id="categoryV" checked>
+                                        <label class="form-check-label" for="categoryV">Visible</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer d-flex">
+                        <div class="me-auto">
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary btn-sm"
+                                ng-disabled="submitting">Submit</button>
+                            <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
+                                ng-if="submitting"></span>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
+                            ng-disabled="submitting">Close</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(function() {
+                    $('#categoryForm form').on('submit', function(e) {
+                        e.preventDefault();
+                        var form = $(this),
+                            formData = new FormData(this),
+                            action = form.attr('action'),
+                            method = form.attr('method');
+
+                        scope.$apply(() => scope.submitting = true);
+                        $.ajax({
+                            url: action,
+                            type: method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data, textStatus, jqXHR) {
+                            var response = JSON.parse(data);
+                            if (response.status) {
+                                toastr.success('Data processed successfully');
+                                $('#categoryForm').modal('hide');
+                                scope.$apply(() => {
+                                    scope.submitting = false;
+                                    if (scope.updateCategory === false) {
+                                        scope.list.unshift(response
+                                            .data);
+                                        scope.load();
+                                        categoyreClsForm()
+                                    } else {
+                                        scope.list[scope
+                                            .updateCategory] = response.data;
+                                    }
+                                });
+                            } else toastr.error("Error");
+                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                            // error msg
+                        });
+                    });
+                });
+
+                function categoyreClsForm() {
+                    $('#category_id').val('');
+                    $('#categoryName').val('');
+                }
+            </script>
+        </div>
     </div>
 @endsection
 
@@ -118,7 +236,8 @@
             $scope.genderObject = {
                 name: ['Both', 'Girl', 'Boy']
             };
-            $('.loading-spinner').hide();
+
+            $scope.submitting = false;
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
@@ -137,7 +256,6 @@
                 if ($scope.noMore) return;
                 $scope.loading = true;
 
-                $('.loading-spinner').show();
                 var request = {
                     q: $scope.q,
                     last_id: $scope.last_id,
@@ -147,7 +265,6 @@
                 };
 
                 $.post("/categories/load", request, function(data) {
-                    $('.loading-spinner').hide();
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;

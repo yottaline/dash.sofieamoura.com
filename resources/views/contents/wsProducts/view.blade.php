@@ -108,9 +108,10 @@
                                                 <label for="orderType">
                                                     Product Order Type <b class="text-danger">&ast;</b></label>
                                                 <select name="order_type" id="orderType" class="form-select" required>
-                                                    <option value="default">-- SELECT ORDER TYPE --</option>
-                                                    <option value="1">IN-STOCK</option>
-                                                    <option value="2">PRE-ORDER</option>
+                                                    <option ng-if="data.product_type == 1" value="1">IN-STOCK
+                                                    </option>
+                                                    <option ng-if="data.product_type == 2" value="2">
+                                                        PRE-ORDER</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -131,7 +132,8 @@
                                 <div class="d-flex mt-2">
                                     <div class="me-auto">
                                     </div>
-                                    <button type="submit" class="btn btn-outline-primary text-end me-auto">Update</button>
+                                    <button type="submit"
+                                        class="btn btn-outline-primary text-end me-auto">Update</button>
                                 </div>
                         </form>
                         <script>
@@ -305,7 +307,7 @@
                                                 value="put">
                                             <input type="hidden" name="id" id="prodsizeId"
                                                 ng-value="siezs[updateSize].prodsize_id">
-                                            <div class="col-12 col-sm-6">
+                                            {{-- <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
                                                     <label for="colorCode">Color Code<b
                                                             class="text-danger">&ast;</b></label>
@@ -313,9 +315,9 @@
                                                         name="code" id="colorCode"
                                                         ng-value="siezs[updateSize].prodcolor_code">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="col-12 col-sm-6">
+                                            <div class="col-12 col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="colorName">Color Name<b
                                                             class="text-danger">&ast;</b></label>
@@ -325,7 +327,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            {{-- <div class="col-12 col-sm-4">
                                                 <div class="mb-3">
                                                     <label for="sizeCost">Size Cost<b
                                                             class="text-danger">&ast;</b></label>
@@ -333,12 +335,12 @@
                                                         ng-value="siezs[updateSize].prodsize_cost" name="cost"
                                                         id="sizeCost">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="minQtyForColor">
-                                                        Mini order quantity for color <b
+                                                        Mini order quantity per-order<b
                                                             class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control" name="mincolorqty"
                                                         ng-value="siezs[updateSize].prodcolor_mincolorqty"
@@ -392,14 +394,15 @@
                                                         Order Type <b class="text-danger">&ast;</b></label>
                                                     <select name="order_type" id="orderType" class="form-select"
                                                         required>
-                                                        <option value="default">-- SELECT ORDER TYPE --</option>
-                                                        <option value="1">IN-STOCK</option>
-                                                        <option value="2">PRE-ORDER</option>
+                                                        <option ng-if="data.product_type == 1" value="1">IN-STOCK
+                                                        </option>
+                                                        <option ng-if="data.product_type == 2" value="2">
+                                                            PRE-ORDER</option>
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="mb-3">
                                                     <label for="colorOrder">
                                                         Color Order <b class="text-danger">&ast;</b></label>
@@ -408,19 +411,18 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Wholesale">Size Wholesale Price<b
-                                                            class="text-danger">&ast;</b></label>
+                                                    <label for="Wholesale">SWP <b class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control"
                                                         ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
                                                         id="Wholesale">
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Qty">Size Quantity<b
+                                                    <label for="Qty">in-stock <b
                                                             class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control"
                                                         ng-value="siezs[updateSize].prodsize_qty" name="qty"
@@ -428,7 +430,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            {{-- <div class="col-12 col-sm-4">
                                                 <div class="mb-3">
                                                     <label for="QUANTITY">Available Quantity<b
                                                             class="text-danger">&ast;</b></label>
@@ -436,12 +438,11 @@
                                                         ng-value="siezs[updateSize].prodsize_stock" name="stock"
                                                         id="QUANTITY">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="col-12 col-sm-4">
+                                            <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Recommanded">Recommanded Retail Price<b
-                                                            class="text-danger">&ast;</b></label>
+                                                    <label for="Recommanded">RRP <b class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control"
                                                         ng-value="siezs[updateSize].prodsize_rrp" name="rrp"
                                                         id="Recommanded">
