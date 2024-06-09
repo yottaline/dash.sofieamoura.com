@@ -20,6 +20,7 @@ return new class extends Migration
             $table->smallInteger('ordprod_served_qty')->unsigned();
             $table->decimal('ordprod_price', 9, 2);
             $table->decimal('ordprod_subtotal', 9, 2)->default('0');
+            $table->decimal('ordprod_total', 9, 2);
             $table->tinyInteger('ordprod_discount')->unsigned()->default('0');
             // $table->timestamps();
         });

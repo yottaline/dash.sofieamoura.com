@@ -8,6 +8,7 @@ use App\Models\Retailer;
 use App\Models\Retailer_address;
 use App\Models\Season;
 use App\Models\Ws_order;
+use App\Models\Ws_orders_product;
 use App\Models\Ws_product;
 use App\Models\Ws_products_size;
 use Illuminate\Http\Request;
@@ -34,6 +35,8 @@ class WsOrderController extends Controller
         $param = $request->q ? ['q' => $request->q] : [];
         $limit = $request->limit;
         $lastId = $request->last_id;
+        if($request->date)   $param[] = ['order_created', 'like', '%' . $request->date . '%'];
+        if($request->r_name) $param[] = ['retailer_fullName', 'like', '%' . $request->r_name . '%'];
 
         echo json_encode(Ws_order::fetch(0, $param, $limit, $lastId));
     }
@@ -65,8 +68,9 @@ class WsOrderController extends Controller
                     'ordprod_size'          => $p->prodsize_id,
                     'ordprod_price'         => $p->prodsize_wsp,
                     'ordprod_request_qty'   => $amount[$indx],
-                    'ordprod_subtotal'    => $subtotal,
-                    'ordprod_discount'      => $p->product_discount,
+                    'ordprod_subtotal'      => $subtotal,
+                    'ordprod_total'         => $total,
+                    'ordprod_discount'      => $p->prodcolor_discount,
                     'ordprod_served_qty'    => $qty[$indx]
                 ];
                 $ordSubtotal    += $subtotal;
@@ -81,7 +85,7 @@ class WsOrderController extends Controller
             'order_retailer'        => $request->retailer_id,
             'order_shipping'        => $request->cost,
             'order_subtotal'        => $ordSubtotal,
-            'order_discount'        => intval($request->orderdisc),
+            'order_discount'        => $request->orderdisc ?? 0,
             'order_total'           => $ordTotal,
             'order_currency'        => $request->currencies,
             'order_type'            => $request->order_type,
@@ -91,7 +95,7 @@ class WsOrderController extends Controller
             'order_proformatime'    => Carbon::now(),
             'order_invoice'         => uniqidReal(30),
             'order_invoicetime'     => Carbon::now(),
-            'order_status'          => 1
+            'order_status'          => 0
         ];
         if($request->checkbox == 'false')
         {
@@ -140,5 +144,29 @@ class WsOrderController extends Controller
         if($result['status']) $result['data'] = Ws_order::fetch($result['id']);
 
         echo json_encode($result);
+    }
+
+
+    public function updateStatus(Request $request)
+    {
+        $param = [
+            'order_status' => $request->status,
+        ];
+        if($request->status == 2) $param['order_placed'] = Carbon::now();
+        $result =  Ws_order::submit($request->id, $param);
+        echo json_encode([
+            'status'  => boolval($result),
+        ]);
+    }
+
+
+    public function view($id)
+    {
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        // return $order;
+        $orderData = Ws_orders_product::fetch(0,[['ordprod_order', $id]]);
+
+        return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 }

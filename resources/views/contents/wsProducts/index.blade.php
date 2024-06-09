@@ -15,7 +15,20 @@
                     <div class="card-body">
                         <h5 class="fw-bold">Filters</h5>
                         <div class="mb-3">
-
+                            <label for="season-filter">Seasons Name</label>
+                            <select class="form-select" id="season-filter">
+                                <option value="0">-- SELECT NAME --</option>
+                                <option ng-repeat="season in seasons" ng-value="season.season_id"
+                                    ng-bind="season.season_name"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="season-filter">Product Name</label>
+                            <input type="text" class="form-control" id="product-name-filter">
+                        </div>
+                        <div class="mb-3">
+                            <label for="season-filter">Color Name</label>
+                            <input type="text" class="form-control" id="color-name-filter">
                         </div>
                     </div>
                 </div>
@@ -35,14 +48,18 @@
                         </div>
 
                         <div ng-if="list.length" class="row">
-                            <div ng-repeat="p in list" class="col-6 col-sm-4 col-md-3 col-xl-2">
-                                <div class="mb-3 text-center">
+                            <div ng-repeat="p in list" class="col-6 col-sm-4 col-md-3 col-xl-2" id="swapDemo">
+                                <div class="mb-3 text-center" id="items">
                                     <a href="/ws_products/view/<% p.product_ref %>" class="card">
-                                        <img src="/assets/img/default_product_image.png" alt=""
-                                            class="card-img-top">
+                                        <img ng-if="p.prodcolor_media == null" src="/assets/img/default_product_image.png"
+                                            alt="" class="card-img-top">
+                                        <img ng-if="p.prodcolor_media"
+                                            src="{{ asset('media/product/') }}/<%p.product_id%>/<%p.media_file%>"
+                                            alt="" class="card-img-top">
                                         <div class="card-body">
                                             <h6 class="card-title" ng-bind="p.product_name"></h6>
                                             <h6 class="small font-monospace" ng-bind="p.product_code"></h6>
+                                            <h6 class="small font-monospace" ng-bind="p.prodcolor_name"></h6>
                                         </div>
                                     </a>
                                 </div>
@@ -81,7 +98,8 @@
                                     <div class="mb-3">
                                         <label for="season">Season<b class="text-danger">&ast;</b></label>
                                         <select name="season" id="season" class="form-select" required>
-                                            <option ng-repeat="s in seasons" ng-bind="s.season_name" ng-value="s.season_id">
+                                            <option ng-repeat="s in seasons" ng-bind="s.season_name"
+                                                ng-value="s.season_id">
                                             </option>
                                         </select>
                                     </div>
@@ -102,8 +120,8 @@
                                         <label for="" class="d-block mb-2">Order Type<b
                                                 class="text-danger">&ast;</b></label>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="order_type" id="orderType1"
-                                                value="1">
+                                            <input class="form-check-input" type="radio" name="order_type"
+                                                id="orderType1" value="1">
                                             <label class="form-check-label" for="orderType1">IN-STOCK</label>
                                         </div>
                                         <div class="form-check form-check-inline">
@@ -195,6 +213,9 @@
                     q: $scope.q,
                     offset: $scope.offset,
                     limit: limit,
+                    season: $('#season-filter').val(),
+                    p_name: $('#product-name-filter').val(),
+                    color: $('#color-name-filter').val(),
                     _token: '{{ csrf_token() }}'
                 };
 
@@ -205,6 +226,7 @@
                         if (ln) {
                             $scope.noMore = ln < limit;
                             $scope.list = data;
+                            console.log(data);
                             $scope.offset += ln;
                         }
                     });

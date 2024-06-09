@@ -58,8 +58,7 @@
 
                         <div class="mb-3">
                             <label for="roleFilter">Order Date</label>
-                            <input type="text" id="filterOrderDate" class="form-control text-center text-monospace"
-                                id="filter-date">
+                            <input type="text" id="filterOrderDate" class="form-control text-center text-monospace">
                         </div>
                     </div>
                 </div>
@@ -101,26 +100,34 @@
                                         </td>
                                         <td class="text-center" data-ng-bind="order.retailer_fullName">
                                         </td>
-                                        <td data-ng-bind="order.order_create" class="text-center"></td>
-                                        <td class="text-center"><% order.order_disc %>%</td>
+                                        <td data-ng-bind="order.order_created" class="text-center"></td>
+                                        <td class="text-center"><% order.order_discount %>%</td>
                                         <td data-ng-bind="order.order_subtotal" class="text-center"></td>
                                         <td class="text-center">
-                                            <button ng-if="order.order_status == 1"
+                                            <button ng-if="order.order_status == 0"
                                                 class="btn btn-outline-danger btn-circle bi bi-x"
-                                                ng-click="opt($index, 2)"></button>
-                                            <button ng-if="order.order_status == 1"
+                                                ng-click="opt($index, 1)"></button>
+                                            <button ng-if="order.order_status == 0"
                                                 class="btn btn-outline-primary btn-circle bi bi-check"
+                                                ng-click="opt($index, 2)"></button>
+                                            <button ng-if="order.order_status == 2"
+                                                class="btn btn-outline-success btn-circle bi bi-check"
                                                 ng-click="opt($index, 3)"></button>
                                             <button ng-if="order.order_status == 3"
-                                                class="btn btn-outline-success btn-circle bi bi-check"
+                                                class="btn btn-outline-warning btn-circle bi bi-cash-stack"
+                                                ng-click="opt($index, 4)"></button>
+                                            <button ng-if="order.order_status == 3"
+                                                class="btn btn-outline-warning btn-circle bi bi-credit-card"
                                                 ng-click="opt($index, 4)"></button>
                                             <button ng-if="order.order_status == 4"
                                                 class="btn btn-outline-success btn-circle bi bi-truck"
                                                 ng-click="opt($index, 5)"></button>
+                                            <button ng-if="order.order_status == 6"
+                                                class="btn btn-outline-success btn-circle bi bi-clipboard2-check"></button>
                                         </td>
                                         <td class="col-fit">
-                                            <button class="btn btn-outline-dark btn-circle bi bi-eye"
-                                                data-ng-click="viewDetails(order)"></button>
+                                            <a href="/ws_orders/view/<%order.order_id%>" target="_blank"
+                                                class="btn btn-outline-dark btn-circle bi bi-eye"></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -149,7 +156,8 @@
                                     <label for="retailer">Retailer<b class="text-danger">&ast;</b></label>
                                     <select name="retailer" id="retailer" class="form-select" required>
                                         <option value="">-- SELECT RETAILER NAME --</option>
-                                        <option data-ng-repeat="retailer in retailers" data-ng-value="retailer.retailer_id"
+                                        <option data-ng-repeat="retailer in retailers"
+                                            data-ng-value="retailer.retailer_id"
                                             data-ng-bind="retailer.retailer_fullName">
                                         </option>
                                     </select>
@@ -187,7 +195,7 @@
                                         <th class="text-center" width="200">Product name</th>
                                         <th class="text-center" width="300">Size and Color names</th>
                                         <th class="text-center" width="90">Amount</th>
-                                        <th class="text-center" width="200">MAX Order QTY</th>
+                                        <th class="text-center" width="200">MAX QTY</th>
                                         <th class="text-center" width="90">Price</th>
                                         <th class="text-center" width="120">Totle</th>
                                     </tr>
@@ -207,7 +215,11 @@
                                                     <div class="items-list">
                                                         <a href="#add" class="d-none">
                                                             <small class="record-name fw-bold"></small><br>
-                                                            <small class="record-sn text-secondary font-monospace"></small>
+                                                            <small
+                                                                class="record-sn text-secondary font-monospace"></small><br>
+                                                            <small class="record-size text-warning font-monospace"></small>
+                                                            <small
+                                                                class="record-color text-danger-emphasis font-monospace"></small>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -215,7 +227,7 @@
                                         </td>
                                     </tr>
                                     <tr class="record-item " data-ng-repeat="p in products"
-                                        id="invitem-<%p.product_id%>">
+                                        id="invitem-<%p.prodsize_id%>">
                                         <input type="hidden" class="record-id" ng-value="p.prodsize_id">
                                         <td><a href="#del" class="inv-item-del text-danger"
                                                 data-ng-click="delProduct($index)"><i class="bi bi-x-circle"></i></a></td>
@@ -227,26 +239,26 @@
                                         <td class="text-center">
                                             <small class="fw-bold" data-ng-bind="p.size_name"></small><br>
                                             <small class="text-secondary font-monospace"
-                                                data-ng-bind="p.prodsize_color"></small>
+                                                data-ng-bind="p.prodcolor_name"></small>
                                         </td>
                                         <td><input type="number" step="1" min="1" name="qty"
                                                 class="record-amount font-monospace text-center w-100"
-                                                ng-change="clTotal()" ng-model="p.product_mincolorqty">
+                                                ng-change="clTotal()" ng-model="p.prodcolor_mincolorqty">
                                         </td>
-                                        <td hidden><input class="record-qty" ng-change="clTotal()"
-                                                ng-model="p.product_mincolorqty">
+                                        <td hidden><input class="record-qty" disabled ng-change="clTotal()"
+                                                ng-model="p.prodcolor_mincolorqty">
                                         </td>
                                         <td><input type="number" disabled
                                                 class="record-maxqty font-monospace text-center w-100"
-                                                ng-value="p.product_maxqty">
+                                                ng-value="p.prodcolor_maxqty">
                                         </td>
                                         <td hidden><input type="number" step="1" min="0" name="qty"
                                                 class="record-disc font-monospace text-center w-100" ng-change="clTotal()"
-                                                ng-model="p.product_discount">
+                                                ng-model="p.prodcolor_discount">
                                         </td>
                                         <td class="text-center" data-ng-bind="p.prodsize_wsp"></td>
                                         <td class="text-center"><span
-                                                data-ng-bind="to (p.prodsize_wsp , p.product_mincolorqty, p.product_discount)"></span>
+                                                data-ng-bind="to (p.prodsize_wsp , p.prodcolor_mincolorqty, p.prodcolor_discount)"></span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -406,11 +418,13 @@
                                             var elem = $("#items-selector > .items-list > a.d-none").clone();
                                             elem.removeClass('d-none').find('.record-name').text(item.product_name);
                                             elem.find('.record-sn').text(item.product_code);
+                                            elem.find('.record-size').text(item.size_name);
+                                            elem.find('.record-color').text(item.prodcolor_name);
                                             elem.on('click', function(e) {
                                                 // invRecord(item);
                                                 $("#items-selector").hide();
 
-                                                if ($(`#invitem-${item.product_id}`).length) {
+                                                if ($(`#invitem-${item.prodsize_id}`).length) {
                                                     toastr.info(
                                                         'This item has already been added, modify the quantity on the added item'
                                                     );
@@ -450,7 +464,7 @@
                             });
 
                             function invRecord(item) {
-                                if ($(`#invitem-${item.product_id}`).length) {
+                                if ($(`#invitem-${item.prodsize_id}`).length) {
                                     toastr.info('This item has already been added, modify the quantity on the added item');
                                     return;
                                 }
@@ -554,43 +568,6 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="modal fade" id="edit_disc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Product Name</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-ng-repeat="details in orderDetails">
-                                    <th scope="row"></th>
-                                    <td data-ng-bind="details.product_name"></td>
-                                    <td data-ng-bind="details.orderItem_qty"></td>
-                                    <td data-ng-bind="details.orderItem_subtotal"></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="3">
-                                        Total amount
-                                    </th>
-                                    <th data-ng-bind="orDe.order_subtotal"></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 @section('js')
@@ -603,10 +580,6 @@
 
         app.controller('myCtrl', function($scope) {
             $('.loading-spinner').hide();
-            $scope.statusObject = {
-                name: ['غير مفعل', 'مفعل'],
-                color: ['danger', 'success']
-            };
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
@@ -634,8 +607,8 @@
 
                 $('.loading-spinner').show();
                 var request = {
-                    date: $('#filter-date').val(),
-                    c_name: $('#filter-name').val(),
+                    date: $('#filterOrderDate').val(),
+                    r_name: $('#filter-name').val(),
                     q: $scope.q,
                     last_id: $scope.last_id,
                     limit: limit,
@@ -667,7 +640,7 @@
                     showCancelButton: true,
                 }).then((result) => {
                     if (!result.isConfirmed) return;
-                    $.post('/orders/change_status', {
+                    $.post('/ws_orders/change_status', {
                         id: $scope.list[indx].order_id,
                         status: status,
                         _token: "{{ csrf_token() }}",
@@ -689,30 +662,30 @@
                 });
             }
 
-            $scope.viewDetails = (order) => {
-                $.get("/orders/view/" + order.order_id, function(data) {
-                    $('.perm').show();
-                    scope.$apply(() => {
+            // $scope.viewDetails = (order) => {
+            //     $.get("/orders/view/" + order.order_id, function(data) {
+            //         $('.perm').show();
+            //         scope.$apply(() => {
 
-                        scope.orderDetails = data.items;
-                        scope.orDe = data.order;
-                        console.log(data)
-                        $('#edit_disc').modal('show');
-                    });
-                }, 'json');
-            }
+            //             scope.orderDetails = data.items;
+            //             scope.orDe = data.order;
+            //             console.log(data)
+            //             $('#edit_disc').modal('show');
+            //         });
+            //     }, 'json');
+            // }
 
             $scope.delProduct = (index) => $scope.products.splice(index, 1);
 
             $scope.clTotal = function() {
                 var total = 0;
-                $scope.products.map(p => total += p.product_mincolorqty * p.prodsize_wsp);
+                $scope.products.map(p => total += p.prodcolor_mincolorqty * p.prodsize_wsp);
                 var totals = total - (total * $scope.orderDisc / 100);
                 return totals.toFixed();
             }
 
-            $scope.to = function(product_price, pecAmount) {
-                return (pecAmount * product_price).toFixed();
+            $scope.to = function(prodcolor_price, pecAmount) {
+                return (pecAmount * prodcolor_price).toFixed();
             };
 
             $scope.dataLoader();

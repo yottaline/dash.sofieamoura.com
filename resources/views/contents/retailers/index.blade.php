@@ -11,7 +11,39 @@
             <div class="col-12 col-sm-4 col-lg-3">
                 <div class="card card-box">
                     <div class="card-body">
+                        <div class="d-flex">
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
+                                <span class="text-warning" role="status"></span><span>FILTERS</span>
+                            </h5>
+                            <div>
+                                <button type="button" class="btn btn-outline-dark btn-circle bi bi-funnel"></button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="statusFilter">Retailer status</label>
+                            <select class="form-select" id="status-filter">
+                                <option value="0">-- SELECT STATUS --</option>
+                                <option value="1">Not Approved</option>
+                                <option value="2">Approved</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="statusFilter">Country Name</label>
+                            <select class="form-select" id="country-filter">
+                                <option value="0">-- SELECT NAME --</option>
+                                <option ng-repeat="country in locations" ng-value="country.location_id"
+                                    ng-bind="country.location_name"></option>
+                            </select>
+                        </div>
 
+                        <div class="mt-3">
+                            <label for="statusFilter">Currency Name</label>
+                            <select class="form-select" id="currecy-filter">
+                                <option value="0">-- SELECT NAME --</option>
+                                <option ng-repeat="currecy in currencies" ng-value="currecy.currency_id"
+                                    ng-bind="currecy.currency_name"></option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -146,6 +178,9 @@
                     q: $scope.q,
                     last_id: $scope.last_id,
                     limit: limit,
+                    status: $('#status-filter').val(),
+                    country: $('#country-filter').val(),
+                    currecy: $('#currecy-filter').val(),
                     _token: '{{ csrf_token() }}'
                 };
 

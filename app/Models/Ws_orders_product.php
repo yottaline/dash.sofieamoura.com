@@ -15,6 +15,7 @@ class Ws_orders_product extends Model
         'ordprod_size',
         'ordprod_request_qty',
         'ordprod_served_qty',
+        'ordprod_total',
         'ordprod_price',
         'ordprod_subtotal',
         'ordprod_discount',
@@ -22,8 +23,9 @@ class Ws_orders_product extends Model
 
     public static function fetch($id = 0, $params = null)
     {
-        $oder_products = self::join('ws_orders', 'ordprod_order', 'order_id')->join('ordprod_product', 'ordprod_order', 'product_id')
-                            ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id');
+        $oder_products = self::join('ws_orders', 'ordprod_order', 'order_id')->join('ws_products', 'ordprod_product', 'product_id')
+                            ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id')->join('sizes', 'ws_products_sizes.prodsize_size', 'sizes.size_id')
+                            ->join('ws_products_colors', 'ws_products_colors.prodcolor_ref', 'ws_products_sizes.prodsize_color');
 
         if($params) $oder_products->where($params);
 

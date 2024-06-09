@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products_media', function (Blueprint $table) {
             $table->bigInteger('media_id', true, true);
             $table->unsignedInteger('media_product');
-            $table->string('media_color', 8)->default('');
+            $table->string('media_color', 24);
             $table->string('media_file', 64);
             $table->unsignedTinyInteger('media_type')->default('1');
             $table->unsignedSmallInteger('media_order')->default('0');

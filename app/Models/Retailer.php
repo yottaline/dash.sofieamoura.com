@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Retailer extends Model
 {
@@ -39,6 +40,19 @@ class Retailer extends Model
     {
         $retailers = self::join('locations', 'retailer_country', 'location_id')
         ->join('currencies', 'retailer_currency', 'currency_id')->orderBy('retailer_created', 'DESC')->limit($limit);
+
+        if (isset($params['q'])) {
+            $retailers->where(function (Builder $query) use ($params) {
+                $query->where('retailer_email', 'like', '%' . $params['q'] . '%')
+                ->orWhere('retailer_phone', 'like', '%' . $params['q'] . '%')
+                ->orWhere('retailer_fullName', $params['q'])
+                ->orWhere('retailer_company', $params['q'])
+                ->orWhere('retailer_address', $params['q'])
+                ->orWhere('retailer_adv_payment', $params['q']);
+            });
+
+            unset($params['q']);
+        }
 
         if($lastId) $retailers->where('retailer_id', '<', $lastId);
 

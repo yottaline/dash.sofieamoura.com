@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Products_media;
+use App\Models\Ws_products_color;
 use Illuminate\Http\Request;
 
 class ProductsMediaController extends Controller
@@ -24,7 +25,7 @@ class ProductsMediaController extends Controller
 
         $param = [
             'media_product'  => $request->product_id,
-            'media_color'    => $request->color ?? '',
+            'media_color'    => $request->color,
             'media_order'    => $request->order,
         ];
 
@@ -41,9 +42,29 @@ class ProductsMediaController extends Controller
 
         echo json_encode([
             'status' => boolval($result),
-            'data' => $result ? Products_media::fetch($result, [['media_product', $request->product_id]]) : []
+            'data' => $result ? Products_media::fetch(0, [['media_id', $result],['media_product', $request->product_id]]) : []
         ]);
 
 
+    }
+    public function updateOrder(Request $request)
+    {
+        $orders = $request->orders;
+        foreach ($orders as $order => $id) {
+           $result =  Products_media::submit(['media_order' => $order], $id);
+        }
+        echo json_encode(['status' => boolval($result)]);
+    }
+
+    public function imageDefault(Request $request)
+    {
+       $color = $request->c_id;
+       $media = $request->m_id;
+       $status = null;
+        if(!$request->s) $status = $media;
+       $result = Ws_products_color::submit($color, ['prodcolor_media' => $status]);
+       echo json_encode([
+        'status' => boolval($result)
+       ]);
     }
 }

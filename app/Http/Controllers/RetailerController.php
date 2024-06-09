@@ -30,7 +30,9 @@ class RetailerController extends Controller
         $param  = $request->q ? ['q' => $request->q] : [];
         $limit  = $request->limit;
         $lastId = $request->last_id;
-        if ($request->status) $param[] = ['retailer_active', '=', $request->status - 1];
+        if ($request->status)  $param[]  = ['retailer_approved', $request->status -1];
+        if ($request->country) $param[] = ['retailer_country', '=', $request->country];
+        if ($request->currecy) $param[] = ['retailer_currency', '=', $request->currecy];
 
         echo json_encode(Retailer::fetch(0, $param, null, $limit, $lastId));
     }

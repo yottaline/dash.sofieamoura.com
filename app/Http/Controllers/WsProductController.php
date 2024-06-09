@@ -30,6 +30,10 @@ class WsProductController extends Controller
         $limit  = $request->limit;
         $offset = $request->offset;
 
+        if($request->season) $params[] = ['product_season', $request->season];
+        if($request->p_name) $params[] = ['product_name', $request->p_name];
+        if($request->color) $params[]  = ['prodcolor_name', $request->color];
+
         echo json_encode(Ws_product::fetch(0, $params, $limit, $offset));
     }
 
@@ -41,15 +45,13 @@ class WsProductController extends Controller
             'product_name'      => $request->name,
             'product_season'    => $request->season,
             'product_category'  => $request->category,
-            'product_ordertype' => $request->order_type,
+            'product_type'      => $request->order_type,
         ];
 
         if (!$id) {
-            $order = Ws_product::maxOrder($request->season);
             $param = [
                 ...$param,
                 'product_ref' => uniqidReal(),
-                'product_order' => ++$order,
                 'product_created_by' => auth()->user()->id,
                 'product_created' => Carbon::now()
             ];
@@ -57,14 +59,7 @@ class WsProductController extends Controller
             $param = [
                 ...$param,
                 'product_desc'      => $request->description,
-                'product_minqty'    => $request->minqty,
-                'product_maxqty'    => $request->maxqty,
-                'product_minorder'  => $request->minorder,
-                'product_discount'  => $request->discount,
-                'product_freeshipping' => intval($request->freeshipping),
                 'product_delivery'     => $request->delivery,
-                'product_related'      => $request->related,
-                'product_published'    => intval($request->status),
                 'product_modified_by' => auth()->user()->id,
                 'product_modified' => Carbon::now()
             ];

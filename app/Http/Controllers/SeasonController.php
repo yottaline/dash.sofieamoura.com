@@ -23,6 +23,8 @@ class SeasonController extends Controller
         $limit  = $request->limit;
         $lastId = $request->last_id;
 
+        if($request->status) $param[] = ['season_visible', $request->status - 1];
+
         echo json_encode(Season::fetch(0, $param, $limit, $lastId));
     }
 

@@ -18,23 +18,11 @@ class Ws_product extends Model
         'product_code',
         'product_name',
         'product_desc',
-        'product_media',
         'product_season',
         'product_type',
         'product_gender',
         'product_category',
-        'product_ordertype',
-        'product_minqty',
-        'product_maxqty',
-        'product_mincolorqty',
-        'product_minorder',
-        'product_discount',
-        'product_freeshipping',
         'product_delivery',
-        'product_views',
-        'product_order',
-        'product_related',
-        'product_published',
         'product_modified_by',
         'product_modified',
         'product_created_by',
@@ -45,7 +33,9 @@ class Ws_product extends Model
     {
         $ws_products = self::join('seasons', 'product_season', '=', 'season_id')
             ->join('categories', 'product_category', '=', 'category_id')
-            ->orderBy('product_order', 'ASC')->limit($limit)->offset($offset);
+            ->leftJoin('ws_products_colors', 'product_id', '=', 'prodcolor_product')
+            ->leftJoin('products_media', 'ws_products_colors.prodcolor_media', 'products_media.media_id')
+            ->orderBy('prodcolor_order', 'ASC')->limit($limit)->offset($offset);
 
 
         if (isset($params['q'])) {

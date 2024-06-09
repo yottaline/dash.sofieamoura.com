@@ -11,7 +11,22 @@
             <div class="col-12 col-sm-4 col-lg-3">
                 <div class="card card-box">
                     <div class="card-body">
-
+                        <div class="d-flex">
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
+                                <span class="text-warning" role="status"></span><span>FILTERS</span>
+                            </h5>
+                            <div>
+                                <button type="button" class="btn btn-outline-dark btn-circle bi bi-funnel"></button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="statusFilter">Sizes status</label>
+                            <select class="form-select" id="status-filter">
+                                <option value="0">-- SELECT STATUS --</option>
+                                <option value="1">Un visible</option>
+                                <option value="2">Visible</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,6 +126,7 @@
                     q: $scope.q,
                     last_id: $scope.last_id,
                     limit: limit,
+                    status: $('#status-filter').val(),
                     _token: '{{ csrf_token() }}'
                 };
 
