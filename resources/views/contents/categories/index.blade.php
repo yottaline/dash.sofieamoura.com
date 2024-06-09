@@ -96,7 +96,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <form method="POST" action="/categories/submit">
+                        <form id="modalForm" method="POST" action="/categories/submit">
                             @csrf
                             <input ng-if="updateCategory !== false" type="hidden" name="_method" value="put">
                             <input type="hidden" name="id" id="category_id"
@@ -149,8 +149,8 @@
                                     <div class="form-check form-switch mb-3">
                                         <input class="form-check-input" type="checkbox" role="switch" name="visible"
                                             value="1" ng-checked="+list[updateCategory].category_visible"
-                                            id="categoryV">
-                                        <label class="form-check-label" for="categoryV">Category Status</label>
+                                            id="categoryV" checked>
+                                        <label class="form-check-label" for="categoryV">Visible</label>
                                     </div>
                                 </div>
                             </div>
@@ -158,12 +158,12 @@
                     </div>
                     <div class="modal-footer d-flex">
                         <div class="me-auto">
-                            <button type="submit" class="btn btn-outline-primary btn-sm"
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary btn-sm"
                                 ng-disabled="submitting">Submit</button>
                             <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
                                 ng-if="submitting"></span>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary me-auto btn-sm" data-bs-dismiss="modal"
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
                             ng-disabled="submitting">Close</button>
                     </div>
                 </div>
