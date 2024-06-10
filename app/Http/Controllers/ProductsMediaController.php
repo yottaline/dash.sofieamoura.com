@@ -26,7 +26,6 @@ class ProductsMediaController extends Controller
         $param = [
             'media_product'  => $request->product_id,
             'media_color'    => $request->color,
-            'media_order'    => $request->order,
         ];
 
         $media = $request->file('media');
@@ -39,6 +38,12 @@ class ProductsMediaController extends Controller
             }
         }
 
+        if($result)
+        {
+            if(Ws_products_color::fetch(0, [['prodcolor_ref', $request->color], ['prodcolor_media', null]])){
+                Ws_products_color::where('prodcolor_ref', $request->color)->update(['prodcolor_media' => $result]);
+            }
+        }
 
         echo json_encode([
             'status' => boolval($result),

@@ -31,10 +31,7 @@
                 <div class="card card-box">
                     <div class="card-body">
                         <div class="d-flex">
-                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
-                                <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
-                                    role="status"></span><span>LOCATIONS</span>
-                            </h5>
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">LOCATIONS</h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
                                     ng-click="setLocation(false)"></button>
@@ -85,7 +82,122 @@
             </div>
         </div>
 
-        @include('contents.components.modal.loactions')
+        <div class="modal fade" id="locationForm" tabindex="-1" role="dialog" aria-labelledby="locationFormLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form method="POST" id="modalForm" action="/locations/submit">
+                            @csrf
+                            <input ng-if="updaetLocation !== false" type="hidden" name="_method" value="put">
+                            <input type="hidden" name="location_id" id="location_id"
+                                ng-value="list[updaetLocation].location_id">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="locationName">
+                                            Location Name<b class="text-danger">&ast;</b></label>
+                                        <input type="text" class="form-control" name="name" required
+                                            ng-value="list[updaetLocation].location_name" id="locationName" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="locationCode">
+                                            Location Code<b class="text-danger">&ast;</b></label>
+                                        <input type="text" class="form-control" name="code" required
+                                            ng-value="list[updaetLocation].location_code" id="locationCode" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="isoCode2">
+                                            Location ISO code 2<b class="text-danger">&ast;</b></label>
+                                        <input type="text" class="form-control" name="iso_code_2" required
+                                            ng-value="list[updaetLocation].location_iso_2" id="isoCode2" />
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="isoCode3">
+                                            Location ISO code 3<b class="text-danger">&ast;</b></label>
+                                        <input type="text" class="form-control" name="iso_code_3" required
+                                            ng-value="list[updaetLocation].location_iso_3" id="isoCode3" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" name="active"
+                                            value="1" ng-checked="+list[updaetLocation].location_visible"
+                                            id="locationS">
+                                        <label class="form-check-label" for="locationS">Location Status</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer d-flex">
+                            <button type="button" class="btn btn-outline-secondary me-auto"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary"
+                                ng-disabled="submitting">Submit</button>
+                            <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
+                                ng-if="submitting"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $(function() {
+                    $('#locationForm form').on('submit', function(e) {
+                        e.preventDefault();
+                        var form = $(this),
+                            formData = new FormData(this),
+                            action = form.attr('action'),
+                            method = form.attr('method');
+
+                        scope.$apply(() => scope.submitting = true);
+                        $.ajax({
+                            url: action,
+                            type: method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data, textStatus, jqXHR) {
+                            var response = JSON.parse(data);
+                            if (response.status) {
+                                toastr.success('Data processed successfully');
+                                $('#locationForm').modal('hide');
+                                scope.$apply(() => {
+                                    scope.submitting = false;
+                                    if (scope.updaetLocation === false) {
+                                        scope.list.unshift(response
+                                            .data);
+                                        scope.load();
+                                        categoyreClsForm()
+                                    } else {
+                                        scope.list[scope
+                                            .updaetLocation] = response.data;
+                                    }
+                                });
+                            } else toastr.error("Error");
+                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                            // error msg
+                        });
+                    })
+                })
+
+                function categoyreClsForm() {
+                    $('#location_id').val('');
+                    $('#locationName').val('');
+                    $('#locationCode').val('');
+                    $('#isoCode2').val('');
+                    $('#isoCode3').val('');
+                }
+            </script>
+        </div>
+
     </div>
 @endsection
 
@@ -102,7 +214,8 @@
                 name: ['Un visible', 'Visible'],
                 color: ['danger', 'success']
             };
-            $('.loading-spinner').hide();
+
+            $scope.submitting = false;
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
@@ -120,8 +233,6 @@
 
                 if ($scope.noMore) return;
                 $scope.loading = true;
-
-                $('.loading-spinner').show();
                 var request = {
                     q: $scope.q,
                     last_id: $scope.last_id,
@@ -131,7 +242,6 @@
                 };
 
                 $.post("/locations/load", request, function(data) {
-                    $('.loading-spinner').hide();
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;

@@ -72,7 +72,8 @@
             </div>
         </div>
 
-        <div class="modal fade" id="formModal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="formModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -133,48 +134,54 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer d-flex">
-                        <div class="me-auto">
-                            <button type="submit" form="modalForm" class="btn btn-outline-primary btn-sm"
+                        <div class="modal-footer d-flex">
+                            <button type="button" class="btn btn-outline-secondary me-auto"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary"
                                 ng-disabled="submitting">Submit</button>
-                            <div class="spinner-border spinner-border-sm text-warning ms-2" role="status"
-                                ng-show="submitting">
-                                <span class="visually-hidden">Processing...</span>
-                            </div>
+                            <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
+                                ng-if="submitting"></span>
+
                         </div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
-                            ng-disabled="submitting">Close</button>
                     </div>
                 </div>
             </div>
             <script>
-                $('#modalForm').on('submit', e => e.preventDefault()).validate({
-                    submitHandler: function(form) {
-                        var formData = new FormData(form),
-                            action = $(form).attr('action'),
-                            method = $(form).attr('method');
+                $(function() {
+                    $('#modalForm').on('submit', e => e.preventDefault()).validate({
+                        submitHandler: function(form) {
+                            var formData = new FormData(form),
+                                action = $(form).attr('action'),
+                                method = $(form).attr('method');
 
-                        scope.$apply(() => scope.submitting = true);
-                        $.ajax({
-                            url: action,
-                            type: method,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                        }).done(function(data, textStatus, jqXHR) {
-                            var response = JSON.parse(data);
-                            scope.$apply(function() {
-                                scope.submitting = false;
-                                if (response.status) {
-                                    toastr.success('Data processed successfully');
-                                    scope.list.unshift(response.data);
-                                    $('#formModal').modal('hide');
-                                } else toastr.error(response.message);
-                            });
-                        }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
-                    }
+                            scope.$apply(() => scope.submitting = true);
+                            $.ajax({
+                                url: action,
+                                type: method,
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                            }).done(function(data, textStatus, jqXHR) {
+                                var response = JSON.parse(data);
+                                scope.$apply(function() {
+                                    scope.submitting = false;
+                                    if (response.status) {
+                                        toastr.success('Data processed successfully');
+                                        scope.list.unshift(response.data);
+                                        productClsForm();
+                                        $('#formModal').modal('hide');
+                                    } else toastr.error(response.message);
+                                });
+                            }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
+                        }
+                    });
                 });
+
+
+                function productClsForm() {
+                    $('#productName').val('');
+                    $('#productCode').val('');
+                }
             </script>
         </div>
     </div>

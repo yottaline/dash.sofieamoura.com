@@ -42,7 +42,7 @@ class SeasonController extends Controller
             'season_delivery_2'  => $request->per_order,
             'season_start'       => $request->start,
             'season_end'         => Season::parse($request->start, 2),
-            'season_lookbook'   => $request->Lookbook,
+            'season_lookbook'   => $request->Lookbook ?? 'off',
             'season_visible'    => intval($request->visible)
         ];
 

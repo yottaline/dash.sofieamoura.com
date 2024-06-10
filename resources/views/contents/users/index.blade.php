@@ -20,10 +20,7 @@
                 <div class="card card-box">
                     <div class="card-body">
                         <div class="d-flex">
-                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">
-                                <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
-                                    role="status"></span><span>USERS</span>
-                            </h5>
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">USERS</h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
                                     ng-click="setUser(false)"></button>
@@ -69,7 +66,8 @@
             </div>
         </div>
 
-        <div class="modal fade" id="userModal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="userModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+            role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -103,66 +101,69 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="d-flex">
-                                <button type="button" class="btn btn-outline-secondary me-auto btn-sm"
-                                    data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-outline-primary btn-sm">Submit</button>
-                            </div>
                         </form>
-                        <script>
-                            $(function() {
-                                $('#userForm').on('submit', e => e.preventDefault()).validate({
-                                    rules: {
-                                        name: {
-                                            required: true
-                                        },
-                                        password: {
-                                            password: true
-                                        },
-                                        password_confirm: {
-                                            equalTo: "#password"
-                                        }
-                                    },
-                                    submitHandler: function(form) {
-                                        var formData = new FormData(form),
-                                            action = $(form).attr('action'),
-                                            method = $(form).attr('method');
-
-                                        $(form).find('button').prop('disabled', true);
-                                        $.ajax({
-                                            url: action,
-                                            type: method,
-                                            data: formData,
-                                            processData: false,
-                                            contentType: false,
-                                        }).done(function(data, textStatus, jqXHR) {
-                                            var response = JSON.parse(data);
-                                            if (response.status) {
-                                                toastr.success('Data processed successfully');
-                                                $('#userModal').modal('hide');
-                                                scope.$apply(() => {
-                                                    if (scope.updateUser === false) {
-                                                        scope.list.unshift(response.data);
-                                                        scope.dataLoader(true);
-                                                    } else {
-                                                        scope.list[scope.updateUser] = response.data;
-                                                    }
-                                                });
-                                            } else toastr.error(response.message);
-                                        }).fail(function(jqXHR, textStatus, errorThrown) {
-                                            // console.log()
-                                            toastr.error(jqXHR.responseJSON.message);
-                                            // $('#techModal').modal('hide');
-                                        }).always(function() {
-                                            $(form).find('button').prop('disabled', false);
-                                        });
-                                    }
-                                });
-                            });
-                        </script>
+                        <div class="modal-footer d-flex">
+                            <button type="button" class="btn btn-outline-secondary me-auto"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" form="userForm" class="btn btn-outline-primary"
+                                ng-disabled="submitting">Submit</button>
+                            <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
+                                ng-if="submitting"></span>
+                        </div>
                     </div>
                 </div>
+
+                <script>
+                    $(function() {
+                        $('#userForm').on('submit', e => e.preventDefault()).validate({
+                            rules: {
+                                name: {
+                                    required: true
+                                },
+                                password: {
+                                    password: true
+                                },
+                                password_confirm: {
+                                    equalTo: "#password"
+                                }
+                            },
+                            submitHandler: function(form) {
+                                var formData = new FormData(form),
+                                    action = $(form).attr('action'),
+                                    method = $(form).attr('method');
+
+                                scope.$apply(() => scope.submitting = true);
+                                $(form).find('button').prop('disabled', true);
+                                $.ajax({
+                                    url: action,
+                                    type: method,
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                }).done(function(data, textStatus, jqXHR) {
+                                    var response = JSON.parse(data);
+                                    if (response.status) {
+                                        toastr.success('Data processed successfully');
+                                        $('#userModal').modal('hide');
+                                        scope.$apply(() => {
+                                            scope.submitting = false;
+                                            if (scope.updateUser === false) {
+                                                scope.list.unshift(response.data);
+                                                scope.dataLoader(true);
+                                            } else {
+                                                scope.list[scope.updateUser] = response.data;
+                                            }
+                                        });
+                                    } else toastr.error(response.message);
+                                }).fail(function(jqXHR, textStatus, errorThrown) {
+                                    // console.log()
+                                    toastr.error(jqXHR.responseJSON.message);
+                                    // $('#techModal').modal('hide');
+                                });
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
 
@@ -178,7 +179,7 @@
             });
 
         app.controller('ngCtrl', function($scope) {
-            $('.loading-spinner').hide();
+            $scope.submitting = false;
             $scope.noMore = false;
             $scope.loading = false;
             $scope.q = '';
@@ -197,7 +198,6 @@
                 if ($scope.noMore) return;
                 $scope.loading = true;
 
-                $('.loading-spinner').show();
                 var request = {
                     q: $scope.q,
                     last_id: $scope.last_id,
@@ -207,7 +207,7 @@
                 };
 
                 $.post("/users/load", request, function(data) {
-                    $('.loading-spinner').hide();
+
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;

@@ -68,53 +68,55 @@
             </div>
         </div>
     </div>
-    <script>
-        $(function() {
-            $('#categoryForm form').on('submit', function(e) {
-                e.preventDefault();
-                var form = $(this),
-                    formData = new FormData(this),
-                    action = form.attr('action'),
-                    method = form.attr('method'),
-                    controls = form.find('button, input');
-                spinner.show();
-                controls.prop('disabled', true);
 
-                $.ajax({
-                    url: action,
-                    type: method,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                }).done(function(data, textStatus, jqXHR) {
-                    var response = JSON.parse(data);
-                    if (response.status) {
-                        toastr.success('Data processed successfully');
-                        $('#categoryForm').modal('hide');
-                        scope.$apply(() => {
-                            if (scope.updateCategory === false) {
-                                scope.list.unshift(response
-                                    .data);
-                                scope.load();
-                                categoyreClsForm()
-                            } else {
-                                scope.list[scope
-                                    .updateCategory] = response.data;
-                            }
-                        });
-                    } else toastr.error("Error");
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    // error msg
-                }).always(function() {
-                    spinner.hide();
-                    controls.prop('disabled', false);
-                });
+</div>
+<script>
+    $(function() {
+        $('#categoryForm form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this),
+                formData = new FormData(this),
+                action = form.attr('action'),
+                method = form.attr('method'),
+                controls = form.find('button, input');
+            spinner.show();
+            controls.prop('disabled', true);
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: formData,
+                processData: false,
+                contentType: false,
+            }).done(function(data, textStatus, jqXHR) {
+                var response = JSON.parse(data);
+                if (response.status) {
+                    toastr.success('Data processed successfully');
+                    $('#categoryForm').modal('hide');
+                    scope.$apply(() => {
+                        if (scope.updateCategory === false) {
+                            scope.list.unshift(response
+                                .data);
+                            scope.load();
+                            categoyreClsForm()
+                        } else {
+                            scope.list[scope
+                                .updateCategory] = response.data;
+                        }
+                    });
+                } else toastr.error("Error");
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                // error msg
+            }).always(function() {
+                spinner.hide();
+                controls.prop('disabled', false);
             });
         });
+    });
 
-        function categoyreClsForm() {
-            $('#category_id').val('');
-            $('#categoryName').val('');
-        }
-    </script>
+    function categoyreClsForm() {
+        $('#category_id').val('');
+        $('#categoryName').val('');
+    }
+</script>
 </div>

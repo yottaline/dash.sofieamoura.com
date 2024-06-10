@@ -13,7 +13,7 @@ class Ws_products_color extends Model
 
     protected $fillable = [
         'prodcolor_ref',
-        'prodcolor_code',
+        // 'prodcolor_code',
         'prodcolor_name',
         'prodcolor_product',
         'prodcolor_mincolorqty',
@@ -33,6 +33,15 @@ class Ws_products_color extends Model
         'prodcolor_created_by',
         'prodcolor_created'
     ];
+
+    public static function fetch($id = 0, $params = null)
+    {
+        $colors = self::orderBy('prodcolor_created', 'DESC');
+        if($params) $colors->where($params);
+        if($id) $colors->where('prodcolor_id', $id);
+
+        return $id ? $colors->first() : $colors->get();
+    }
 
 
     public static function submit($id = 0, $params = null)

@@ -40,58 +40,60 @@
                         <button type="submit" class="btn btn-outline-primary">Submit</button>
                     </div>
                 </form>
-                <script>
-                    $('#sizeF').on('submit', e => e.preventDefault()).validate({
-                        rules: {
-                            order: {
-                                digits: true,
-                                required: true
-                            }
-                        },
-                        submitHandler: function(form) {
-                            console.log(form);
-                            var formData = new FormData(form),
-                                action = $(form).attr('action'),
-                                method = $(form).attr('method');
-
-                            $(form).find('button').prop('disabled', true);
-                            $.ajax({
-                                url: action,
-                                type: method,
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                            }).done(function(data, textStatus, jqXHR) {
-                                var response = JSON.parse(data);
-                                if (response.status) {
-                                    toastr.success('Data processed successfully');
-                                    $('#sizeForm').modal('hide');
-                                    scope.$apply(() => {
-                                        if (scope.updateSize === false) {
-                                            scope.list.unshift(response
-                                                .data);
-                                            categoyreClsForm()
-                                        } else {
-                                            scope.list[scope
-                                                .updateSize] = response.data;
-                                        }
-                                    });
-                                } else toastr.error(response.message);
-                            }).fail(function(jqXHR, textStatus, errorThrown) {
-                                toastr.error("error");
-                            }).always(function() {
-                                $(form).find('button').prop('disabled', false);
-                            });
-                        }
-                    });
-
-                    function categoyreClsForm() {
-                        $('#size_id').val('');
-                        $('#sizeName').val('');
-                        $('#sizeOrder').val('');
-                    }
-                </script>
             </div>
         </div>
+        <script>
+            $(function() {
+                $('#sizeF').on('submit', e => e.preventDefault()).validate({
+                    rules: {
+                        order: {
+                            digits: true,
+                            required: true
+                        }
+                    },
+                    submitHandler: function(form) {
+                        console.log(form);
+                        var formData = new FormData(form),
+                            action = $(form).attr('action'),
+                            method = $(form).attr('method');
+
+                        $(form).find('button').prop('disabled', true);
+                        $.ajax({
+                            url: action,
+                            type: method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data, textStatus, jqXHR) {
+                            var response = JSON.parse(data);
+                            if (response.status) {
+                                toastr.success('Data processed successfully');
+                                $('#sizeForm').modal('hide');
+                                scope.$apply(() => {
+                                    if (scope.updateSize === false) {
+                                        scope.list.unshift(response
+                                            .data);
+                                        categoyreClsForm()
+                                    } else {
+                                        scope.list[scope
+                                            .updateSize] = response.data;
+                                    }
+                                });
+                            } else toastr.error(response.message);
+                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                            toastr.error("error");
+                        }).always(function() {
+                            $(form).find('button').prop('disabled', false);
+                        });
+                    }
+                });
+            });
+
+            function categoyreClsForm() {
+                $('#size_id').val('');
+                $('#sizeName').val('');
+                $('#sizeOrder').val('');
+            }
+        </script>
     </div>
 </div>

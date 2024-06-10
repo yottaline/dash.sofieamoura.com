@@ -50,55 +50,57 @@
                 </form>
             </div>
         </div>
+        <script>
+            $(function() {
+                $('#currencyForm form').on('submit', function(e) {
+                    e.preventDefault();
+                    var form = $(this),
+                        formData = new FormData(this),
+                        action = form.attr('action'),
+                        method = form.attr('method'),
+                        controls = form.find('button, input'),
+                        spinner = $('#currencyForm .loading-spinner');
+                    spinner.show();
+                    controls.prop('disabled', true);
+                    $.ajax({
+                        url: action,
+                        type: method,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                    }).done(function(data, textStatus, jqXHR) {
+                        var response = JSON.parse(data);
+                        if (response.status) {
+                            toastr.success('Data processed successfully');
+                            $('#currencyForm').modal('hide');
+                            scope.$apply(() => {
+                                if (scope.updateCurrency === false) {
+                                    scope.list.unshift(response
+                                        .data);
+                                    scope.load();
+                                    categoyreClsForm()
+                                } else {
+                                    scope.list[scope
+                                        .updateCurrency] = response.data;
+                                }
+                            });
+                        } else toastr.error("Error");
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        // error msg
+                    }).always(function() {
+                        spinner.hide();
+                        controls.prop('disabled', false);
+                    });
+                })
+            });
+
+            function categoyreClsForm() {
+                $('#currency_id').val('');
+                $('#currencyName').val('');
+                $('#currencyCode').val('');
+                $('#currencysymbol').val('');
+                $('#isoCode3').val('');
+            }
+        </script>
     </div>
 </div>
-<script>
-    $('#currencyForm form').on('submit', function(e) {
-        e.preventDefault();
-        var form = $(this),
-            formData = new FormData(this),
-            action = form.attr('action'),
-            method = form.attr('method'),
-            controls = form.find('button, input'),
-            spinner = $('#currencyForm .loading-spinner');
-        spinner.show();
-        controls.prop('disabled', true);
-        $.ajax({
-            url: action,
-            type: method,
-            data: formData,
-            processData: false,
-            contentType: false,
-        }).done(function(data, textStatus, jqXHR) {
-            var response = JSON.parse(data);
-            if (response.status) {
-                toastr.success('Data processed successfully');
-                $('#currencyForm').modal('hide');
-                scope.$apply(() => {
-                    if (scope.updateCurrency === false) {
-                        scope.list.unshift(response
-                            .data);
-                        scope.load();
-                        categoyreClsForm()
-                    } else {
-                        scope.list[scope
-                            .updateCurrency] = response.data;
-                    }
-                });
-            } else toastr.error("Error");
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            // error msg
-        }).always(function() {
-            spinner.hide();
-            controls.prop('disabled', false);
-        });
-    })
-
-    function categoyreClsForm() {
-        $('#currency_id').val('');
-        $('#currencyName').val('');
-        $('#currencyCode').val('');
-        $('#currencysymbol').val('');
-        $('#isoCode3').val('');
-    }
-</script>

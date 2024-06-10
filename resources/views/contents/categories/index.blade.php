@@ -155,16 +155,14 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer d-flex">
-                        <div class="me-auto">
-                            <button type="submit" form="modalForm" class="btn btn-outline-primary btn-sm"
+                        <div class="modal-footer d-flex">
+                            <button type="button" class="btn btn-outline-secondary me-auto"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary"
                                 ng-disabled="submitting">Submit</button>
                             <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
                                 ng-if="submitting"></span>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
-                            ng-disabled="submitting">Close</button>
                     </div>
                 </div>
             </div>

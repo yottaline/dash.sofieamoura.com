@@ -108,9 +108,10 @@
                                                 <label for="orderType">
                                                     Product Order Type <b class="text-danger">&ast;</b></label>
                                                 <select name="order_type" id="orderType" class="form-select" required>
-                                                    <option value="default">-- SELECT ORDER TYPE --</option>
-                                                    <option value="1">IN-STOCK</option>
-                                                    <option value="2">PRE-ORDER</option>
+                                                    <option ng-if="data.product_type == 1" value="1">IN-STOCK
+                                                    </option>
+                                                    <option ng-if="data.product_type == 2" value="2">
+                                                        PRE-ORDER</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -131,7 +132,8 @@
                                 <div class="d-flex mt-2">
                                     <div class="me-auto">
                                     </div>
-                                    <button type="submit" class="btn btn-outline-primary text-end me-auto">Update</button>
+                                    <button type="submit"
+                                        class="btn btn-outline-primary text-end me-auto">Update</button>
                                 </div>
                         </form>
                         <script>
@@ -244,7 +246,7 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-center">Size Name</th>
-                                        <th class="text-center">Color Code</th>
+                                        {{-- <th class="text-center">Color Code</th> --}}
                                         <th class="text-center">Color Name</th>
                                         <th class="text-center">Size Cost</th>
                                         <th class="text-center">Wholesale Price</th>
@@ -265,7 +267,7 @@
                                             <span ng-if="si.size_name == null" class="text-warning">Not added
                                                 yet</span>
                                         </td>
-                                        <td class="text-center" ng-bind="si.prodcolor_code"></td>
+                                        {{-- <td class="text-center" ng-bind="si.prodcolor_code"></td> --}}
                                         <td class="text-center" ng-bind="si.prodcolor_name"></td>
                                         <td class="text-center" ng-bind="si.prodsize_cost"></td>
                                         <td class="text-center" ng-bind="si.prodsize_wsp"></td>
@@ -305,7 +307,7 @@
                                                 value="put">
                                             <input type="hidden" name="id" id="prodsizeId"
                                                 ng-value="siezs[updateSize].prodsize_id">
-                                            <div class="col-12 col-sm-6">
+                                            {{-- <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
                                                     <label for="colorCode">Color Code<b
                                                             class="text-danger">&ast;</b></label>
@@ -313,9 +315,9 @@
                                                         name="code" id="colorCode"
                                                         ng-value="siezs[updateSize].prodcolor_code">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="col-12 col-sm-6">
+                                            <div class="col-12 col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="colorName">Color Name<b
                                                             class="text-danger">&ast;</b></label>
@@ -325,7 +327,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            {{-- <div class="col-12 col-sm-4">
                                                 <div class="mb-3">
                                                     <label for="sizeCost">Size Cost<b
                                                             class="text-danger">&ast;</b></label>
@@ -333,12 +335,12 @@
                                                         ng-value="siezs[updateSize].prodsize_cost" name="cost"
                                                         id="sizeCost">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="minQtyForColor">
-                                                        Mini order quantity for color <b
+                                                        Mini order quantity per-order <b
                                                             class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control" name="mincolorqty"
                                                         ng-value="siezs[updateSize].prodcolor_mincolorqty"
@@ -392,14 +394,15 @@
                                                         Order Type <b class="text-danger">&ast;</b></label>
                                                     <select name="order_type" id="orderType" class="form-select"
                                                         required>
-                                                        <option value="default">-- SELECT ORDER TYPE --</option>
-                                                        <option value="1">IN-STOCK</option>
-                                                        <option value="2">PRE-ORDER</option>
+                                                        <option ng-if="data.product_type == 1" value="1">IN-STOCK
+                                                        </option>
+                                                        <option ng-if="data.product_type == 2" value="2">
+                                                            PRE-ORDER</option>
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="mb-3">
                                                     <label for="colorOrder">
                                                         Color Order <b class="text-danger">&ast;</b></label>
@@ -408,19 +411,18 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Wholesale">Size Wholesale Price<b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
+                                                    <label for="Wholesale">SWP <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" ng-model="wsp"
                                                         ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
                                                         id="Wholesale">
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Qty">Size Quantity<b
+                                                    <label for="Qty">in-stock <b
                                                             class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control"
                                                         ng-value="siezs[updateSize].prodsize_qty" name="qty"
@@ -428,7 +430,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-4">
+                                            {{-- <div class="col-12 col-sm-4">
                                                 <div class="mb-3">
                                                     <label for="QUANTITY">Available Quantity<b
                                                             class="text-danger">&ast;</b></label>
@@ -436,15 +438,13 @@
                                                         ng-value="siezs[updateSize].prodsize_stock" name="stock"
                                                         id="QUANTITY">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="col-12 col-sm-4">
+                                            <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Recommanded">Recommanded Retail Price<b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
-                                                        ng-value="siezs[updateSize].prodsize_rrp" name="rrp"
-                                                        id="Recommanded">
+                                                    <label for="Recommanded">RRP <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" ng-value="to(wsp , 2.4)"
+                                                        name="rrp" id="Recommanded">
                                                 </div>
                                             </div>
 
@@ -502,82 +502,81 @@
                         </div>
                     </div>
                     <script>
-                        $('#sizeForm').on('submit', e => e.preventDefault()).validate({
-                            rules: {
-                                name: {
-                                    required: true
+                        $(function() {
+                            $('#sizeForm').on('submit', e => e.preventDefault()).validate({
+                                rules: {
+                                    name: {
+                                        required: true
+                                    },
+                                    code: {
+                                        required: true,
+                                    },
+                                    cost: {
+                                        digits: true,
+                                        required: true,
+                                    },
+                                    mincolorqty: {
+                                        digits: true,
+                                        required: true,
+                                    },
+                                    minqty: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    maxqty: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    minorder: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    discount: {
+                                        digits: true
+                                    },
+                                    order: {
+                                        required: true
+                                    },
+                                    size: {
+                                        required: true
+                                    },
+                                    wholesale: {
+                                        digits: true,
+                                    },
+                                    qty: {
+                                        digits: true,
+                                    },
+                                    stock: {
+                                        digits: true,
+                                    }
                                 },
-                                code: {
-                                    required: true,
-                                },
-                                cost: {
-                                    digits: true,
-                                    required: true,
-                                },
-                                mincolorqty: {
-                                    digits: true,
-                                    required: true,
-                                },
-                                minqty: {
-                                    digits: true,
-                                    required: true
-                                },
-                                maxqty: {
-                                    digits: true,
-                                    required: true
-                                },
-                                minorder: {
-                                    digits: true,
-                                    required: true
-                                },
-                                discount: {
-                                    digits: true
-                                },
-                                order: {
-                                    required: true
-                                },
-                                size: {
-                                    required: true
-                                },
-                                wholesale: {
-                                    digits: true,
-                                },
-                                qty: {
-                                    digits: true,
-                                },
-                                stock: {
-                                    digits: true,
-                                },
-                                rrp: {
-                                    digits: true,
-                                }
-                            },
-                            submitHandler: function(form) {
-                                var formData = new FormData(form),
-                                    action = $(form).attr('action'),
-                                    method = $(form).attr('method');
+                                submitHandler: function(form) {
+                                    var formData = new FormData(form),
+                                        action = $(form).attr('action'),
+                                        method = $(form).attr('method');
 
-                                scope.$apply(() => scope.submitting = true);
-                                $.ajax({
-                                    url: action,
-                                    type: method,
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                }).done(function(data, textStatus, jqXHR) {
-                                    var response = JSON.parse(data);
-                                    console.log(response);
-                                    scope.$apply(function() {
-                                        scope.submitting = false;
-                                        if (response.status) {
-                                            toastr.success('Data processed successfully');
-                                            $('#sizeModal').modal('hide');
-                                            scope.load(true);
-                                            $('#sizeModal').modal('hide');
-                                        } else toastr.error(response.message);
-                                    });
-                                }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
-                            }
+                                    scope.$apply(() => scope.submitting = true);
+                                    $.ajax({
+                                        url: action,
+                                        type: method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                    }).done(function(data, textStatus, jqXHR) {
+                                        var response = JSON.parse(data);
+                                        console.log(response);
+                                        scope.$apply(function() {
+                                            scope.submitting = false;
+                                            if (response.status) {
+                                                toastr.success('Data processed successfully');
+                                                $('#sizeModal').modal('hide');
+                                                scope.load(true);
+                                                $('#sizeModal').modal('hide');
+                                            } else toastr.error(response.message);
+                                        });
+                                    }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
+                                }
+                            });
                         });
                     </script>
                 </div>
@@ -673,7 +672,7 @@
                         </div>
                     </div>
 
-                    <div ng-if="medails.length"class="row" id="sortable">
+                    <div ng-if="medails.length" class="row" id="sortable">
                         <div ng-repeat="m in medails" class="col-6 col-sm-4 col-md-3 col-xl-2" data-id="<%m.media_id%>">
                             <form action="/product_medias/image_default" method="post">
                                 @csrf
@@ -741,7 +740,7 @@
                             @csrf
                             <input type="hidden" name="product_id" ng-value="data.product_id">
                             <div class="row">
-                                <div class="col-12 col-sm-6">
+                                <div class="col-12 col-sm-12">
 
                                     <div class="mb-3">
                                         <label for="category">
@@ -758,18 +757,18 @@
                                             id="color">
                                     </div> --}}
                                 </div>
-
+                                {{--
                                 <div class="col-12 col-sm-6">
                                     <div class="mb-3">
                                         <label for="order">Order<b class="text-danger">&ast;</b></label>
                                         <input type="text" class="form-control" name="order" id="order">
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-12 col-sm-12">
                                     <div class="mb-3">
-                                        <label for="media">Name<b class="text-danger">&ast;</b></label>
-                                        <input type="file" class="form-control" name="media[]" multiple
+                                        <label for="media">Media<b class="text-danger">&ast;</b></label>
+                                        <input type="file" class="form-control dropify" name="media[]" multiple
                                             id="media">
                                     </div>
                                 </div>
@@ -814,6 +813,8 @@
                         }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
                     }
                 });
+
+                $('.dropify').dropify();
             </script>
         </div>
         {{-- end media section --}}
@@ -848,6 +849,7 @@
             $scope.seasons = <?= json_encode($seasons) ?>;
             $scope.categories = <?= json_encode($categories) ?>;
             $scope.allsizes = <?= json_encode($sizes) ?>;
+            console.log($scope.data);
             $scope.load = function(reload = false) {
                 $('.loading-spinner').show();
                 var request = {
@@ -896,6 +898,11 @@
                     });
                 }, 'json');
             }
+
+            $scope.to = function(wsp, rrp) {
+                if (wsp == null) return 0;
+                return (wsp * rrp).toFixed(2);
+            };
 
             $scope.load();
             $scope.loadProductMedia();

@@ -60,54 +60,55 @@
             </div>
         </div>
     </div>
-</div>
-<script>
-    $('#locationForm form').on('submit', function(e) {
-        e.preventDefault();
-        var form = $(this),
-            formData = new FormData(this),
-            action = form.attr('action'),
-            method = form.attr('method'),
-            controls = form.find('button, input'),
-            spinner = $('#locationForm .loading-spinner');
-        spinner.show();
-        controls.prop('disabled', true);
-        $.ajax({
-            url: action,
-            type: method,
-            data: formData,
-            processData: false,
-            contentType: false,
-        }).done(function(data, textStatus, jqXHR) {
-            var response = JSON.parse(data);
-            if (response.status) {
-                toastr.success('Data processed successfully');
-                $('#locationForm').modal('hide');
-                scope.$apply(() => {
-                    if (scope.updaetLocation === false) {
-                        scope.list.unshift(response
-                            .data);
-                        scope.load();
-                        categoyreClsForm()
-                    } else {
-                        scope.list[scope
-                            .updaetLocation] = response.data;
-                    }
-                });
-            } else toastr.error("Error");
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            // error msg
-        }).always(function() {
-            spinner.hide();
-            controls.prop('disabled', false);
-        });
-    })
 
-    function categoyreClsForm() {
-        $('#location_id').val('');
-        $('#locationName').val('');
-        $('#locationCode').val('');
-        $('#isoCode2').val('');
-        $('#isoCode3').val('');
-    }
-</script>
+    <script>
+        $('#locationForm form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this),
+                formData = new FormData(this),
+                action = form.attr('action'),
+                method = form.attr('method'),
+                controls = form.find('button, input'),
+                spinner = $('#locationForm .loading-spinner');
+            spinner.show();
+            controls.prop('disabled', true);
+            $.ajax({
+                url: action,
+                type: method,
+                data: formData,
+                processData: false,
+                contentType: false,
+            }).done(function(data, textStatus, jqXHR) {
+                var response = JSON.parse(data);
+                if (response.status) {
+                    toastr.success('Data processed successfully');
+                    $('#locationForm').modal('hide');
+                    scope.$apply(() => {
+                        if (scope.updaetLocation === false) {
+                            scope.list.unshift(response
+                                .data);
+                            scope.load();
+                            categoyreClsForm()
+                        } else {
+                            scope.list[scope
+                                .updaetLocation] = response.data;
+                        }
+                    });
+                } else toastr.error("Error");
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                // error msg
+            }).always(function() {
+                spinner.hide();
+                controls.prop('disabled', false);
+            });
+        })
+
+        function categoyreClsForm() {
+            $('#location_id').val('');
+            $('#locationName').val('');
+            $('#locationCode').val('');
+            $('#isoCode2').val('');
+            $('#isoCode3').val('');
+        }
+    </script>
+</div>
