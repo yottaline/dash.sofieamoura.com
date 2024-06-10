@@ -488,16 +488,13 @@
                                         </div>
 
                                 </div>
-
-                                <div class="modal-footer d-flex">
-                                    <div class="me-auto">
-                                        <button type="submit" form="sizeForm" class="btn btn-outline-primary btn-sm"
-                                            ng-disabled="submitting">Submit</button>
-                                    </div>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm"
-                                        data-bs-dismiss="modal" ng-disabled="submitting">Close</button>
-                                </div>
                                 </form>
+                                <div class="modal-footer d-flex">
+                                    <button type="button" class="btn btn-outline-secondary me-auto"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" form="sizeForm" class="btn btn-outline-primary"
+                                        ng-disabled="submitting">Submit</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -775,14 +772,12 @@
 
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer d-flex">
-                        <div class="me-auto">
-                            <button type="submit" form="mediaForm" class="btn btn-outline-primary btn-sm"
+                        <div class="modal-footer d-flex">
+                            <button type="button" class="btn btn-outline-secondary me-auto"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" form="mediaForm" class="btn btn-outline-primary"
                                 ng-disabled="submitting">Submit</button>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
-                            ng-disabled="submitting">Close</button>
                     </div>
                 </div>
             </div>
