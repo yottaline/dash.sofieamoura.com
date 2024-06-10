@@ -40,7 +40,7 @@ class ProductsMediaController extends Controller
 
         if($result)
         {
-            if(Ws_products_color::fetch(0, [['prodcolor_ref', $request->color], ['prodcolor_media', null]])){
+            if(Ws_products_color::where('prodcolor_ref', $request->color)->where('prodcolor_media', null)->get()){
                 Ws_products_color::where('prodcolor_ref', $request->color)->update(['prodcolor_media' => $result]);
             }
         }
