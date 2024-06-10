@@ -767,8 +767,8 @@
 
                                 <div class="col-12 col-sm-12">
                                     <div class="mb-3">
-                                        <label for="media">Name<b class="text-danger">&ast;</b></label>
-                                        <input type="file" class="form-control" name="media[]" multiple
+                                        <label for="media">Media<b class="text-danger">&ast;</b></label>
+                                        <input type="file" class="form-control dropify" name="media[]" multiple
                                             id="media">
                                     </div>
                                 </div>
@@ -813,6 +813,8 @@
                         }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
                     }
                 });
+
+                $('.dropify').dropify();
             </script>
         </div>
         {{-- end media section --}}
