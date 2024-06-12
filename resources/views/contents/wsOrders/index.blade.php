@@ -345,7 +345,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-12">
+                            {{-- <div class="col-12">
                                 <div class="form-check form-switch mb-3">
                                     <input class="form-check-input" id="checkbox" value="1"
                                         ng-checked="+list[updateOrder].order_status" type="checkbox">
@@ -353,10 +353,10 @@
                                         the same
                                         as the retailer address ?</label>
                                 </div>
-                            </div>
-                            <hr>
+                            </div> --}}
+                            {{-- <hr> --}}
 
-                            <div class="col-12 col-md-6">
+                            {{-- <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label for="locations">Bill Country</label>
                                     <select name="location" id="locations" class="form-select" required>
@@ -411,7 +411,7 @@
                                         Bill Phone </label>
                                     <input type="text" class="form-control" name="bill_phone" id="billP" />
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-12 col-md-12">
                                 <div class="mb-3">
@@ -574,7 +574,7 @@
                                     currencies: currencies,
                                     cost: cost,
                                     zip: zip,
-                                    checkbox: check.checked,
+                                    // checkbox: check.checked,
                                     location: location,
                                     bill_province: bill_province,
                                     order_type: orderT,
