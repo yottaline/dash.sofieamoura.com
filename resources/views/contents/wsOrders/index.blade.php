@@ -151,7 +151,56 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <div class="row">
-                            <div class="col-12 col-md-12">
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost">Retailer Name</label>
+                                    <input type="text" id="retailer_name" class="form-control"
+                                        name="retailer_name" />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost">Email</label>
+                                    <input type="text" id="email" required class="form-control" name="email" />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost">Phone</label>
+                                    <input type="text" id="retailer_phone" class="form-control" name="phone" />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="mb-3">
+                                    <label for="Country">Country</label>
+                                    <select name="country" id="country" class="form-select">
+                                        <option value="">-- SELECT LOCATION NAME --</option>
+                                        <option data-ng-repeat="location in locations"
+                                            data-ng-value="location.location_id" data-ng-bind="location.location_name">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost">City</label>
+                                    <input type="text" id="city" class="form-control" name="city" />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost">Address</label>
+                                    <input type="text" id="address" class="form-control" name="address" />
+                                </div>
+                            </div>
+                            {{-- <div class="col-12 col-md-12">
                                 <div class="mb-3">
                                     <label for="retailer">Retailer<b class="text-danger">&ast;</b></label>
                                     <select name="retailer" id="retailer" class="form-select" required>
@@ -162,7 +211,7 @@
                                         </option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
@@ -230,7 +279,8 @@
                                         id="invitem-<%p.prodsize_id%>">
                                         <input type="hidden" class="record-id" ng-value="p.prodsize_id">
                                         <td><a href="#del" class="inv-item-del text-danger"
-                                                data-ng-click="delProduct($index)"><i class="bi bi-x-circle"></i></a></td>
+                                                data-ng-click="delProduct($index)"><i class="bi bi-x-circle"></i></a>
+                                        </td>
                                         <td colspan="1">
                                             <small class="fw-bold" data-ng-bind="p.product_name"></small><br>
                                             <small class="text-secondary font-monospace"
@@ -305,6 +355,7 @@
                                 </div>
                             </div>
                             <hr>
+
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label for="locations">Bill Country</label>
@@ -338,7 +389,6 @@
                                 </div>
                             </div>
 
-
                             <div class="col-12 col-md-3">
                                 <div class="mb-3">
                                     <label for="billLine2">
@@ -354,8 +404,6 @@
                                     <input type="text" class="form-control" name="line1" id="billLine1" />
                                 </div>
                             </div>
-
-
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
@@ -451,9 +499,6 @@
                                 }, callback, 'json');
                             }
 
-
-
-
                             $('#orderModal').on('show.bs.modal', function() {
                                 $("#items-selector, #inv-loading").hide();
                                 // $(this).find('select').val(null).trigger('change');
@@ -482,7 +527,13 @@
                                         amount: [],
                                         disc: []
                                     },
-                                    retailer = $('#retailer').val(),
+                                    retailer_name = $('#retailer_name').val(),
+                                    email = $('#email').val(),
+                                    r_phone = $('#retailer_phone').val(),
+                                    country = $('#country').val(),
+                                    r_city = $('#city').val(),
+                                    address = $('#address').val(),
+                                    // retailer = $('#retailer').val(),
                                     note = $('#note').val(),
                                     orderD = $('#order_disc').val(),
                                     season = $('#season').val(),
@@ -512,7 +563,13 @@
                                     qty: cart.qty.join(),
                                     disc: cart.disc.join(),
                                     amount: cart.amount.join(),
-                                    retailer_id: retailer,
+                                    name: retailer_name,
+                                    email: email,
+                                    r_phone: r_phone,
+                                    country: country,
+                                    r_city: r_city,
+                                    address: address,
+                                    // retailer_id: retailer,
                                     season: season,
                                     currencies: currencies,
                                     cost: cost,
