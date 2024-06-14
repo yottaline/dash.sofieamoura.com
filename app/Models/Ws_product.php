@@ -35,7 +35,7 @@ class Ws_product extends Model
             ->join('categories', 'product_category', '=', 'category_id')
             ->leftJoin('ws_products_colors', 'product_id', '=', 'prodcolor_product')
             ->leftJoin('products_media', 'ws_products_colors.prodcolor_media', 'products_media.media_id')
-            ->orderBy('prodcolor_order', 'ASC')->limit($limit)->offset($offset);
+            ->orderBy('product_id', 'ASC')->limit($limit)->offset($offset)->groupBy('product_id');
 
 
         if (isset($params['q'])) {

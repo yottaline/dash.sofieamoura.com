@@ -13,6 +13,7 @@ use App\Models\Ws_product;
 use App\Models\Ws_products_size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class WsOrderController extends Controller
 {
@@ -54,7 +55,30 @@ class WsOrderController extends Controller
         $qty = explode(',', $request->qty);
         $disc = explode(',', $request->disc);
         $amount = explode(',', $request->amount);
-        $retailer_address = Retailer_address::fetch(0, [['address_retailer', $request->retailer_id]]);
+
+        // create and check retailer data
+        $retailer = Retailer::fetch(0, [['retailer_email', $request->email]]);
+        if(!count($retailer))
+        {
+            $retailerParam = [
+                'retailer_code' => uniqidReal(8),
+                'retailer_fullName' => $request->name ?? 'default',
+                'retailer_email'    => $request->email,
+                'retailer_password' => Hash::make('1234'),
+                'retailer_phone'    => $request->r_phone ?? 'default',
+                'retailer_country'  => 1,
+                'retailer_city'     => $request->r_city ?? 'default',
+                'retailer_address'  => $request->address ?? 'default',
+                'retailer_company'  => 'Company',
+                'retailer_created'  => Carbon::now(),
+                'retailer_province' => $request->r_city  ?? 'default',
+            ];
+
+            $status = Retailer::submit($retailerParam, null);
+            $retailer = Retailer::fetch(0, [['retailer_id', $status]]);
+        }
+
+        // $retailer_address = Retailer_address::fetch(0, [['address_retailer', $request->retailer_id]]);
         $ordSubtotal = $orderTotalDisc = $ordTotal = 0;
         $orderParam = [];
         $products  = Ws_products_size::fetch(0, null, $ids);
@@ -82,7 +106,7 @@ class WsOrderController extends Controller
         $orderParam = [
             'order_code'            => uniqidReal(10),
             'order_season'          => $request->season,
-            'order_retailer'        => $request->retailer_id,
+            'order_retailer'        => $retailer[0]->retailer_id,
             'order_shipping'        => $request->cost,
             'order_subtotal'        => $ordSubtotal,
             'order_discount'        => $request->orderdisc ?? 0,
@@ -101,40 +125,40 @@ class WsOrderController extends Controller
         {
              $orderParam = [
             ...$orderParam,
-            'order_bill_country'  => $request->location,
-            'order_bill_province' => $request->bill_province,
-            'order_bill_city'     => $request->city,
-            'order_bill_zip'      => $request->zip,
-            'order_bill_line1'    => $request->line1,
-            'order_bill_line2'    => $request->line2,
-            'order_bill_phone'    => $request->phone,
-            'order_ship_country'  => $request->location,
-            'order_ship_province' => $request->bill_province,
-            'order_ship_city'     => $request->city,
-            'order_ship_zip'      => $request->zip,
-            'order_ship_line1'    => $request->line1,
-            'order_ship_line2'    => $request->line2,
-            'order_ship_phone'    => $request->phone,
+            'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
+            'order_bill_province' => $retailer[0]->retailer_province ??'default',
+            'order_bill_city'     => $retailer[0]->retailer_city ??'default',
+            'order_bill_zip'      => $retailer[0]->retailer_country ??'default',
+            'order_bill_line1'    => $retailer[0]->retailer_city ??'default',
+            'order_bill_line2'    => $retailer[0]->retailer_city ??'default',
+            'order_bill_phone'    => $retailer[0]->retailer_phone ??'default',
+            'order_ship_country'  => $retailer[0]->retailer_country ??'default',
+            'order_ship_province' => $retailer[0]->retailer_province ??'default',
+            'order_ship_city'     => $retailer[0]->retailer_city ??'default',
+            'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
+            'order_ship_line1'    => $retailer[0]->retailer_city ??'default',
+            'order_ship_line2'    => $retailer[0]->retailer_city ??'default',
+            'order_ship_phone'    => $retailer[0]->retailer_phone ??'default',
 
         ];
         }else {
 
             $orderParam = [
                 ...$orderParam,
-                'order_bill_country'  => $retailer_address[0]->address_country,
-                'order_bill_province' => $retailer_address[0]->address_province,
-                'order_bill_city'     => $retailer_address[0]->address_city,
-                'order_bill_zip'      => $retailer_address[0]->address_zip,
-                'order_bill_line1'    => $retailer_address[0]->address_line1,
-                'order_bill_line2'    => $retailer_address[0]->address_line2,
-                'order_bill_phone'    => $retailer_address[0]->address_phone,
-                'order_ship_country'  => $retailer_address[0]->address_country,
-                'order_ship_province' => $retailer_address[0]->address_province,
-                'order_ship_city'     => $retailer_address[0]->address_city,
-                'order_ship_zip'      => $retailer_address[0]->address_zip,
-                'order_ship_line1'    => $retailer_address[0]->address_line1,
-                'order_ship_line2'    => $retailer_address[0]->address_line2,
-                'order_ship_phone'    => $retailer_address[0]->address_phone,
+                'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
+                'order_bill_province' => $retailer[0]->retailer_province ??'default',
+                'order_bill_city'     => $retailer[0]->retailer_city ??'default',
+                'order_bill_zip'      => $retailer[0]->retailer_country ??'default',
+                'order_bill_line1'    => $retailer[0]->retailer_city ??'default',
+                'order_bill_line2'    => $retailer[0]->retailer_city ??'default',
+                'order_bill_phone'    => $retailer[0]->retailer_phone ??'default',
+                'order_ship_country'  => $retailer[0]->retailer_country ??'default',
+                'order_ship_province' => $retailer[0]->retailer_province ??'default',
+                'order_ship_city'     => $retailer[0]->retailer_city ??'default',
+                'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
+                'order_ship_line1'    => $retailer[0]->retailer_city ??'default',
+                'order_ship_line2'    => $retailer[0]->retailer_city ??'default',
+                'order_ship_phone'    => $retailer[0]->retailer_phone ??'default',
 
             ];
         }
