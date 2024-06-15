@@ -38,7 +38,7 @@
                 <div class="card card-box">
                     <div class="card-body">
                         <div class="d-flex">
-                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">WS PRODUCTS</h5>
+                            <h5 class="card-title fw-semibold pt-1 me-auto mb-3 text-uppercase">Wholesale Products</h5>
                             <div>
                                 <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus"
                                     data-bs-toggle="modal" data-bs-target="#formModal"></button>
@@ -54,7 +54,7 @@
                                         <img ng-if="p.prodcolor_media == null" src="/assets/img/default_product_image.png"
                                             alt="" class="card-img-top">
                                         <img ng-if="p.prodcolor_media"
-                                            src="{{ asset('media/product/') }}/<%p.product_id%>/<%p.media_file%>"
+                                            src="{{ asset('media/product/') }}/<% p.product_id %>/<% p.media_file %>"
                                             alt="" class="card-img-top">
                                         <div class="card-body">
                                             <h6 class="card-title" ng-bind="p.product_name"></h6>
@@ -134,15 +134,16 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="modal-footer d-flex">
-                            <button type="button" class="btn btn-outline-secondary me-auto"
-                                data-bs-dismiss="modal">Close</button>
-                            <button type="submit" form="modalForm" class="btn btn-outline-primary"
+                    </div>
+                    <div class="modal-footer d-flex">
+                        <div class="me-auto">
+                            <button type="submit" form="modalForm" class="btn btn-outline-primary btn-sm"
                                 ng-disabled="submitting">Submit</button>
                             <span class="spinner-border spinner-border-sm text-warning ms-2" role="status"
                                 ng-if="submitting"></span>
-
                         </div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal"
+                            ng-disabled="submitting">Close</button>
                     </div>
                 </div>
             </div>
@@ -230,10 +231,9 @@
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;
+                        $scope.noMore = ln < limit;
                         if (ln) {
-                            $scope.noMore = ln < limit;
                             $scope.list = data;
-                            console.log(data);
                             $scope.offset += ln;
                         }
                     });

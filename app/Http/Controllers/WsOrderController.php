@@ -17,39 +17,45 @@ use Illuminate\Support\Facades\Hash;
 
 class WsOrderController extends Controller
 {
-    public function __construct()
+    function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function index()
+    function index()
     {
-        $retailers   = Retailer::fetch(0,[['retailer_blocked', 1]]);
+        $retailers   = Retailer::fetch(0, [['retailer_blocked', 1]]);
         $seasons     = Season::fetch(0, [['season_visible', 1]]);
         $currencies  = Currency::fetch(0, [['currency_visible', 1]]);
-        $locations   = Location::fetch(0,[['location_visible', 1]]);
+        $locations   = Location::fetch(0, [['location_visible', 1]]);
         return view('contents.wsOrders.index', compact('retailers', 'seasons', 'currencies', 'locations'));
     }
 
-    public function load(Request $request)
+    function create()
+    {
+        $countries = Location::fetch(null, [['location_visible', '1']]);
+        return view('contents.wsOrders.create', compact('countries'));
+    }
+
+    function load(Request $request)
     {
         $param = $request->q ? ['q' => $request->q] : [];
         $limit = $request->limit;
         $lastId = $request->last_id;
-        if($request->date)   $param[] = ['order_created', 'like', '%' . $request->date . '%'];
-        if($request->r_name) $param[] = ['retailer_fullName', 'like', '%' . $request->r_name . '%'];
+        if ($request->date)   $param[] = ['order_created', 'like', '%' . $request->date . '%'];
+        if ($request->r_name) $param[] = ['retailer_fullName', 'like', '%' . $request->r_name . '%'];
 
         echo json_encode(Ws_order::fetch(0, $param, $limit, $lastId));
     }
 
-    public function getProduct(Request $request)
+    function getProduct(Request $request)
     {
         $product_name = $request->product;
         $param =  [['product_name', 'like', '%' . $product_name . '%']];
         echo json_encode(Ws_products_size::fetch(0, $param));
     }
 
-    public function submit(Request $request)
+    function submit(Request $request)
     {
         $ids = explode(',', $request->id);
         $qty = explode(',', $request->qty);
@@ -58,8 +64,7 @@ class WsOrderController extends Controller
 
         // create and check retailer data
         $retailer = Retailer::fetch(0, [['retailer_email', $request->email]]);
-        if(!count($retailer))
-        {
+        if (!count($retailer)) {
             $retailerParam = [
                 'retailer_code' => uniqidReal(8),
                 'retailer_fullName' => $request->name ?? 'default',
@@ -121,62 +126,61 @@ class WsOrderController extends Controller
             'order_invoicetime'     => Carbon::now(),
             'order_status'          => 0
         ];
-        if($request->checkbox == 'false')
-        {
-             $orderParam = [
-            ...$orderParam,
-            'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
-            'order_bill_province' => $retailer[0]->retailer_province ??'default',
-            'order_bill_city'     => $retailer[0]->retailer_city ??'default',
-            'order_bill_zip'      => $retailer[0]->retailer_country ??'default',
-            'order_bill_line1'    => $retailer[0]->retailer_city ??'default',
-            'order_bill_line2'    => $retailer[0]->retailer_city ??'default',
-            'order_bill_phone'    => $retailer[0]->retailer_phone ??'default',
-            'order_ship_country'  => $retailer[0]->retailer_country ??'default',
-            'order_ship_province' => $retailer[0]->retailer_province ??'default',
-            'order_ship_city'     => $retailer[0]->retailer_city ??'default',
-            'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
-            'order_ship_line1'    => $retailer[0]->retailer_city ??'default',
-            'order_ship_line2'    => $retailer[0]->retailer_city ??'default',
-            'order_ship_phone'    => $retailer[0]->retailer_phone ??'default',
+        if ($request->checkbox == 'false') {
+            $orderParam = [
+                ...$orderParam,
+                'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
+                'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
+                'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
+                'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
+                'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
+                'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
+                'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
+                'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
+                'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
+                'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
+                'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
+                'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
+                'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
+                'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
 
-        ];
-        }else {
+            ];
+        } else {
 
             $orderParam = [
                 ...$orderParam,
                 'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
-                'order_bill_province' => $retailer[0]->retailer_province ??'default',
-                'order_bill_city'     => $retailer[0]->retailer_city ??'default',
-                'order_bill_zip'      => $retailer[0]->retailer_country ??'default',
-                'order_bill_line1'    => $retailer[0]->retailer_city ??'default',
-                'order_bill_line2'    => $retailer[0]->retailer_city ??'default',
-                'order_bill_phone'    => $retailer[0]->retailer_phone ??'default',
-                'order_ship_country'  => $retailer[0]->retailer_country ??'default',
-                'order_ship_province' => $retailer[0]->retailer_province ??'default',
-                'order_ship_city'     => $retailer[0]->retailer_city ??'default',
+                'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
+                'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
+                'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
+                'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
+                'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
+                'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
+                'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
+                'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
+                'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
                 'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
-                'order_ship_line1'    => $retailer[0]->retailer_city ??'default',
-                'order_ship_line2'    => $retailer[0]->retailer_city ??'default',
-                'order_ship_phone'    => $retailer[0]->retailer_phone ??'default',
+                'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
+                'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
+                'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
 
             ];
         }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
 
-        if($result['status']) $result['data'] = Ws_order::fetch($result['id']);
+        if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
 
         echo json_encode($result);
     }
 
 
-    public function updateStatus(Request $request)
+    function updateStatus(Request $request)
     {
         $param = [
             'order_status' => $request->status,
         ];
-        if($request->status == 2) $param['order_placed'] = Carbon::now();
+        if ($request->status == 2) $param['order_placed'] = Carbon::now();
         $result =  Ws_order::submit($request->id, $param);
         echo json_encode([
             'status'  => boolval($result),
@@ -184,12 +188,12 @@ class WsOrderController extends Controller
     }
 
 
-    public function view($id)
+    function view($id)
     {
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         // return $order;
-        $orderData = Ws_orders_product::fetch(0,[['ordprod_order', $id]]);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }

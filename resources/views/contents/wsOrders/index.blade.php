@@ -5,7 +5,7 @@
         <input type="search" name="q" class="form-control my-3 my-md-0 rounded-pill" placeholder="Search...">
     </form>
 @endsection
-@section('content')
+@section('style')
     <style>
         .table>:not(:first-child) {
             border-top: 1px solid #ccc !important;
@@ -46,6 +46,8 @@
             background-color: #f8f8f8;
         }
     </style>
+@endsection
+@section('content')
     <div class="container-fluid" data-ng-app="myApp" data-ng-controller="myCtrl">
         <div class="row">
             <div class="col-12 col-sm-4 col-lg-3">
@@ -72,12 +74,13 @@
                                 <span class="loading-spinner spinner-border spinner-border-sm text-warning me-2"
                                     role="status"></span><span>ORDERS</span>
                             </h5>
-                            @csrf
+                            {{-- @csrf --}}
                             <div>
-                                <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
-                                    data-ng-click="setOrder(false)"></button>
+                                <a href="/ws_orders/create" class="btn btn-outline-primary btn-circle bi bi-plus-lg"></a>
+                                {{-- <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
+                                    data-ng-click="setOrder(false)"></button> --}}
                                 <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
-                                    data-ng-click="dataLoader(true)"></button>
+                                    data-ng-click="load(true)"></button>
                             </div>
                         </div>
                         <div data-ng-if="list.length" class="table-responsive">
@@ -652,7 +655,7 @@
             $scope.seasons = <?= json_encode($seasons) ?>;
             $scope.currencies = <?= json_encode($currencies) ?>;
             $scope.locations = <?= json_encode($locations) ?>;
-            $scope.dataLoader = function(reload = false) {
+            $scope.load = function(reload = false) {
                 if (reload) {
                     $scope.list = [];
                     $scope.last_id = 0;
@@ -709,7 +712,7 @@
                             scope.$apply(() => {
                                 if (scope.updateOrders === false) {
                                     scope.list.unshift(response.data);
-                                    scope.dataLoader(true);
+                                    scope.load(true);
                                 } else {
                                     scope.list[scope.updateOrders] = response.data;
                                 }
@@ -745,7 +748,7 @@
                 return (pecAmount * prodcolor_price).toFixed();
             };
 
-            $scope.dataLoader();
+            $scope.load();
             scope = $scope;
         });
 
@@ -753,7 +756,7 @@
             $('#nvSearch').on('submit', function(e) {
                 e.preventDefault();
                 scope.$apply(() => scope.q = $(this).find('input').val());
-                scope.dataLoader(true);
+                scope.load(true);
             });
 
             $('#productItem').on('change', function() {

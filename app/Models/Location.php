@@ -20,11 +20,9 @@ class Location extends Model
         'location_visible'
     ];
 
-    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    static function fetch($id = 0, $params = null, $limit = null)
     {
-        $locations = self::limit($limit)->orderBy('location_id', 'DESC');
-
-        if($lastId) $locations->where('location_id', '<', $lastId);
+        $locations = self::orderBy('location_name', 'ASC');
 
         if (isset($params['q'])) {
             $locations->where(function (Builder $query) use ($params) {
@@ -37,16 +35,16 @@ class Location extends Model
             unset($params['q']);
         }
 
-        if($params) $locations->where($params);
-
-        if($id) $locations->where('location_id', $id);
+        if ($id) $locations->where('location_id', $id);
+        if ($params) $locations->where($params);
+        if ($limit) $locations->limit($limit);
 
         return $id ? $locations->first() : $locations->get();
     }
 
-    public static function submit($param, $id)
+    static function submit($param, $id)
     {
-        if($id) return self::where('location_id', $id)->update($param) ? $id : false;
+        if ($id) return self::where('location_id', $id)->update($param) ? $id : false;
         $status = self::create($param);
         return $status ? $status->id : false;
     }

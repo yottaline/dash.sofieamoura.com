@@ -149,7 +149,7 @@
                                             scope.submitting = false;
                                             if (scope.updateUser === false) {
                                                 scope.list.unshift(response.data);
-                                                scope.dataLoader(true);
+                                                scope.load(true);
                                             } else {
                                                 scope.list[scope.updateUser] = response.data;
                                             }

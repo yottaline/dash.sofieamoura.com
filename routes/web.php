@@ -71,13 +71,13 @@ Route::middleware('auth')->group(function () {
     });
 
     // ws product sizes
-    Route::prefix('product_sizes')->group(function(){
+    Route::prefix('product_sizes')->group(function () {
         Route::post('load', 'WsProductsSizeController@load');
         Route::match(['post', 'put'], 'submit', 'WsProductsSizeController@submit');
         Route::put('edit_status', 'WsProductsSizeController@editStatus');
     });
 
-    Route::prefix('product_medias')->group(function(){
+    Route::prefix('product_medias')->group(function () {
         Route::post('load', 'ProductsMediaController@load');
         Route::match(['post', 'put'], 'submit', 'ProductsMediaController@submit');
         Route::post('order', 'ProductsMediaController@updateOrder');
@@ -85,8 +85,9 @@ Route::middleware('auth')->group(function () {
     });
 
     // ws-orders
-    Route::prefix('ws_orders')->group(function(){
+    Route::prefix('ws_orders')->group(function () {
         Route::get('/', 'WsOrderController@index');
+        Route::get('create', 'WsOrderController@create');
         Route::post('load', 'WsOrderController@load');
         Route::post('get_product', 'WsOrderController@getProduct');
         Route::match(['post', 'put'], 'submit', 'WsOrderController@submit');
@@ -94,7 +95,7 @@ Route::middleware('auth')->group(function () {
         Route::get('view/{id}', 'WsOrderController@view');
     });
 
-    Route::prefix('users')->group(function(){
+    Route::prefix('users')->group(function () {
         Route::get('/', 'UserController@index');
         Route::post('load', 'UserController@load');
         Route::match(['post', 'put'], 'submit', 'UserController@submit');

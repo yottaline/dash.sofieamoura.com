@@ -27,14 +27,9 @@ class WsProductController extends Controller
     function load(Request $request)
     {
         $params = $request->q ? ['q' => $request->q] : [];
-        $limit  = $request->limit;
-        $offset = $request->offset;
-
-        if($request->season) $params[] = ['product_season', $request->season];
-        if($request->p_name) $params[] = ['product_name', $request->p_name];
-        if($request->color) $params[]  = ['prodcolor_name', $request->color];
-
-        echo json_encode(Ws_product::fetch(0, $params, $limit, $offset));
+        if ($request->season) $params[] = ['product_season', $request->season];
+        if ($request->category) $params[] = ['product_category', $request->category];
+        echo json_encode(Ws_product::fetch(0, $params, $request->limit, $request->offset));
     }
 
     function submit(Request $request)
@@ -96,5 +91,4 @@ class WsProductController extends Controller
             'data'   => $result ? Ws_product::fetch(0, null, null, null, $ids) : [],
         ]);
     }
-
 }
