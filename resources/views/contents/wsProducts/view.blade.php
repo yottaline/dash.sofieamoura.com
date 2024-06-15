@@ -282,7 +282,7 @@
                                             <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
                                                 ng-click="editStatus($index)"></button>
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                ng-click="setSiez($index)"></button>
+                                                ng-click="editSize($index)"></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -294,7 +294,7 @@
                         </div>
                     </div>
 
-                    {{-- start size model --}}
+                    {{-- start add size model --}}
                     <div class="modal fade" id="sizeModal" tabindex="-1" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -568,6 +568,7 @@
                                                 toastr.success('Data processed successfully');
                                                 $('#sizeModal').modal('hide');
                                                 scope.load(true);
+                                                sClsForm();
                                                 $('#sizeModal').modal('hide');
                                             } else toastr.error(response.message);
                                         });
@@ -575,7 +576,232 @@
                                 }
                             });
                         });
+
+                        function sClsForm() {
+                            $('#prodsizeId').val('');
+                            $('#colorName').val('');
+                            $('#Wholesale').val('');
+                            $('#Recommanded').val('0');
+                        }
                     </script>
+                    {{-- end  add  size model --}}
+                    {{-- start add size model --}}
+
+                    <div class="modal fade" id="editSizeModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <form method="post" id="sizeFormedit" action="/product_sizes/submit">
+                                        @csrf
+                                        <div class="row">
+                                            <input type="hidden" name="p_id" ng-value="data.product_id">
+                                            <input ng-if="updateSize !== false" type="hidden" name="_method"
+                                                value="put">
+                                            <input type="hidden" name="id" id="prodsizeId"
+                                                ng-value="siezs[updateSize].prodsize_id">
+                                            <input type="hidden" name="color_id" id="prodsizeId"
+                                                ng-value="siezs[updateSize].prodcolor_id">
+
+                                            <div class="col-12 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label for="colorName">Color Name<b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodcolor_name" name="name"
+                                                        id="colorName">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="minQtyForColor">
+                                                        Mini order quantity per-order <b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" name="mincolorqty"
+                                                        ng-value="siezs[updateSize].prodcolor_mincolorqty"
+                                                        id="minQtyForColor" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="productMinQty">
+                                                        Product Min Qty <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" name="minqty"
+                                                        ng-value="siezs[updateSize].prodcolor_minqty"
+                                                        id="productMinQty" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="productMaxQty">
+                                                        Product Max Qty <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" name="maxqty"
+                                                        ng-value="siezs[updateSize].prodcolor_maxqty"
+                                                        id="productMaxQty" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="productMinOrder">
+                                                        Product Min Order </label>
+                                                    <input type="text" class="form-control" name="minorder"
+                                                        ng-value="siezs[updateSize].prodcolor_minorder"
+                                                        id="productMinOrder" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="productDiscount">
+                                                        Product Discount <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" name="discount"
+                                                        ng-value="siezs[updateSize].prodcolor_discount"
+                                                        id="productDiscount" />
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="Wholesale">SWP <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" ng-model="wsp"
+                                                        ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
+                                                        id="Wholesale">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="Qty">in-stock <b
+                                                            class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control"
+                                                        ng-value="siezs[updateSize].prodsize_qty" name="qty"
+                                                        id="Qty">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="Recommanded">RRP <b class="text-danger">&ast;</b></label>
+                                                    <input type="text" class="form-control" ng-value="to(wsp , 2.4)"
+                                                        name="rrp" id="Recommanded" readonly>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-6">
+                                                <div class="form-check form-switch mb-3">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="freeshipping" value="1"
+                                                        ng-checked="+siezs[updateSize].prodcolor_freeshipping">
+                                                    <label class="form-check-label">Free Shipping </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="form-check form-switch mb-3">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="color_status" value="1"
+                                                        ng-checked="+siezs[updateSize].prodcolor_published">
+                                                    <label class="form-check-label">Color product status </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                </div>
+                                </form>
+                                <div class="modal-footer d-flex">
+                                    <button type="button" class="btn btn-outline-secondary me-auto"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" form="sizeFormedit" class="btn btn-outline-primary"
+                                        ng-disabled="submitting">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(function() {
+                            $('#sizeFormedit').on('submit', e => e.preventDefault()).validate({
+                                rules: {
+                                    name: {
+                                        required: true
+                                    },
+                                    code: {
+                                        required: true,
+                                    },
+                                    cost: {
+                                        digits: true,
+                                        required: true,
+                                    },
+                                    mincolorqty: {
+                                        digits: true,
+                                        required: true,
+                                    },
+                                    minqty: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    maxqty: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    minorder: {
+                                        digits: true,
+                                        required: true
+                                    },
+                                    discount: {
+                                        digits: true
+                                    },
+                                    order: {
+                                        required: true
+                                    },
+                                    size: {
+                                        required: true
+                                    },
+                                    wholesale: {
+                                        digits: true,
+                                    },
+                                    qty: {
+                                        digits: true,
+                                    },
+                                    stock: {
+                                        digits: true,
+                                    }
+                                },
+                                submitHandler: function(form) {
+                                    var formData = new FormData(form),
+                                        action = $(form).attr('action'),
+                                        method = $(form).attr('method');
+
+                                    scope.$apply(() => scope.submitting = true);
+                                    $.ajax({
+                                        url: action,
+                                        type: method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                    }).done(function(data, textStatus, jqXHR) {
+                                        var response = JSON.parse(data);
+                                        console.log(response);
+                                        scope.$apply(function() {
+                                            scope.submitting = false;
+                                            if (response.status) {
+                                                toastr.success('Data processed successfully');
+                                                $('#editSizeModal').modal('hide');
+                                                scope.load(true);
+                                                $('#editSizeModal').modal('hide');
+                                            } else toastr.error(response.message);
+                                        });
+                                    }).fail((jqXHR, textStatus, errorThrown) => toastr.error("Request failed!"));
+                                }
+                            });
+                        });
+                    </script>
+                    {{-- end  add  size model --}}
                 </div>
 
                 <div class="modal fade" id="editStatus" tabindex="-1" role="dialog">
@@ -874,6 +1100,11 @@
             $scope.editStatus = (index) => {
                 $scope.updateSize = index;
                 $('#editStatus').modal('show');
+            }
+
+            $scope.editSize = (index) => {
+                $scope.updateSize = index;
+                $('#editSizeModal').modal('show');
             }
 
             $scope.loadProductMedia = function(reload = false) {
