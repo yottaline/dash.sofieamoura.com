@@ -689,7 +689,7 @@
                                                 <div class="form-check form-switch mb-3">
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="freeshipping" value="1"
-                                                        ng-checked="+siezs[updateSize].prodsize_freeshipping">
+                                                        ng-checked="+siezs[updateSize].prodcolor_freeshipping">
                                                     <label class="form-check-label">Free Shipping </label>
                                                 </div>
                                             </div>
@@ -698,7 +698,7 @@
                                                 <div class="form-check form-switch mb-3">
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="color_status" value="1"
-                                                        ng-checked="+siezs[updateSize].prodsize_published">
+                                                        ng-checked="+siezs[updateSize].prodcolor_published">
                                                     <label class="form-check-label">Color product status </label>
                                                 </div>
                                             </div>
