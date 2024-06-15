@@ -73,10 +73,9 @@ class WsProductController extends Controller
         $seasons = Season::fetch(0, [['season_visible', 1]]);
         $sizes = Size::fetch(0, [['size_visible', 1]]);
         $categories = Category::fetch(0, [['category_visible', 1]]);
-        $colors = Ws_products_color::fetch(0, [['product_ref', $ref]]);
         $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
         // return $data;
-        return view('contents.wsProducts.view', compact('data', 'seasons', 'categories', 'sizes', 'colors'));
+        return view('contents.wsProducts.view', compact('data', 'seasons', 'categories', 'sizes'));
     }
 
     function order(Request $request)

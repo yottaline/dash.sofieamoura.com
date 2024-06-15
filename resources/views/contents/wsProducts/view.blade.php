@@ -121,7 +121,7 @@
                                     <div class="col-12">
                                         <div class="mb-3">
                                             <label for="desc">
-                                                Product Description <b class="text-danger">&ast;</b></label>
+                                                Product Description </label>
                                             <textarea class="form-control" name="description" id="desc" cols="30" rows="7"><%data.product_desc%></textarea>
                                         </div>
                                     </div>
@@ -132,8 +132,7 @@
                                 <div class="d-flex mt-2">
                                     <div class="me-auto">
                                     </div>
-                                    <button type="submit"
-                                        class="btn btn-outline-primary text-end me-auto">Update</button>
+                                    <button type="submit" class="btn btn-outline-primary text-end me-auto">Update</button>
                                 </div>
                         </form>
                         <script>
@@ -375,6 +374,7 @@
                                                 $('#sizeModal').modal('hide');
                                                 scope.load(true);
                                                 sClsForm();
+                                                scope.loadcolor(true);
                                                 $('#sizeModal').modal('hide');
                                             } else toastr.error(response.message);
                                         });
@@ -774,7 +774,7 @@
             $scope.q = '';
             $scope.updateSize = false;
             $scope.siezs = [];
-
+            $scope.colors = [];
             $scope.medails = [];
             $scope.updateMedails = false;
 
@@ -782,7 +782,6 @@
             $scope.data = <?= json_encode($data) ?>;
             $scope.seasons = <?= json_encode($seasons) ?>;
             $scope.categories = <?= json_encode($categories) ?>;
-            $scope.colors = <?= json_encode($colors) ?>;
             $scope.allsizes = <?= json_encode($sizes) ?>;
             console.log($scope.data);
             $scope.load = function(reload = false) {
@@ -835,6 +834,18 @@
                             $scope.medails = data;
                             console.log(data)
                         }
+                    });
+                }, 'json');
+            }
+
+            $scope.loadcolor = function(reload = false) {
+                var request = {
+                    ref: $scope.data.product_ref,
+                    _token: '{{ csrf_token() }}'
+                };
+                $.post("/product_medias/get_color", request, function(data) {
+                    $scope.$apply(() => {
+                        $scope.colors = data;
                     });
                 }, 'json');
             }
@@ -899,6 +910,7 @@
 
             $scope.load();
             $scope.loadProductMedia();
+            $scope.loadcolor();
             scope = $scope;
         });
 

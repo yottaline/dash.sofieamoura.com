@@ -157,7 +157,7 @@
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="cost">Retailer Name</label>
+                                    <label for="retailer_name">Retailer Name</label>
                                     <input type="text" id="retailer_name" class="form-control"
                                         name="retailer_name" />
                                 </div>
@@ -165,14 +165,14 @@
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="cost">Email</label>
+                                    <label for="email">Email</label>
                                     <input type="text" id="email" required class="form-control" name="email" />
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="cost">Phone</label>
+                                    <label for="retailer_phone">Phone</label>
                                     <input type="text" id="retailer_phone" class="form-control" name="phone" />
                                 </div>
                             </div>
@@ -192,14 +192,14 @@
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="cost">City</label>
+                                    <label for="city">City</label>
                                     <input type="text" id="city" class="form-control" name="city" />
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="cost">Address</label>
+                                    <label for="city">Address</label>
                                     <input type="text" id="address" class="form-control" name="address" />
                                 </div>
                             </div>

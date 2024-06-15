@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
         Route::match(['post', 'put'], 'submit', 'ProductsMediaController@submit');
         Route::post('order', 'ProductsMediaController@updateOrder');
         Route::post('image_default', 'ProductsMediaController@imageDefault');
+        Route::post('get_color', 'ProductsMediaController@getColor');
     });
 
     // ws-orders
