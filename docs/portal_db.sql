@@ -83,7 +83,6 @@ CREATE TABLE IF NOT EXISTS
   ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------
-
 CREATE TABLE IF NOT EXISTS
   `retailer_addresses` (
     `address_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -178,7 +177,7 @@ CREATE TABLE IF NOT EXISTS
   `ws_products_colors` (
     `prodcolor_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `prodcolor_ref` VARCHAR(24) NOT NULL,
-    `prodcolor_code` VARCHAR(12) NOT NULL,
+    -- `prodcolor_code` VARCHAR(12) NOT NULL,
     `prodcolor_name` VARCHAR(24) NOT NULL,
     `prodcolor_product` INT UNSIGNED NOT NULL,
     `prodcolor_mincolorqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
