@@ -84,7 +84,7 @@ class WsProductsSizeController extends Controller
                     ];
                     $colorParam = [
                         'prodcolor_name'        => $request->name,
-                        'prodcolor_published'   => intval($request->color_status) ?? 1,
+                        'prodcolor_published'   => intval($request->color_status),
                         'prodcolor_modified_by' => auth()->user()->id,
                         'prodcolor_modified'    => Carbon::now(),
                         'prodcolor_product'     => $request->p_id,
@@ -94,7 +94,7 @@ class WsProductsSizeController extends Controller
                         'prodcolor_minorder'    => $request->minorder,
                         'prodcolor_ordertype'   => $request->order_type,
                         'prodcolor_discount'    => $request->discount,
-                        'prodcolor_freeshipping'=> intval($request->freeshipping) ?? 1,
+                        'prodcolor_freeshipping'=> intval($request->freeshipping),
                     ];
 
             }else{
