@@ -49,9 +49,9 @@ class Ws_products_color extends Model
         return self::where('prodcolor_id', $id)->update($params) ? $id : false;
     }
 
-    public static function createUpdateColorSize($id, $colorParam, $sizeParam)
+    public static function createUpdateColorSize($size, $sizeParam, $color, $colorParam)
     {
-        if($id) return Ws_products_size::where('prodsize_id', $id)->update($sizeParam) ? $id : false;
+        if($size && $color) return self::where('prodcolor_id', $color)->update($colorParam) && Ws_products_size::where('prodsize_id', $size)->update($sizeParam) ? $size : false;
         try {
             DB::beginTransaction();
 
@@ -72,9 +72,9 @@ class Ws_products_color extends Model
 
     }
 
-    public static function updateSizeColor($size, $sizeParam, $color, $colorParam)
-    {
-        return self::where('prodcolor_id', $color)->update($colorParam) && Ws_products_size::where('prodsize_id', $size)->update($sizeParam) ? $size : false;
-    }
+    // public static function updateSizeColor()
+    // {
+    //     return self::where('prodcolor_id', $color)->update($colorParam) && Ws_products_size::where('prodsize_id', $size)->update($sizeParam) ? $size : false;
+    // }
 
 }

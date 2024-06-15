@@ -583,7 +583,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <form method="post" id="sizeFormedit" action="/product_sizes/update">
+                                    <form method="post" id="sizeFormedit" action="/product_sizes/submit">
                                         @csrf
                                         <div class="row">
                                             <input type="hidden" name="p_id" ng-value="data.product_id">
