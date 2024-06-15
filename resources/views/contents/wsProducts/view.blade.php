@@ -234,33 +234,34 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="si in siezs track by $index">
+                                        <input type="hidden" ng-id="id" ng-value="si.size_id">
                                         <td ng-bind="si.prodcolor_ref"
                                             class="text-center small font-monospace text-uppercase"></td>
                                         <td class="text-center" ng-bind="si.size_name"></td>
                                         <td class="text-center" ng-bind="si.prodcolor_name"></td>
                                         <td class="text-center" ng-bind="si.prodsize_cost"></td>
-                                        <form action="" method="post">
-                                            <td style="width:100px">
-                                                <input type="number" name=""
-                                                    class="font-monospace text-center w-100" ng-value="si.prodsize_wsp"
-                                                    id="">
-                                            </td>
-                                            <td class="text-center" ng-bind="si.prodsize_rrp"></td>
-                                            <td class="text-center" ng-bind="si.prodsize_qty"></td>
-                                            <td class="text-center" ng-bind="si.prodsize_stock"></td>
-                                            <td class="text-center">
-                                                <span
-                                                    class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[si.prodsize_visible]%></span>
-                                            </td>
-                                            <td class="col-fit">
-                                                <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
-                                                    ng-click="editStatus($index)"></button>
-                                                <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                    ng-click="editSize($index)"></button>
-                                            </td>
+                                        <td style="width:100px">
+                                            <input type="text" class="font-monospace text-center w-100"
+                                                ng-model="si.prodsize_wsp" ng-blur="updatePrice(si)">
+                                        </td>
+                                        <td class="text-center" ng-bind="si.prodsize_rrp"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_qty"></td>
+                                        <td class="text-center" ng-bind="si.prodsize_stock"></td>
+                                        <td class="text-center">
+                                            <span
+                                                class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2">
+                                                <%statusObject.name[si.prodsize_visible]%>
+                                            </span>
+                                        </td>
+                                        <td class="col-fit">
+                                            <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
+                                                ng-click="editStatus($index)"></button>
+                                            <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
+                                                ng-click="editSize($index)"></button>
+                                        </td>
                                     </tr>
-                                    </form>
                                 </tbody>
+
                             </table>
                         </div>
                         <div ng-if="!siezs.length" class="py-5 text-center text-secondary">
@@ -390,8 +391,8 @@
                         }
                     </script>
                     {{-- end  add  size model --}}
-                    {{-- start add size model --}}
 
+                    {{-- start update size model --}}
                     <div class="modal fade" id="editSizeModal" tabindex="-1" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -606,7 +607,7 @@
                             });
                         });
                     </script>
-                    {{-- end  add  size model --}}
+                    {{-- end  update  size model --}}
                 </div>
 
                 <div class="modal fade" id="editStatus" tabindex="-1" role="dialog">
@@ -935,6 +936,34 @@
                 return (wsp * rrp).toFixed(2);
             };
 
+            $scope.updatePrice = function(item) {
+                item.prodsize_wsp = parseFloat(item.prodsize_wsp);
+
+                var data = {
+                    id: item.prodsize_id,
+                    newPrice: item.prodsize_wsp,
+                    pr_id: $scope.data.product_id,
+                    _token: '{{ csrf_token() }}'
+                };
+
+                $.post('/product_sizes/update', data)
+                    .then(function(response) {
+                        var data = JSON.parse(response);
+                        scope.$apply(function() {
+                            scope.submitting = false;
+                            if (data.status) {
+                                toastr.success('Data processed successfully');
+                                $scope.data = data.data
+                                // console.log()
+                                scope.load()
+                            } else toastr.error(data.message);
+                        });
+                    })
+                    .catch(function(error) {
+                        console.error('Error occurred:', error);
+                    });
+            };
+
             $scope.load();
             $scope.loadProductMedia();
             scope = $scope;
@@ -970,7 +999,6 @@
                     }
                 });
             }, 5000);
-
         });
     </script>
 @endsection
