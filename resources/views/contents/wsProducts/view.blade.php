@@ -151,31 +151,7 @@
                                     category: {
                                         required: true
                                     },
-                                    description: {
-                                        required: true
-                                    },
                                     order_type: {
-                                        required: true
-                                    },
-                                    minqty: {
-                                        required: true,
-                                        digits: true,
-                                    },
-                                    maxqty: {
-                                        digits: true,
-                                        required: true
-                                    },
-                                    minorder: {
-                                        digits: true,
-                                    },
-                                    discount: {
-                                        digits: true,
-                                        max: 100
-                                    },
-                                    delivery: {
-                                        required: true
-                                    },
-                                    related: {
                                         required: true
                                     }
                                 },
@@ -246,11 +222,10 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th class="text-center">Size Name</th>
-                                        {{-- <th class="text-center">Color Code</th> --}}
                                         <th class="text-center">Color Name</th>
                                         <th class="text-center">Size Cost</th>
-                                        <th class="text-center">Wholesale Price</th>
-                                        <th class="text-center">Recommanded Retail Price</th>
+                                        <th class="text-center">WSP</th>
+                                        <th class="text-center">RRP</th>
                                         <th class="text-center">Size Qty </th>
                                         <th class="text-center">AVAILABLE QUANTITY</th>
                                         <th class="text-center">Status</th>
@@ -260,31 +235,31 @@
                                 <tbody>
                                     <tr ng-repeat="si in siezs track by $index">
                                         <td ng-bind="si.prodcolor_ref"
-                                            class="text-center small font-monospace text-uppercase">
-                                        </td>
-                                        <td class="text-center">
-                                            <span ng-if="si.size_name" ng-bind="si.size_name"></span>
-                                            <span ng-if="si.size_name == null" class="text-warning">Not added
-                                                yet</span>
-                                        </td>
-                                        {{-- <td class="text-center" ng-bind="si.prodcolor_code"></td> --}}
+                                            class="text-center small font-monospace text-uppercase"></td>
+                                        <td class="text-center" ng-bind="si.size_name"></td>
                                         <td class="text-center" ng-bind="si.prodcolor_name"></td>
                                         <td class="text-center" ng-bind="si.prodsize_cost"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_wsp"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_rrp"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_qty"></td>
-                                        <td class="text-center" ng-bind="si.prodsize_stock"></td>
-                                        <td class="text-center">
-                                            <span
-                                                class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[si.prodsize_visible]%></span>
-                                        </td>
-                                        <td class="col-fit">
-                                            <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
-                                                ng-click="editStatus($index)"></button>
-                                            <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
-                                                ng-click="editSize($index)"></button>
-                                        </td>
+                                        <form action="" method="post">
+                                            <td style="width:100px">
+                                                <input type="number" name=""
+                                                    class="font-monospace text-center w-100" ng-value="si.prodsize_wsp"
+                                                    id="">
+                                            </td>
+                                            <td class="text-center" ng-bind="si.prodsize_rrp"></td>
+                                            <td class="text-center" ng-bind="si.prodsize_qty"></td>
+                                            <td class="text-center" ng-bind="si.prodsize_stock"></td>
+                                            <td class="text-center">
+                                                <span
+                                                    class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"><%statusObject.name[si.prodsize_visible]%></span>
+                                            </td>
+                                            <td class="col-fit">
+                                                <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
+                                                    ng-click="editStatus($index)"></button>
+                                                <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
+                                                    ng-click="editSize($index)"></button>
+                                            </td>
                                     </tr>
+                                    </form>
                                 </tbody>
                             </table>
                         </div>
@@ -307,15 +282,6 @@
                                                 value="put">
                                             <input type="hidden" name="id" id="prodsizeId"
                                                 ng-value="siezs[updateSize].prodsize_id">
-                                            {{-- <div class="col-12 col-sm-6">
-                                                <div class="mb-3">
-                                                    <label for="colorCode">Color Code<b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control font-monospace"
-                                                        name="code" id="colorCode"
-                                                        ng-value="siezs[updateSize].prodcolor_code">
-                                                </div>
-                                            </div> --}}
 
                                             <div class="col-12 col-sm-12">
                                                 <div class="mb-3">
@@ -327,118 +293,16 @@
                                                 </div>
                                             </div>
 
-                                            {{-- <div class="col-12 col-sm-4">
-                                                <div class="mb-3">
-                                                    <label for="sizeCost">Size Cost<b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
-                                                        ng-value="siezs[updateSize].prodsize_cost" name="cost"
-                                                        id="sizeCost">
-                                                </div>
-                                            </div> --}}
-
-                                            {{-- <div class="col-4">
-                                                <div class="mb-3">
-                                                    <label for="minQtyForColor">
-                                                        Mini order quantity per-order <b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" name="mincolorqty"
-                                                        ng-value="siezs[updateSize].prodcolor_mincolorqty"
-                                                        id="minQtyForColor" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-4">
-                                                <div class="mb-3">
-                                                    <label for="productMinQty">
-                                                        Product Min Qty <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" name="minqty"
-                                                        ng-value="siezs[updateSize].prodcolor_minqty"
-                                                        id="productMinQty" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-4">
-                                                <div class="mb-3">
-                                                    <label for="productMaxQty">
-                                                        Product Max Qty <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" name="maxqty"
-                                                        ng-value="siezs[updateSize].prodcolor_maxqty"
-                                                        id="productMaxQty" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-4">
-                                                <div class="mb-3">
-                                                    <label for="productMinOrder">
-                                                        Product Min Order </label>
-                                                    <input type="text" class="form-control" name="minorder"
-                                                        ng-value="siezs[updateSize].prodcolor_minorder"
-                                                        id="productMinOrder" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-4">
-                                                <div class="mb-3">
-                                                    <label for="productDiscount">
-                                                        Product Discount <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" name="discount"
-                                                        ng-value="siezs[updateSize].prodcolor_discount"
-                                                        id="productDiscount" />
-                                                </div>
-                                            </div> --}}
-
-                                            {{-- <div class="col-4">
-                                                <div class="mb-3">
-                                                    <label for="orderType">
-                                                        Order Type <b class="text-danger">&ast;</b></label>
-                                                    <select name="order_type" id="orderType" class="form-select"
-                                                        required>
-                                                        <option ng-if="data.product_type == 1" value="1">IN-STOCK
-                                                        </option>
-                                                        <option ng-if="data.product_type == 2" value="2">
-                                                            PRE-ORDER</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-6">
-                                                <div class="mb-3">
-                                                    <label for="colorOrder">
-                                                        Color Order <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" name="order"
-                                                        ng-value="siezs[updateSize].prodcolor_order" id="colorOrder" />
-                                                </div>
-                                            </div> --}}
 
                                             <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
-                                                    <label for="Wholesale">SWP <b class="text-danger">&ast;</b></label>
+                                                    <label for="Wholesale">Wholesale <b
+                                                            class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control" ng-model="wsp"
                                                         ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
                                                         id="Wholesale">
                                                 </div>
                                             </div>
-
-                                            {{-- <div class="col-12 col-sm-6">
-                                                <div class="mb-3">
-                                                    <label for="Qty">in-stock <b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
-                                                        ng-value="siezs[updateSize].prodsize_qty" name="qty"
-                                                        id="Qty">
-                                                </div>
-                                            </div> --}}
-
-                                            {{-- <div class="col-12 col-sm-4">
-                                                <div class="mb-3">
-                                                    <label for="QUANTITY">Available Quantity<b
-                                                            class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control"
-                                                        ng-value="siezs[updateSize].prodsize_stock" name="stock"
-                                                        id="QUANTITY">
-                                                </div>
-                                            </div> --}}
 
                                             <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
@@ -448,13 +312,6 @@
                                                 </div>
                                             </div>
 
-                                            {{-- <div class="col-12 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="productRelated">
-                                                        Product Related <b class="text-danger">&ast;</b></label>
-                                                    <textarea class="form-control" name="related" id="productRelated" cols="30" rows="5"><%siezs[updateSize].prodcolor_related%></textarea>
-                                                </div>
-                                            </div> --}}
 
                                             <input type="hidden" name="ps_size"
                                                 ng-value="siezs[updateSize].prodsize_size">
@@ -468,23 +325,6 @@
                                                 </div>
                                             </div>
 
-                                            {{-- <div class="col-6">
-                                                <div class="form-check form-switch mb-3">
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        name="freeshipping" value="1"
-                                                        ng-checked="+siezs[updateSize].prodsize_freeshipping">
-                                                    <label class="form-check-label">Free Shipping </label>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-6">
-                                                <div class="form-check form-switch mb-3">
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        name="color_status" value="1"
-                                                        ng-checked="+siezs[updateSize].prodsize_published">
-                                                    <label class="form-check-label">Color product status </label>
-                                                </div>
-                                            </div> --}}
                                         </div>
 
                                 </div>
@@ -508,42 +348,7 @@
                                     code: {
                                         required: true,
                                     },
-                                    cost: {
-                                        digits: true,
-                                        required: true,
-                                    },
-                                    mincolorqty: {
-                                        digits: true,
-                                        required: true,
-                                    },
-                                    minqty: {
-                                        digits: true,
-                                        required: true
-                                    },
-                                    maxqty: {
-                                        digits: true,
-                                        required: true
-                                    },
-                                    minorder: {
-                                        digits: true,
-                                        required: true
-                                    },
-                                    discount: {
-                                        digits: true
-                                    },
-                                    order: {
-                                        required: true
-                                    },
-                                    size: {
-                                        required: true
-                                    },
                                     wholesale: {
-                                        digits: true,
-                                    },
-                                    qty: {
-                                        digits: true,
-                                    },
-                                    stock: {
                                         digits: true,
                                     }
                                 },
