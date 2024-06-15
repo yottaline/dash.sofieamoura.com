@@ -161,7 +161,7 @@
                                             if (scope.updateSize === false) {
                                                 scope.list.unshift(response
                                                     .data);
-                                                categoyreClsForm()
+                                                sizeClsForm()
                                             } else {
                                                 scope.list[scope
                                                     .updateSize] = response.data;
@@ -177,7 +177,7 @@
                         });
                     });
 
-                    function categoyreClsForm() {
+                    function sizeClsForm() {
                         $('#size_id').val('');
                         $('#sizeName').val('');
                         $('#sizeOrder').val('');

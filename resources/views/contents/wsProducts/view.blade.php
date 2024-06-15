@@ -568,6 +568,7 @@
                                                 toastr.success('Data processed successfully');
                                                 $('#sizeModal').modal('hide');
                                                 scope.load(true);
+                                                sClsForm();
                                                 $('#sizeModal').modal('hide');
                                             } else toastr.error(response.message);
                                         });
@@ -575,6 +576,13 @@
                                 }
                             });
                         });
+
+                        function sClsForm() {
+                            $('#prodsizeId').val('');
+                            $('#colorName').val('');
+                            $('#Wholesale').val('');
+                            $('#Recommanded').val('0');
+                        }
                     </script>
                     {{-- end  add  size model --}}
                     {{-- start add size model --}}

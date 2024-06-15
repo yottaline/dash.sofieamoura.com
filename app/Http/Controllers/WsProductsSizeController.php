@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ws_product;
 use App\Models\Ws_products_color;
 use App\Models\Ws_products_size;
 use Carbon\Carbon;
@@ -29,7 +30,6 @@ class WsProductsSizeController extends Controller
         $id = $request->id;
         $color = $request->color_id;
         $sizes      = $request->size;
-        $orders     =   rand(0,99999);;
         $user = auth()->user()->id;
         $time = Carbon::now();
 
@@ -40,11 +40,12 @@ class WsProductsSizeController extends Controller
             $e = trim($e);
             return !empty($e);
         }));
+
         if( count($color_name) > 1){
 
             foreach($color_name as $color)
             {
-                $i = 0;
+                $orders     =   rand(0, 1000);
                 $color_ref = uniqidReal(14);
                 $colorParam[] = [
                     'prodcolor_ref'         => $color_ref,
@@ -98,6 +99,7 @@ class WsProductsSizeController extends Controller
                     ];
 
             }else{
+                $orders     =   rand(0, 100);
                 $color_ref = uniqidReal(14);
                 $colorParam[] = [
                     'prodcolor_ref'         => $color_ref,
