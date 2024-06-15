@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Season;
 use App\Models\Size;
 use App\Models\Ws_product;
+use App\Models\Ws_products_color;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,9 +73,10 @@ class WsProductController extends Controller
         $seasons = Season::fetch(0, [['season_visible', 1]]);
         $sizes = Size::fetch(0, [['size_visible', 1]]);
         $categories = Category::fetch(0, [['category_visible', 1]]);
+        $colors = Ws_products_color::fetch(0, [['product_ref', $ref]]);
         $data = Ws_product::fetch(0, [['product_ref', $ref]], 1);
         // return $data;
-        return view('contents.wsProducts.view', compact('data', 'seasons', 'categories', 'sizes'));
+        return view('contents.wsProducts.view', compact('data', 'seasons', 'categories', 'sizes', 'colors'));
     }
 
     function order(Request $request)

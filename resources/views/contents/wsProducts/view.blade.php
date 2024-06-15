@@ -682,8 +682,8 @@
                                         <label for="category">
                                             Color <b class="text-danger">&ast;</b></label>
                                         <select name="color" id="color" class="form-select" required>
-                                            <option ng-repeat="color in siezs" ng-value="color.prodcolor_ref">
-                                                <%color.prodcolor_name%> / <%color.size_name%>
+                                            <option ng-repeat="color in colors" ng-value="color.prodcolor_ref">
+                                                <%color.prodcolor_name%>
                                             </option>
                                         </select>
                                     </div>
@@ -782,6 +782,7 @@
             $scope.data = <?= json_encode($data) ?>;
             $scope.seasons = <?= json_encode($seasons) ?>;
             $scope.categories = <?= json_encode($categories) ?>;
+            $scope.colors = <?= json_encode($colors) ?>;
             $scope.allsizes = <?= json_encode($sizes) ?>;
             console.log($scope.data);
             $scope.load = function(reload = false) {
