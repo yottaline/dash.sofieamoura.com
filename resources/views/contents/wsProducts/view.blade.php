@@ -296,7 +296,7 @@
 
                     {{-- start size model --}}
                     <div class="modal fade" id="sizeModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-body">
                                     <form method="post" id="sizeForm" action="/product_sizes/submit">
@@ -337,7 +337,7 @@
                                                 </div>
                                             </div> --}}
 
-                                            <div class="col-4">
+                                            {{-- <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="minQtyForColor">
                                                         Mini order quantity per-order <b
@@ -386,9 +386,9 @@
                                                         ng-value="siezs[updateSize].prodcolor_discount"
                                                         id="productDiscount" />
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="col-4">
+                                            {{-- <div class="col-4">
                                                 <div class="mb-3">
                                                     <label for="orderType">
                                                         Order Type <b class="text-danger">&ast;</b></label>
@@ -409,7 +409,7 @@
                                                     <input type="text" class="form-control" name="order"
                                                         ng-value="siezs[updateSize].prodcolor_order" id="colorOrder" />
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
@@ -420,7 +420,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-6">
+                                            {{-- <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
                                                     <label for="Qty">in-stock <b
                                                             class="text-danger">&ast;</b></label>
@@ -428,7 +428,7 @@
                                                         ng-value="siezs[updateSize].prodsize_qty" name="qty"
                                                         id="Qty">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             {{-- <div class="col-12 col-sm-4">
                                                 <div class="mb-3">
@@ -444,17 +444,17 @@
                                                 <div class="mb-3">
                                                     <label for="Recommanded">RRP <b class="text-danger">&ast;</b></label>
                                                     <input type="text" class="form-control" ng-value="to(wsp , 2.4)"
-                                                        name="rrp" id="Recommanded">
+                                                        name="rrp" id="Recommanded" readonly>
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-sm-12">
+                                            {{-- <div class="col-12 col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="productRelated">
                                                         Product Related <b class="text-danger">&ast;</b></label>
                                                     <textarea class="form-control" name="related" id="productRelated" cols="30" rows="5"><%siezs[updateSize].prodcolor_related%></textarea>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <input type="hidden" name="ps_size"
                                                 ng-value="siezs[updateSize].prodsize_size">
@@ -468,7 +468,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-6">
+                                            {{-- <div class="col-6">
                                                 <div class="form-check form-switch mb-3">
                                                     <input class="form-check-input" type="checkbox" role="switch"
                                                         name="freeshipping" value="1"
@@ -484,7 +484,7 @@
                                                         ng-checked="+siezs[updateSize].prodsize_published">
                                                     <label class="form-check-label">Color product status </label>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
 
                                 </div>
