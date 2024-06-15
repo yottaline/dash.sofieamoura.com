@@ -249,13 +249,13 @@
                                         <td class="text-center" ng-bind="si.prodsize_stock"></td>
                                         <td class="text-center">
                                             <span
-                                                class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2">
+                                                class="badge bg-<%statusObject.color[si.prodsize_visible]%> rounded-pill font-monospace p-2"
+                                                data-ng-model="si.prodsize_visible" data-ng-click="toggle(si)"
+                                                style="cursor: pointer">
                                                 <%statusObject.name[si.prodsize_visible]%>
                                             </span>
                                         </td>
                                         <td class="col-fit">
-                                            <button class="btn btn-outline-success btn-circle bi bi-ui-checks-grid"
-                                                ng-click="editStatus($index)"></button>
                                             <button class="btn btn-outline-primary btn-circle bi bi-pencil-square"
                                                 ng-click="editSize($index)"></button>
                                         </td>
@@ -408,7 +408,7 @@
                                             <input type="hidden" name="color_id" id="prodsizeId"
                                                 ng-value="siezs[updateSize].prodcolor_id">
 
-                                            <div class="col-12 col-sm-12">
+                                            {{-- <div class="col-12 col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="colorName">Color Name<b
                                                             class="text-danger">&ast;</b></label>
@@ -416,7 +416,7 @@
                                                         ng-value="siezs[updateSize].prodcolor_name" name="name"
                                                         id="colorName">
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-6">
                                                 <div class="mb-3">
@@ -469,16 +469,6 @@
                                                 </div>
                                             </div>
 
-
-                                            <div class="col-12 col-sm-6">
-                                                <div class="mb-3">
-                                                    <label for="Wholesale">SWP <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" ng-model="wsp"
-                                                        ng-value="siezs[updateSize].prodsize_wsp" name="wholesale"
-                                                        id="Wholesale">
-                                                </div>
-                                            </div>
-
                                             <div class="col-12 col-sm-6">
                                                 <div class="mb-3">
                                                     <label for="Qty">in-stock <b
@@ -486,15 +476,6 @@
                                                     <input type="text" class="form-control"
                                                         ng-value="siezs[updateSize].prodsize_qty" name="qty"
                                                         id="Qty">
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-12 col-sm-6">
-                                                <div class="mb-3">
-                                                    <label for="Recommanded">RRP <b class="text-danger">&ast;</b></label>
-                                                    <input type="text" class="form-control" ng-value="to(wsp , 2.4)"
-                                                        name="rrp" id="Recommanded" readonly>
                                                 </div>
                                             </div>
 
@@ -609,80 +590,6 @@
                     </script>
                     {{-- end  update  size model --}}
                 </div>
-
-                <div class="modal fade" id="editStatus" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <form method="POST" action="/product_sizes/edit_status">
-                                    @csrf
-                                    <input data-ng-if="updateSize !== false" type="hidden" name="_method"
-                                        value="put">
-                                    <input type="hidden" name="size_id" data-ng-value="+siezs[updateSize].prodsize_id">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <div class="form-check form-switch mb-3">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="visible" value="1"
-                                                    ng-checked="+siezs[updateSize].prodsize_visible">
-                                                <label class="form-check-label">Size Status </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <button type="button" class="btn btn-outline-secondary me-auto"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-outline-primary">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <script>
-                    $('#editStatus form').on('submit', function(e) {
-                        e.preventDefault();
-                        var form = $(this),
-                            formData = new FormData(this),
-                            action = form.attr('action'),
-                            method = form.attr('method'),
-                            controls = form.find('button, input'),
-                            spinner = $('#editStatus .loading-spinner');
-                        spinner.show();
-                        controls.prop('disabled', true);
-                        $.ajax({
-                            url: action,
-                            type: method,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                        }).done(function(data, textStatus, jqXHR) {
-                            var response = JSON.parse(data);
-                            if (response.status) {
-                                toastr.success('Actived successfully');
-                                $('#editStatus').modal('hide');
-                                scope.$apply(() => {
-                                    if (scope.updateSize === false) {
-                                        scope.siezs = response.data;
-                                        scope.load(true);
-                                    } else {
-                                        scope.siezs[scope.updateSize] = response.data;
-                                    }
-                                });
-                            } else toastr.error("Error");
-                        }).fail(function(jqXHR, textStatus, errorThrown) {
-                            toastr.error("error");
-                            controls.log(jqXHR.responseJSON.message);
-                            $('#useForm').modal('hide');
-                        }).always(function() {
-                            spinner.hide();
-                            controls.prop('disabled', false);
-                        });
-
-                    })
-                </script>
-
-                {{-- end  size model --}}
             </div>
         </div>
         {{-- end siezs section --}}
@@ -956,6 +863,31 @@
                                 $scope.data = data.data
                                 // console.log()
                                 scope.load()
+                            } else toastr.error(data.message);
+                        });
+                    })
+                    .catch(function(error) {
+                        console.error('Error occurred:', error);
+                    });
+            };
+
+            $scope.toggle = function(item) {
+                var data = {
+                    id: item.prodsize_id,
+                    status: item.prodsize_visible,
+                    pr_id: $scope.data.product_id,
+                    _token: '{{ csrf_token() }}'
+                };
+
+                $.post('/product_sizes/edit_status', data)
+                    .then(function(response) {
+                        var data = JSON.parse(response);
+                        scope.$apply(function() {
+                            scope.submitting = false;
+                            if (data.status) {
+                                toastr.success('Data processed successfully');
+                                $scope.data = data.data
+                                $scope.load()
                             } else toastr.error(data.message);
                         });
                     })

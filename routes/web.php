@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('product_sizes')->group(function () {
         Route::post('load', 'WsProductsSizeController@load');
         Route::match(['post', 'put'], 'submit', 'WsProductsSizeController@submit');
-        Route::put('edit_status', 'WsProductsSizeController@editStatus');
+        Route::post('edit_status', 'WsProductsSizeController@editStatus');
         Route::post('update', 'WsProductsSizeController@update');
     });
 

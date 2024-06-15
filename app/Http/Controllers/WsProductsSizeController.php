@@ -72,31 +72,28 @@ class WsProductsSizeController extends Controller
         }
         else {
             if($id && $color){
-                // $sizeParam = [
-                //     'prodsize_product'     => $request->p_id,
-                //     'prodsize_cost'        => '0.00',
-                //     'prodsize_wsp'         => $request->wholesale,
-                //     'prodsize_rrp'         => $request->rrp,
-                //     'prodsize_qty'         => $request->qty,
-                //     'prodsize_stock'       => $request->qty,
-                //     'prodsize_visible'     => $request->visible ?? 1,
-                //     'prodsize_modified_by' => auth()->user()->id,
-                //     'prodsize_modified'    => Carbon::now()
-                //     ];
-                //     $colorParam = [
-                //         'prodcolor_name'        => $request->name,
-                //         'prodcolor_published'   => intval($request->color_status),
-                //         'prodcolor_modified_by' => auth()->user()->id,
-                //         'prodcolor_modified'    => Carbon::now(),
-                //         'prodcolor_product'     => $request->p_id,
-                //         'prodcolor_mincolorqty' => $request->mincolorqty,
-                //         'prodcolor_minqty'      => $request->minqty,
-                //         'prodcolor_maxqty'      => $request->maxqty,
-                //         'prodcolor_minorder'    => $request->minorder,
-                //         'prodcolor_ordertype'   => $request->order_type,
-                //         'prodcolor_discount'    => $request->discount,
-                //         'prodcolor_freeshipping'=> intval($request->freeshipping),
-                //     ];
+                $sizeParam = [
+                    'prodsize_product'     => $request->p_id,
+                    'prodsize_cost'        => '0.00',
+                    'prodsize_wsp'         => $request->wholesale,
+                    'prodsize_stock'       => $request->qty,
+                    'prodsize_visible'     => $request->visible ?? 1,
+                    'prodsize_modified_by' => auth()->user()->id,
+                    'prodsize_modified'    => Carbon::now()
+                    ];
+                    $colorParam = [
+                        'prodcolor_published'   => intval($request->color_status),
+                        'prodcolor_modified_by' => auth()->user()->id,
+                        'prodcolor_modified'    => Carbon::now(),
+                        'prodcolor_product'     => $request->p_id,
+                        'prodcolor_mincolorqty' => $request->mincolorqty,
+                        'prodcolor_minqty'      => $request->minqty,
+                        'prodcolor_maxqty'      => $request->maxqty,
+                        'prodcolor_minorder'    => $request->minorder,
+                        'prodcolor_ordertype'   => $request->order_type,
+                        'prodcolor_discount'    => $request->discount,
+                        'prodcolor_freeshipping'=> intval($request->freeshipping),
+                    ];
 
             }else{
                 $orders     =   rand(0, 100);
@@ -135,9 +132,12 @@ class WsProductsSizeController extends Controller
 
     public function editStatus(Request $request)
     {
-      $param = ['prodsize_visible' => intval($request->visible)];
+        // return $request;
+        $i = 1;
+        if($request->status) $i = 0;
+      $param = ['prodsize_visible' => $i];
 
-      $result = Ws_products_size::submit($param, $request->size_id);
+      $result = Ws_products_size::submit($param, $request->id);
       echo json_encode([
         'status' => boolval($result),
         'data'   => $result ?  Ws_products_size::fetch($result) : []
