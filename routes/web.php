@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
         Route::post('load', 'WsProductsSizeController@load');
         Route::match(['post', 'put'], 'submit', 'WsProductsSizeController@submit');
         Route::put('edit_status', 'WsProductsSizeController@editStatus');
+        Route::put('update', 'WsProductsSizeController@update');
     });
 
     Route::prefix('product_medias')->group(function(){
