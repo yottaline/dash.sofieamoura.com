@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Season;
 use App\Models\Size;
 use App\Models\Ws_product;
+use App\Models\Ws_products_color;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

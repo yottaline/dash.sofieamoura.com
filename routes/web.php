@@ -74,8 +74,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('product_sizes')->group(function () {
         Route::post('load', 'WsProductsSizeController@load');
         Route::match(['post', 'put'], 'submit', 'WsProductsSizeController@submit');
-        Route::put('edit_status', 'WsProductsSizeController@editStatus');
-        Route::put('update', 'WsProductsSizeController@update');
+        Route::post('edit_status', 'WsProductsSizeController@editStatus');
+        Route::post('update', 'WsProductsSizeController@update');
     });
 
     Route::prefix('product_medias')->group(function () {
@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
         Route::match(['post', 'put'], 'submit', 'ProductsMediaController@submit');
         Route::post('order', 'ProductsMediaController@updateOrder');
         Route::post('image_default', 'ProductsMediaController@imageDefault');
+        Route::post('get_color', 'ProductsMediaController@getColor');
     });
 
     // ws-orders

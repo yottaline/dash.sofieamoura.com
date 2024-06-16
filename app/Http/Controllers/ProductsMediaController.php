@@ -19,6 +19,12 @@ class ProductsMediaController extends Controller
         echo json_encode(Products_media::fetch(0, $param));
     }
 
+    public function getColor(Request $request)
+    {
+        $param[] = ['product_ref', $request->ref];
+        echo json_encode(Ws_products_color::fetch(0, $param));
+    }
+
     public function submit(Request $request)
     {
         $id = $request->id;

@@ -36,7 +36,7 @@ class Ws_products_color extends Model
 
     public static function fetch($id = 0, $params = null)
     {
-        $colors = self::orderBy('prodcolor_created', 'DESC');
+        $colors = self::join('ws_products', 'prodcolor_product', 'product_id')->orderBy('prodcolor_created', 'DESC');
         if($params) $colors->where($params);
         if($id) $colors->where('prodcolor_id', $id);
 
