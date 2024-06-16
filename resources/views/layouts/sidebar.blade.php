@@ -13,6 +13,30 @@
                  </a>
              </li>
 
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/retailers/">
+                     <i class="bi bi-person-lines-fill text-secondary me-2"></i><b>Retailers</b>
+                 </a>
+             </li>
+
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/ws_products/">
+                     <i class="bi bi-box-seam text-secondary me-2"></i><b>Wholesale Products</b>
+                 </a>
+             </li>
+
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/ws_orders/">
+                     <i class="bi bi-clipboard2-check-fill text-secondary me-2"></i><b>Wholesale
+                         Orders</b>
+                 </a>
+             </li>
+
+             <li class="list-group-item nav-support">
+                 <a class="link-dark d-block" href="/users/">
+                     <i class="bi bi-people-fill text-secondary me-2"></i><b>Users</b>
+                 </a>
+             </li>
 
              <li class="list-group-item">
                  <a class="link-dark d-block" data-bs-toggle="collapse" href="#settingCollapse" role="button"
@@ -60,43 +84,16 @@
                          settingCollapse.show();
                  </script>
              </li>
-
-             <li class="list-group-item nav-support">
-                 <a class="link-dark d-block" href="/retailers/">
-                     <i class="bi bi-person-lines-fill text-secondary me-2"></i><b>Retailers</b>
-                 </a>
-             </li>
-
-
-             <li class="list-group-item nav-support">
-                 <a class="link-dark d-block" href="/ws_products/">
-                     <i class="bi bi-box-seam text-secondary me-2"></i><b>Whole Sale Products</b>
-                 </a>
-             </li>
-
-             <li class="list-group-item nav-support">
-                 <a class="link-dark d-block" href="/ws_orders/">
-                     <i class="bi bi-clipboard2-check-fill text-secondary me-2"></i><b>Whole Sale
-                         Orders</b>
-                 </a>
-             </li>
-
-             <li class="list-group-item nav-support">
-                 <a class="link-dark d-block" href="/users/">
-                     <i class="bi bi-people-fill text-secondary me-2"></i><b>Users</b>
-                 </a>
-             </li>
-
          </ul>
      </div>
      <div class="d-flex">
          <a href="#" class="d-block p-3 flex-grow-1 border-top rounded-0 link-dark">
              <i class="bi bi-person-circle text-warning me-2"></i>
-             <b>{{ auth()->user()->name }}</b>
+             <b>{{ auth()->user()->user_name }}</b>
          </a>
          <form action="{{ route('logout') }}" method="post" class="d-block p-2 border-top border-start rounded-0">
              @csrf
-             <button type="submit" class="btn"><i class="bi bi-power text-danger"></i></button>
+             <button type="submit" class="btn border-0"><i class="bi bi-power text-danger"></i></button>
          </form>
      </div>
  </div>

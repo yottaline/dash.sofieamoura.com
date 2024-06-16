@@ -51,23 +51,22 @@ class Ws_order extends Model
     public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
     {
         $ws_orders = self::join('seasons', 'order_season', 'season_id')->join('retailers', 'order_retailer', 'retailer_id')
-                        ->join('currencies', 'order_currency', 'currency_id')->join('locations', 'order_bill_country', 'location_id');
+            ->join('currencies', 'order_currency', 'currency_id');
 
-        if($lastId) $ws_orders->where('order_id', '<', $lastId);
+        if ($lastId) $ws_orders->where('order_id', '<', $lastId);
 
         if (isset($params['q'])) {
             $ws_orders->where(function (Builder $query) use ($params) {
                 $query->where('order_code', 'like', '%' . $params['q'] . '%')
-                ->orWhere('order_discount', 'like', '%' . $params['q'] . '%')
-                ->orWhere('order_created', 'like', '%' . $params['q'] . '%');
+                    ->orWhere('order_discount', 'like', '%' . $params['q'] . '%')
+                    ->orWhere('order_created', 'like', '%' . $params['q'] . '%');
             });
 
             unset($params['q']);
         }
 
-        if($params) $ws_orders->where($params);
-
-        if($id) $ws_orders->where('order_id', $id);
+        if ($params) $ws_orders->where($params);
+        if ($id) $ws_orders->where('order_id', $id);
 
         return $id ? $ws_orders->first() : $ws_orders->get();
     }
@@ -80,16 +79,15 @@ class Ws_order extends Model
             $id = $id ? $id : $status->id;
             if (!empty($orderItemParam)) {
                 for ($i = 0; $i < count($orderItemParam); $i++) {
-                 $orderItemParam[$i]['ordprod_order'] = $id;
+                    $orderItemParam[$i]['ordprod_order'] = $id;
                 }
                 Ws_orders_product::insert($orderItemParam);
             }
             DB::commit();
-            return ['status' => true,'id' => $id];
-
+            return ['status' => true, 'id' => $id];
         } catch (\Exception $e) {
             DB::rollBack();
-            return ['status' => false,'message' => 'error: ' . $e->getMessage()];
+            return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
         }
     }
 }

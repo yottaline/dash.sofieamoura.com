@@ -57,26 +57,26 @@ class WsOrderController extends Controller
 
     function submit(Request $request)
     {
-        $ids = explode(',', $request->id);
+        $ids = explode(',', $request->sizes);
         $qty = explode(',', $request->qty);
-        $disc = explode(',', $request->disc);
-        $amount = explode(',', $request->amount);
+        // $disc = explode(',', $request->disc);
+        // $amount = explode(',', $request->amount);
 
         // create and check retailer data
         $retailer = Retailer::fetch(0, [['retailer_email', $request->email]]);
         if (!count($retailer)) {
             $retailerParam = [
                 'retailer_code' => uniqidReal(8),
-                'retailer_fullName' => $request->name ?? 'default',
                 'retailer_email'    => $request->email,
                 'retailer_password' => Hash::make('1234'),
-                'retailer_phone'    => $request->r_phone ?? 'default',
-                'retailer_country'  => 1,
-                'retailer_city'     => $request->r_city ?? 'default',
+                'retailer_fullName' => $request->name,
+                'retailer_company'  => $request->biz,
+                'retailer_phone'    => $request->phone ?? 'default',
+                'retailer_country'  => $request->country,
+                'retailer_province' => $request->city  ?? 'default',
+                'retailer_city'     => $request->city ?? 'default',
                 'retailer_address'  => $request->address ?? 'default',
-                'retailer_company'  => 'Company',
                 'retailer_created'  => Carbon::now(),
-                'retailer_province' => $request->r_city  ?? 'default',
             ];
 
             $status = Retailer::submit($retailerParam, null);
@@ -90,34 +90,33 @@ class WsOrderController extends Controller
         foreach ($products as $p) {
             $indx = array_search($p->prodsize_id, $ids);
             if ($indx !== false) {
-                $subtotal = $amount[$indx] * $p->prodsize_wsp;
-                $total    = $subtotal * $disc[$indx] / 100;
+                $subtotal = $qty[$indx] * $p->prodsize_wsp;
+                // $total    = $subtotal * $disc[$indx] / 100;
                 $orderProductParam[] = [
                     'ordprod_product'       => $p->product_id,
                     'ordprod_size'          => $p->prodsize_id,
                     'ordprod_price'         => $p->prodsize_wsp,
-                    'ordprod_request_qty'   => $amount[$indx],
+                    'ordprod_request_qty'   => $qty[$indx],
                     'ordprod_subtotal'      => $subtotal,
-                    'ordprod_total'         => $total,
-                    'ordprod_discount'      => $p->prodcolor_discount,
+                    'ordprod_total'         => $subtotal,
+                    'ordprod_discount'      => 0,
                     'ordprod_served_qty'    => $qty[$indx]
                 ];
                 $ordSubtotal    += $subtotal;
-                $orderTotalDisc += $total - $subtotal;
-                $ordTotal       += $total;
+                $ordTotal       += $subtotal;
             }
         }
 
         $orderParam = [
             'order_code'            => uniqidReal(10),
-            'order_season'          => $request->season,
+            'order_season'          => 1,
             'order_retailer'        => $retailer[0]->retailer_id,
-            'order_shipping'        => $request->cost,
+            'order_shipping'        => 0,
             'order_subtotal'        => $ordSubtotal,
-            'order_discount'        => $request->orderdisc ?? 0,
+            'order_discount'        => 0,
             'order_total'           => $ordTotal,
-            'order_currency'        => $request->currencies,
-            'order_type'            => $request->order_type,
+            'order_currency'        => 1,
+            'order_type'            => 1,
             'order_note'            => $request->note,
             'order_created'         => Carbon::now(),
             'order_proforma'        => uniqidReal(20),
@@ -126,51 +125,49 @@ class WsOrderController extends Controller
             'order_invoicetime'     => Carbon::now(),
             'order_status'          => 0
         ];
-        if ($request->checkbox == 'false') {
-            $orderParam = [
-                ...$orderParam,
-                'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
-                'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
-                'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
-                'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
-                'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
-                'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
-                'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
-                'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
-                'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
-                'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
-                'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
-                'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
-                'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
-                'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
 
-            ];
-        } else {
+        // if ($request->checkbox == 'false') {
+        //     $orderParam = [
+        //         ...$orderParam,
+        //         'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
+        //         'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
+        //         'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
+        //         'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
+        //         'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
+        //         'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
+        //         'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
+        //         'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
+        //         'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
+        //         'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
 
-            $orderParam = [
-                ...$orderParam,
-                'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
-                'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
-                'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
-                'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
-                'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
-                'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
-                'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
-                'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
-                'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
-                'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
-                'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
-                'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
-                'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
-                'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
+        //     ];
+        // } else {
+        //     $orderParam = [
+        //         ...$orderParam,
+        //         'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
+        //         'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
+        //         'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
+        //         'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
+        //         'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
+        //         'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
+        //         'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
+        //         'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
+        //         'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
+        //         'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
+        //         'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
 
-            ];
-        }
+        //     ];
+        // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
-
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
-
         echo json_encode($result);
     }
 
