@@ -15,13 +15,13 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" />
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
 
 
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
@@ -66,15 +66,18 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-sanitize.js"></script>
 
-
-    @yield('style')
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
     <link rel="stylesheet" href="{{ asset('assets/dropify-master/dist/css/dropify.min.css') }}">
     <script src="{{ asset('assets/dropify-master/dist/js/dropify.min.js') }}"></script>
+
     <link rel="stylesheet" href="{{ asset('/assets/css/style.css?v=1.0.0') }}">
+    <script src="{{ asset('/assets/js/custom_functions.js?v=1.0.0') }}"></script>
+    <script src="{{ asset('/assets/js/ng_functions.js?v=1.0.0') }}"></script>
+
+    @yield('style')
     <script>
-        let limit = 24;
+        const limit = 24;
     </script>
 </head>

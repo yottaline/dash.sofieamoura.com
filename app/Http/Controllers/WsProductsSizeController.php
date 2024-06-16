@@ -18,9 +18,8 @@ class WsProductsSizeController extends Controller
 
     public function load(Request $request)
     {
-        $param = $request->q ? ['q' => $request->q] : [];
-        $param[] = ['prodsize_product', '=', $request->product_id];
-        echo json_encode(Ws_products_size::fetch(0,$param));
+        $param = [['prodsize_product', '=', $request->product_id]];
+        echo json_encode(Ws_products_size::fetch(0, $param));
     }
 
     public function submit(Request $request)
@@ -36,15 +35,13 @@ class WsProductsSizeController extends Controller
         $colorParam = [];
         $sizeParam  = [];
 
-        $color_name = array_values(array_filter($color_name, function($e) {
+        $color_name = array_values(array_filter($color_name, function ($e) {
             $e = trim($e);
             return !empty($e);
         }));
 
-        if( count($color_name) > 1){
-
-            foreach($color_name as $color)
-            {
+        if (count($color_name) > 1) {
+            foreach ($color_name as $color) {
                 $orders     =   rand(0, 1000);
                 $color_ref = uniqidReal(14);
                 $colorParam[] = [
@@ -55,8 +52,7 @@ class WsProductsSizeController extends Controller
                     'prodcolor_created'      => $time,
                     'prodcolor_product'     => $request->p_id,
                 ];
-                foreach($sizes as $size)
-                {
+                foreach ($sizes as $size) {
                     $index = 0;
                     $sizeParam[] = [
                         'prodsize_size'    => $size[$index],
@@ -69,9 +65,8 @@ class WsProductsSizeController extends Controller
                     ];
                 };
             }
-        }
-        else {
-            if($id && $color){
+        } else {
+            if ($id && $color) {
                 $sizeParam = [
                     'prodsize_product'     => $request->p_id,
                     'prodsize_cost'        => '0.00',
@@ -80,22 +75,21 @@ class WsProductsSizeController extends Controller
                     'prodsize_visible'     => $request->visible ?? 1,
                     'prodsize_modified_by' => auth()->user()->id,
                     'prodsize_modified'    => Carbon::now()
-                    ];
-                    $colorParam = [
-                        'prodcolor_published'   => intval($request->color_status),
-                        'prodcolor_modified_by' => auth()->user()->id,
-                        'prodcolor_modified'    => Carbon::now(),
-                        'prodcolor_product'     => $request->p_id,
-                        'prodcolor_mincolorqty' => $request->mincolorqty,
-                        'prodcolor_minqty'      => $request->minqty,
-                        'prodcolor_maxqty'      => $request->maxqty,
-                        'prodcolor_minorder'    => $request->minorder,
-                        'prodcolor_ordertype'   => $request->order_type,
-                        'prodcolor_discount'    => $request->discount,
-                        'prodcolor_freeshipping'=> intval($request->freeshipping),
-                    ];
-
-            }else{
+                ];
+                $colorParam = [
+                    'prodcolor_published'   => intval($request->color_status),
+                    'prodcolor_modified_by' => auth()->user()->id,
+                    'prodcolor_modified'    => Carbon::now(),
+                    'prodcolor_product'     => $request->p_id,
+                    'prodcolor_mincolorqty' => $request->mincolorqty,
+                    'prodcolor_minqty'      => $request->minqty,
+                    'prodcolor_maxqty'      => $request->maxqty,
+                    'prodcolor_minorder'    => $request->minorder,
+                    'prodcolor_ordertype'   => $request->order_type,
+                    'prodcolor_discount'    => $request->discount,
+                    'prodcolor_freeshipping' => intval($request->freeshipping),
+                ];
+            } else {
                 $orders     =   rand(0, 100);
                 $color_ref = uniqidReal(14);
                 $colorParam[] = [
@@ -106,8 +100,7 @@ class WsProductsSizeController extends Controller
                     'prodcolor_created'      => $time,
                     'prodcolor_product'     => $request->p_id,
                 ];
-                foreach($sizes as $size)
-                {
+                foreach ($sizes as $size) {
                     $index = 0;
                     $sizeParam[] = [
                         'prodsize_size'    => $size[$index],
@@ -132,16 +125,15 @@ class WsProductsSizeController extends Controller
 
     public function editStatus(Request $request)
     {
-        // return $request;
         $i = 1;
-        if($request->status) $i = 0;
-      $param = ['prodsize_visible' => $i];
+        if ($request->status) $i = 0;
+        $param = ['prodsize_visible' => $i];
 
-      $result = Ws_products_size::submit($param, $request->id);
-      echo json_encode([
-        'status' => boolval($result),
-        'data'   => $result ?  Ws_products_size::fetch($result) : []
-    ]);
+        $result = Ws_products_size::submit($param, $request->id);
+        echo json_encode([
+            'status' => boolval($result),
+            'data'   => $result ?  Ws_products_size::fetch($result) : []
+        ]);
     }
 
     public function update(Request $request)

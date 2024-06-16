@@ -154,7 +154,6 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <div class="row">
-
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label for="retailer_name">Retailer Name</label>
@@ -680,11 +679,10 @@
                     var ln = data.length;
                     $scope.$apply(() => {
                         $scope.loading = false;
+                        $scope.noMore = ln < limit;
                         if (ln) {
-                            $scope.noMore = ln < limit;
                             $scope.list.push(...data);
                             $scope.last_id = data[ln - 1].order_id;
-                            console.log(data)
                         }
                     });
                 }, 'json');

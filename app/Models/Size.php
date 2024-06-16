@@ -18,33 +18,28 @@ class Size extends Model
         'size_visible'
     ];
 
-    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    public static function fetch($id = 0, $params = null, $limit = null, $offset = null)
     {
         $sizes = self::orderBy('size_order', 'ASC')->limit($limit);
 
         if (isset($params['q'])) {
             $sizes->where(function (Builder $query) use ($params) {
-                $query->where('size_order', 'like', '%' . $params['q'] . '%')
-                    ->orWhere('size_name', $params['q']);
+                $query->Where('size_name', $params['q']);
             });
 
             unset($params['q']);
         }
 
-        if($lastId) $sizes->where('size_id', '<', $lastId);
-
-        if($params) $sizes->where($params);
-
-        if($id) $sizes->where('size_id', $id);
+        if ($params) $sizes->where($params);
+        if ($id) $sizes->where('size_id', $id);
 
         return $id ? $sizes->first() : $sizes->get();
     }
 
     public static function submit($param, $id)
     {
-        if($id) return self::where('size_id', $id)->update($param) ? $id : false;
+        if ($id) return self::where('size_id', $id)->update($param) ? $id : false;
         $status = self::create($param);
         return $status ? $status->id : false;
     }
-
 }
