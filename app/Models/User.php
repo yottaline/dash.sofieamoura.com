@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable ;
+    use HasApiTokens, HasFactory, Notifiable;
     public $timestamps = false;
 
     /**
@@ -49,32 +49,30 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
+    static function fetch($id = 0, $params = null, $limit = 1, $lastId = null)
     {
         $users = self::limit($limit);
-
-        if($lastId) $users->where('id', '<', $lastId);
+        if ($lastId) $users->where('id', '<', $lastId);
 
         if (isset($params['q'])) {
             $users->where(function (Builder $query) use ($params) {
                 $query->where('user_code', 'like', '%' . $params['q'] . '%')
-                ->orWhere('user_email', 'like', '%' . $params['q'] . '%')
-                ->orWhere('user_name', $params['q']);
+                    ->orWhere('user_email', 'like', '%' . $params['q'] . '%')
+                    ->orWhere('user_name', $params['q']);
             });
 
             unset($params['q']);
         }
 
-        if($params) $users->where($params);
-
-        if($id) $params->where('id', $id);
+        if ($params) $users->where($params);
+        if (!empty($id)) $params->where('id', intval($id));
 
         return $id ? $users->first() : $users->get();
     }
 
-    public static function submit($param, $id)
+    static function submit($param, $id)
     {
-        if($id) return self::where('id', $id)->update($param) ? $id : false;
+        if ($id) return self::where('id', $id)->update($param) ? $id : false;
         $status = self::create($param);
         return $status ? $status->id : false;
     }
