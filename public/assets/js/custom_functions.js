@@ -1,4 +1,4 @@
-function nl2br(str, is_xhtml) {
+const nl2br = function (str, is_xhtml) {
   if (typeof str === "undefined" || str === null) return "";
 
   var breakTag =
@@ -7,26 +7,28 @@ function nl2br(str, is_xhtml) {
     /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
     "$1" + breakTag + "$2"
   );
-}
+};
 
-function oneSpace(input) {
+const oneSpace = function (input) {
   var clearValue = input.val().replace(/\s\s+/g, " ");
   input.val(clearValue);
-}
+};
 
 // 1,500,000 1,000
-function sepNumber(num) {
+const sepNumber = function (num) {
   return num
     .toString()
     .replaceAll(",", "")
     .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-}
+};
 
-/*
-	$('form').find('input, select').keydown(function(event){
-    if(event.keyCode == 13) {
-      event.preventDefault();
-      return false;
-    }
-  });
-*/
+const preventEnterToSubmit = function (form) {
+  $(form)
+    .find("input, select")
+    .keydown(function (event) {
+      if (event.keyCode == 13) {
+        event.preventDefault();
+        return false;
+      }
+    });
+};

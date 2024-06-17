@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS
     `retailer_country` INT UNSIGNED NOT NULL,
     `retailer_province` VARCHAR(120) NOT NULL,
     `retailer_city` VARCHAR(120) NOT NULL,
+    `retailer_zip` VARCHAR(12) NOT NULL,
     `retailer_address` VARCHAR(255) DEFAULT NULL,
     `retailer_billAdd` INT UNSIGNED DEFAULT NULL COMMENT 'DEFAULT BILLING ADDRESS',
     `retailer_shipAdd` INT UNSIGNED DEFAULT NULL COMMENT 'DEFAULT SHIPPING ADDRESS',
