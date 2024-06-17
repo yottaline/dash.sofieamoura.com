@@ -67,13 +67,13 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th>Full Name</th>
-                                        <th class="text-center">Company Name</th>
+                                        <th class="text-center">Company</th>
                                         <th class="text-center">Country</th>
-                                        <th class="text-center">Address</th>
+                                        {{-- <th class="text-center">Address</th>
                                         <th class="text-center">Province</th>
-                                        <th class="text-center">Advance Payment</th>
-                                        <th class="text-center">Currency</th>
-                                        <th class="text-center">Apperoved Date</th>
+                                        <th class="text-center">Advance Payment</th> --}}
+                                        {{-- <th class="text-center">Currency</th> --}}
+                                        {{-- <th class="text-center">Apperoved Date</th> --}}
                                         <th class="text-center">Status</th>
                                         <th></th>
                                     </tr>
@@ -97,15 +97,15 @@
                                         </td>
                                         <td class="text-center" ng-bind="retailer.retailer_company"></td>
                                         <td class="text-center" ng-bind="retailer.location_name"></td>
-                                        <td class="text-center" ng-bind="retailer.retailer_address"></td>
+                                        {{-- <td class="text-center" ng-bind="retailer.retailer_address"></td>
                                         <td class="text-center" ng-bind="retailer.retailer_province"></td>
-                                        <td class="text-center" ng-bind="retailer.retailer_adv_payment"></td>
-                                        <td class="text-center" ng-bind="retailer.currency_name"></td>
-                                        <td class="text-center">
+                                        <td class="text-center" ng-bind="retailer.retailer_adv_payment"></td> --}}
+                                        {{-- <td class="text-center" ng-bind="retailer.currency_name"></td> --}}
+                                        {{-- <td class="text-center">
                                             <span ng-if="retailer.retailer_approved == null">Not Approved</span>
                                             <span ng-if="retailer.retailer_approved != null"
                                                 ng-bind="retailer.retailer_approved"></span>
-                                        </td>
+                                        </td> --}}
 
                                         <td class="text-center">
                                             <span
@@ -174,8 +174,8 @@
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label for="phone">
-                                            Phone <b class="text-danger">&ast;</b></label>
-                                        <input type="text" class="form-control" name="phone" required
+                                            Phone </label>
+                                        <input type="text" class="form-control" name="phone"
                                             ng-value="list[updateRetailer].retailer_phone" id="phone" />
                                     </div>
                                 </div>
@@ -189,14 +189,14 @@
                                     </div>
                                 </div>
 
-                                <div class="col-6">
+                                {{-- <div class="col-6">
                                     <div class="mb-3">
                                         <label for="logo">
                                             Company Logo</label>
                                         <input type="file" class="form-control" name="logo" id="logo" />
                                     </div>
-                                </div>
-
+                                </div> --}}
+                                {{--
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label for="website">
@@ -204,21 +204,21 @@
                                         <input type="text" class="form-control" name="website"
                                             ng-value="list[updateRetailer].retailer_website" id="website" />
                                     </div>
-                                </div>
+                                </div> --}}
 
-                                <div class="col-12">
+                                {{-- <div class="col-12">
                                     <div class="mb-3">
                                         <label for="desc">
                                             Company Description</label>
                                         <textarea class="form-control" name="desc" cols="30" rows="7" id="desc"></textarea>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label for="province">
-                                            Province <b class="text-danger">&ast;</b></label>
-                                        <input type="text" class="form-control" name="province" required
+                                            Province </label>
+                                        <input type="text" class="form-control" name="province"
                                             ng-value="list[updateRetailer].retailer_province" id="province" />
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="col-6">
+                                {{-- <div class="col-6">
                                     <div class="mb-3">
                                         <label for="currency">
                                             Currency <b class="text-danger">&ast;</b></label>
@@ -247,7 +247,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-6">
                                     <div class="mb-3">
@@ -300,7 +300,7 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="col-6">
+                                <div class="col-12">
                                     <div class="mb-3">
                                         <label for="address">
                                             Address</label>
@@ -475,8 +475,8 @@
 
         app.controller('ngCtrl', function($scope) {
             $scope.statusObject = {
-                name: ['Blacked', 'Available'],
-                color: ['danger', 'success']
+                name: ['Available', 'Blacked'],
+                color: ['success', 'danger']
             };
 
             $scope.submitting = false;
