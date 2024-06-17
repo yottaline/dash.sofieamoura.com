@@ -44,11 +44,6 @@ class RetailerController extends Controller
             'email'      => 'required|email',
             'phone'      => 'required',
             'company'    => 'required',
-            'Payment'    => 'numeric',
-            'province'   => 'required',
-            'currency'   => 'required|numeric',
-            'country'    => 'required|numeric',
-            'city'       => 'required'
         ]);
 
         $id    = $request->retailer_id;
@@ -77,10 +72,10 @@ class RetailerController extends Controller
             'retailer_desc'         => $request?->desc,
             'retailer_website'      => $request?->website,
             'retailer_country'      => $request->country,
-            'retailer_province'     => $request->province,
+            'retailer_province'     => $request->province ?? 'default',
             'retailer_city'         => $request->city,
             'retailer_address'      => $request?->address,
-            'retailer_currency'     => $request->currency,
+            'retailer_currency'     => 1,
             // 'retailer_adv_payment'  => $request?->payment,
             'retailer_blocked'      => intval($request->status)
         ];
@@ -113,14 +108,14 @@ class RetailerController extends Controller
         if($result){
             $paramAddress = [
                 'address_retailer'  => $result,
-                'address_country'   => $request->currency,
-                'address_province'  => $request->province,
+                'address_country'   => 1,
+                'address_province'  => $request->province ?? 'default',
                 'address_city'      => $request->city,
                 'address_zip'       => $request->zip,
                 'address_line1'     => $request->address,
                 'address_line2'     => $request->address,
                 'address_phone'     => $phone,
-                'address_note'      => $request->address,
+                'address_note'      => $request->address ?? 'default',
             ];
 
             Retailer_address::submit($paramAddress, null);
