@@ -36,12 +36,12 @@ class UserController extends Controller
         $param = [
             'user_name'    => $request->name,
             'user_email'   => $request->email,
+            'user_password' => Hash::make($request->password)
         ];
 
         if (!$id) {
             $param['user_code'] = uniqidReal(8);
             $param['user_created'] = Carbon::now();
-            $param['user_password'] = Hash::make( $request->password);
         } else {
             $param['user_modified'] = Carbon::now();
         }
