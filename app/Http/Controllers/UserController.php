@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -41,7 +42,7 @@ class UserController extends Controller
         if (!$id) {
             $param['user_code'] = uniqidReal(8);
             $param['user_created'] = Carbon::now();
-            $param['user_password'] = '';
+            $param['user_password'] = Hash::make( $request->password);
         } else {
             $param['user_modified'] = Carbon::now();
         }
