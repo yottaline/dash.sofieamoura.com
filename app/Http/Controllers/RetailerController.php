@@ -40,9 +40,8 @@ class RetailerController extends Controller
     public function submit(Request $request)
     {
         $request->validate([
-            'name'       => 'required',
+            // 'name'       => 'required',
             'email'      => 'required|email',
-            'phone'      => 'required',
             'company'    => 'required',
         ]);
 
