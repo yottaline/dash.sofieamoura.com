@@ -318,7 +318,7 @@
                                             <div class="col-12 col-sm-12">
                                                 <label for="size">Sizes<b class="text-danger">&ast;</b></label>
                                                 <div class="form-check form-switch mb-5" style="display: inline-block"
-                                                    name=""ng-repeat="s in allsizes">
+                                                    ng-repeat="s in allsizes">
                                                     <input type="checkbox" name="size[]" ng-value="s.size_id">
                                                     <label for="size" ng-bind="s.size_name">Size<b
                                                             class="text-danger">&ast;</b></label>

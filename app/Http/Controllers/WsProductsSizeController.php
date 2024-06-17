@@ -53,9 +53,8 @@ class WsProductsSizeController extends Controller
                     'prodcolor_product'     => $request->p_id,
                 ];
                 foreach ($sizes as $size) {
-                    $index = 0;
                     $sizeParam[] = [
-                        'prodsize_size'    => $size[$index],
+                        'prodsize_size'    => $size,
                         'prodsize_color'   => $color_ref,
                         'prodsize_product' => $request->p_id,
                         'prodsize_wsp'     => $request->wholesale,
@@ -103,7 +102,7 @@ class WsProductsSizeController extends Controller
                 foreach ($sizes as $size) {
                     $index = 0;
                     $sizeParam[] = [
-                        'prodsize_size'    => $size[$index],
+                        'prodsize_size'    => $size,
                         'prodsize_color'   => $color_ref,
                         'prodsize_product' => $request->p_id,
                         'prodsize_wsp'     => $request->wholesale,
