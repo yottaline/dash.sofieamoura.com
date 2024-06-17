@@ -25,17 +25,16 @@ class UserController extends Controller
     function submit(Request $request)
     {
         $id = intval($request->id);
-        $email = $request->email;
 
-        if(count(User::fetch(0,[['id', '!=', $id], ['user_email', '=', $email]])))
-        {
-            echo json_encode(['status' => false, 'message' => __('البريد الالكتروني موجود مسبقا'),]);
+        $emailCheck = User::fetch(0, [['id', '!=', $id], ['user_email', '=', $request->email]]);
+        if ($emailCheck) {
+            echo json_encode(['status' => false, 'message' => __('The email address is already registered'),]);
             return;
         }
 
         $param = [
             'user_name'    => $request->name,
-            'user_email'   => $email,
+            'user_email'   => $request->email,
         ];
 
         if (!$id) {
