@@ -110,7 +110,7 @@ class RetailerController extends Controller
                 'address_country'   => 1,
                 'address_province'  => $request->province ?? 'default',
                 'address_city'      => $request->city,
-                'address_zip'       => $request->zip,
+                'address_zip'       => $request->zip ?? '44',
                 'address_line1'     => $request->address,
                 'address_line2'     => $request->address,
                 'address_phone'     => $phone,
