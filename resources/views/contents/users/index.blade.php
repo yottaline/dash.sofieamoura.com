@@ -117,9 +117,6 @@
                     $(function() {
                         $('#userForm').on('submit', e => e.preventDefault()).validate({
                             rules: {
-                                name: {
-                                    required: true
-                                },
                                 password: {
                                     password: true
                                 },
@@ -133,7 +130,7 @@
                                     method = $(form).attr('method');
 
                                 scope.$apply(() => scope.submitting = true);
-                                $(form).find('button').prop('disabled', true);
+
                                 $.ajax({
                                     url: action,
                                     type: method,
@@ -142,23 +139,19 @@
                                     contentType: false,
                                 }).done(function(data, textStatus, jqXHR) {
                                     var response = JSON.parse(data);
-                                    if (response.status) {
-                                        toastr.success('Data processed successfully');
-                                        $('#userModal').modal('hide');
-                                        scope.$apply(() => {
-                                            scope.submitting = false;
-                                            if (scope.updateUser === false) {
-                                                scope.list.unshift(response.data);
-                                                scope.load(true);
-                                            } else {
-                                                scope.list[scope.updateUser] = response.data;
-                                            }
-                                        });
-                                    } else toastr.error(response.message);
+                                    scope.$apply(() => {
+                                        scope.submitting = false;
+                                        if (response.status) {
+                                            if (scope.updateUser === false) scope.list.unshift(
+                                                response.data);
+                                            else scope.list[scope.updateUser] = response.data;
+
+                                            toastr.success('Data processed successfully');
+                                            $('#userModal').modal('hide');
+                                        } else toastr.error(response.message);
+                                    });
                                 }).fail(function(jqXHR, textStatus, errorThrown) {
-                                    // console.log()
                                     toastr.error(jqXHR.responseJSON.message);
-                                    // $('#techModal').modal('hide');
                                 });
                             }
                         });

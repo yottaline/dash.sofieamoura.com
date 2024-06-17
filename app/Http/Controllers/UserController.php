@@ -26,11 +26,11 @@ class UserController extends Controller
     {
         $id = intval($request->id);
 
-        $emailCheck = User::fetch(0, [['id', '!=', $id], ['user_email', '=', $request->email]]);
-        if ($emailCheck) {
-            echo json_encode(['status' => false, 'message' => __('The email address is already registered'),]);
-            return;
-        }
+        // $emailCheck = User::fetch(0, [['id', '!=', $id], ['user_email', '=', $request->email]]);
+        // if ($emailCheck) {
+        //     echo json_encode(['status' => false, 'message' => __('The email address is already registered'),]);
+        //     return;
+        // }
 
         $param = [
             'user_name'    => $request->name,
