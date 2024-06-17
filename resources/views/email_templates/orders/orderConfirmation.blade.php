@@ -6,5 +6,5 @@
     In the meanwhile, if you have any questions or need assistance, contact us at <a
         href="mailto:info@sofieamoura.com">info@sofieamoura.com</a></p>
 <br>
-<p><b>Please see your ORDER # {{ order_code }} attached.</b></p>
-<br>
+{{-- <p><b>Please see your ORDER # {{ order_code }} attached.</b></p> --}}
+{{-- <br> --}}
