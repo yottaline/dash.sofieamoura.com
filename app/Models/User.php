@@ -65,7 +65,7 @@ class User extends Authenticatable
         }
 
         if ($params) $users->where($params);
-        if (!empty($id)) $params->where('id', intval($id));
+        if ($id) $users->where('id', $id);
 
         return $id ? $users->first() : $users->get();
     }
