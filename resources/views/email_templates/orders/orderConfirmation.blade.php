@@ -1,5 +1,5 @@
 <br>
-<h5>Hi {{ $user_name }},</h5>
+<h5>Hi {{ $retailer }},</h5>
 
 <p>Thank you for your order.<br>
     We will send you a proforma invoice confirming your order once we receive your advance payment.
