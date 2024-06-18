@@ -3,7 +3,7 @@
 @section('style')
     <style>
         :root {
-            --product-size: 240px;
+            --product-size: 200px;
         }
 
         .product-box {
