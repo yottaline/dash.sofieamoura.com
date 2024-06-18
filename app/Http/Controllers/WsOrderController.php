@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderCreated;
 use App\Models\Currency;
 use App\Models\Location;
 use App\Models\Retailer;
@@ -14,6 +15,7 @@ use App\Models\Ws_products_size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class WsOrderController extends Controller
 {
@@ -167,6 +169,9 @@ class WsOrderController extends Controller
         // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
+        if($result){
+            Mail::to($retailer[0]->retailer_email)->send(new OrderCreated($retailer[0]->retailer_fullname));
+        }
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
         echo json_encode($result);
     }
