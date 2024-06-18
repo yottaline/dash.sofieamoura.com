@@ -122,7 +122,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="font-monospace small text-end">
+                                <div class="font-monospace small text-end py-2">
                                     <div class="me-3 d-inline-block">Qty: <span ng-bind="o.qty"></span></div>
                                     <div class="d-inline-block">Total: <span ng-bind="fn.toFixed(o.total, 2)"></span></div>
                                 </div>
@@ -139,6 +139,9 @@
                                 <label for="orderNote">Note</label>
                                 <textarea id="orderNote" class="form-control form-control-sm" rows="2"></textarea>
                             </div>
+                            <p ng-if="+o.total < 2000" class="m-0 mt-3 text-danger">
+                                <i class="bi bi-info-circle me-1"></i>Min order amount EUR 2000
+                            </p>
                             <button class="btn btn-outline-dark w-100 btn-sm mt-3" ng-click="placeOrder()"
                                 ng-disabled="!fn.objectLen(order) || submitting">
                                 <span ng-if="submitting" class="spinner-border spinner-border-sm me-2"
@@ -179,9 +182,10 @@
             <div ng-if="selectedProduct !== false" class="offcanvas-body">
                 <div ng-if="list[selectedProduct].prodcolor_media == null" class="product-img rounded"
                     style="background-image: url(/assets/img/default_product_image.png)"></div>
-                <div ng-if="list[selectedProduct].prodcolor_media" class="product-img rounded"
+                <a href="{{ asset('media/product/') }}/<% list[selectedProduct].product_id %>/<% list[selectedProduct].media_file %>"
+                    ng-if="list[selectedProduct].prodcolor_media" class="product-img rounded d-block" target="_blank"
                     style="background-image: url({{ asset('media/product/') }}/<% list[selectedProduct].product_id %>/<% list[selectedProduct].media_file %>)">
-                </div>
+                </a>
                 <h6 class="fw-bold" ng-bind="list[selectedProduct].product_name"></h6>
                 <h6 class="text-secondary small" ng-bind="list[selectedProduct].season_name"></h6>
                 <div class="py-4">
@@ -420,9 +424,11 @@
                 }, function(response) {
                     scope.$apply(() => {
                         $scope.submitting = false;
-                        if (response.status) $('.retailer-field').val(null);
-                        $scope.order = {};
-                        toastr.success('Order placed');
+                        if (response.status) {
+                            $('.retailer-field').val(null);
+                            $scope.order = {};
+                            toastr.success('Order placed');
+                        }
                     });
                 }, 'json');
             }
