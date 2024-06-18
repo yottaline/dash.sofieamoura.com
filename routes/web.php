@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::get('view/{id}', 'WsOrderController@view');
     });
 
-
+    Route::get('test', 'WsOrderController@test');
     Route::prefix('users')->group(function () {
         Route::get('/', 'UserController@index');
         Route::post('load', 'UserController@load');

@@ -189,7 +189,6 @@ class WsOrderController extends Controller
         ]);
     }
 
-
     function view($id)
     {
         $order = Ws_order::fetch($id);
@@ -198,5 +197,16 @@ class WsOrderController extends Controller
         $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
+    }
+
+    public function test(){
+
+    //    try{
+        Mail::to('ahmedelnoman995@gmail.com')->send(new OrderCreated('ahmed'));
+        echo 's';
+    //    }catch(\Exception $e)
+    //    {
+    //     return $e;
+    //    }
     }
 }
