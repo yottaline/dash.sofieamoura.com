@@ -41,9 +41,9 @@ class WsProductsSizeController extends Controller
         }));
 
         $lastOrder = Ws_products_color::lastOrder(1);
+        $color_ref = uniqidReal(rand(6, 24));
         if (count($color_name) > 1) {
             foreach ($color_name as $color) {
-                $color_ref = uniqidReal(rand(6, 24));
                 $colorParam[] = [
                     'prodcolor_ref'         => $color_ref,
                     'prodcolor_name'        => $color,
@@ -89,7 +89,6 @@ class WsProductsSizeController extends Controller
                     'prodcolor_freeshipping' => intval($request->freeshipping),
                 ];
             } else {
-                $color_ref = uniqidReal(14);
                 $colorParam[] = [
                     'prodcolor_ref'         => $color_ref,
                     'prodcolor_name'        => $request->name,
