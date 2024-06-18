@@ -233,7 +233,7 @@
                         $scope.loading = false;
                         $scope.noMore = ln < limit;
                         if (ln) {
-                            $scope.list = data;
+                            $scope.list.push(...data);
                             $scope.offset += ln;
                         }
                     });
