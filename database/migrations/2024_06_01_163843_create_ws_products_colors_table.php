@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('ws_products_colors', function (Blueprint $table) {
             $table->integer('prodcolor_id', true, true);
             $table->string('prodcolor_ref', 24)->unique();
-            // $table->string('prodcolor_code', 12);
+            $table->string('prodcolor_slug', 24);
             $table->string('prodcolor_name', 24);
             $table->integer('prodcolor_product')->unsigned();
             $table->smallInteger('prodcolor_mincolorqty')->default('0');

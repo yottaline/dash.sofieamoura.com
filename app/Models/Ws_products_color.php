@@ -13,7 +13,7 @@ class Ws_products_color extends Model
 
     protected $fillable = [
         'prodcolor_ref',
-        // 'prodcolor_code',
+        'prodcolor_slug',
         'prodcolor_name',
         'prodcolor_product',
         'prodcolor_mincolorqty',
@@ -34,24 +34,24 @@ class Ws_products_color extends Model
         'prodcolor_created'
     ];
 
-    public static function fetch($id = 0, $params = null)
+    static function fetch($id = 0, $params = null)
     {
         $colors = self::join('ws_products', 'prodcolor_product', 'product_id')->orderBy('prodcolor_created', 'DESC');
-        if($params) $colors->where($params);
-        if($id) $colors->where('prodcolor_id', $id);
+        if ($params) $colors->where($params);
+        if ($id) $colors->where('prodcolor_id', $id);
 
         return $id ? $colors->first() : $colors->get();
     }
 
 
-    public static function submit($id = 0, $params = null)
+    static function submit($id = 0, $params = null)
     {
         return self::where('prodcolor_id', $id)->update($params) ? $id : false;
     }
 
-    public static function createUpdateColorSize($size, $sizeParam, $color, $colorParam)
+    static function createUpdateColorSize($size, $sizeParam, $color, $colorParam)
     {
-        if($size && $color) return self::where('prodcolor_id', $color)->update($colorParam) && Ws_products_size::where('prodsize_id', $size)->update($sizeParam) ? $size : false;
+        if ($size && $color) return self::where('prodcolor_id', $color)->update($colorParam) && Ws_products_size::where('prodsize_id', $size)->update($sizeParam) ? $size : false;
         try {
             DB::beginTransaction();
 
@@ -64,15 +64,19 @@ class Ws_products_color extends Model
 
             DB::commit();
             return ['status' => boolval($status), 'id' => $status ? $status->id : false];
-
         } catch (\Exception $e) {
             DB::rollBack();
             return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
         }
-
     }
 
-    // public static function updateSizeColor()
+    static function lastOrder($season)
+    {
+        return self::join('ws_products', 'prodcolor_product', 'product_id')
+            ->where('product_season', $season)->max('prodcolor_order');
+    }
+
+    // static function updateSizeColor()
     // {
     //     return self::where('prodcolor_id', $color)->update($colorParam) && Ws_products_size::where('prodsize_id', $size)->update($sizeParam) ? $size : false;
     // }
