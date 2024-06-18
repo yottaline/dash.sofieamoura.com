@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ApprovedAccount;
 use App\Models\Currency;
 use App\Models\Location;
 use App\Models\Retailer;
@@ -10,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 
 class RetailerController extends Controller
 {
@@ -128,15 +130,24 @@ class RetailerController extends Controller
     public function editApproved(Request $request)
     {
         $id = $request->id;
+        $password = uniqidReal(7);
         $param = [
             'retailer_approved'     => Carbon::now(),
-            'retailer_approved_by'  => auth()->user()->id
+            'retailer_approved_by'  => auth()->user()->id,
+            'retailer_password'     => Hash::make($password)
         ];
 
         $result = Retailer::submit($param, $id);
+        if($result)
+        {
+            $retailer = Retailer::fetch($result);
+
+            Mail::to($retailer->retailer_email)->send(new ApprovedAccount($retailer->retailer_fullname, $retailer->retailer_email, $password));
+        }
+
         echo json_encode([
             'status' => boolval($result),
-            'data'   => $result ? Retailer::fetch($result) : []
+            'data'   => $result ? $retailer : []
         ]);
     }
 

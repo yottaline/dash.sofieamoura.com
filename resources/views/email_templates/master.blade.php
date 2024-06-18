@@ -19,12 +19,12 @@
                 </tr>
                 <tr>
                     <td style='padding: 15px; border: 10px solid #f2f2f2; background-color: #fdfdfd'>
-                        {{ $message }}
+                        @yield('message')
                     </td>
                 </tr>
                 <tr>
                     <td
-                        style='text-align: center; background-color: #f2f2f2; padding: 10px; 
+                        style='text-align: center; background-color: #f2f2f2; padding: 10px;
                     font-size: 11px; color: #333'>
                         <b>&copy; Sofie Amoura <?= date('Y') ?></b>
                     </td>

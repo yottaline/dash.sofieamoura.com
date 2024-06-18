@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::post('change_status', 'WsOrderController@updateStatus');
         Route::get('view/{id}', 'WsOrderController@view');
     });
+
 
     Route::prefix('users')->group(function () {
         Route::get('/', 'UserController@index');
