@@ -34,6 +34,7 @@ class Ws_products_size extends Model
         $ws_products_sizes = self::join('ws_products', 'prodsize_product', 'product_id')
             ->join('sizes', 'prodsize_size', 'size_id')
             ->join('ws_products_colors', 'prodsize_color', 'prodcolor_ref')
+            ->orderBy('prodcolor_order', 'ASC')
             ->orderBy('size_order', 'ASC');
 
         if ($params) $ws_products_sizes->where($params);
