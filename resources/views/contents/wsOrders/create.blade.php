@@ -38,7 +38,7 @@
             <div class="col-12 col-sm-4 col-lg-3">
                 <div class="card card-box mb-3">
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold text-uppercase">Retailet Info</h5>
+                        <h5 class="card-title fw-semibold text-uppercase">Retailer Info</h5>
                         <div class="mb-3">
                             <label for="retailerEmail">Email<b class="text-danger">&ast;</b></label>
                             <input type="email" class="form-control form-control-sm retailer-field" id="retailerEmail"
@@ -140,7 +140,7 @@
                                 <textarea id="orderNote" class="form-control form-control-sm" rows="2"></textarea>
                             </div>
                             <p ng-if="+orderTotal < 2000" class="m-0 mt-3 text-danger">
-                                <i class="bi bi-info-circle me-1"></i>Min order amount EUR 2000
+                                <i class="bi bi-info-circle me-1"></i>MOA EUR 2000
                             </p>
                             <button class="btn btn-outline-dark w-100 btn-sm mt-3" ng-click="placeOrder()"
                                 ng-disabled="!fn.objectLen(order) || submitting">
