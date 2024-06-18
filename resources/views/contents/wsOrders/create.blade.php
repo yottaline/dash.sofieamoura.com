@@ -139,7 +139,7 @@
                                 <label for="orderNote">Note</label>
                                 <textarea id="orderNote" class="form-control form-control-sm" rows="2"></textarea>
                             </div>
-                            <p ng-if="+o.total < 2000" class="m-0 mt-3 text-danger">
+                            <p ng-if="+orderTotal < 2000" class="m-0 mt-3 text-danger">
                                 <i class="bi bi-info-circle me-1"></i>Min order amount EUR 2000
                             </p>
                             <button class="btn btn-outline-dark w-100 btn-sm mt-3" ng-click="placeOrder()"
@@ -155,7 +155,7 @@
                 <div class="card card-box">
                     <div class="card-body">
                         <div ng-if="list.length" class="row">
-                            <div ng-repeat="(pk, p) in list" class="col-6 col-sm-4 col-md-3">
+                            <div ng-repeat="(pk, p) in list" class="col-12 col-sm-6  col-lg-4 col-xl-3">
                                 <a href="" class="product-box" ng-click="viewProduct(pk)">
                                     <div ng-if="p.prodcolor_media == null" class="product-img rounded mb-2"
                                         style="background-image: url(/assets/img/default_product_image.png)"></div>
