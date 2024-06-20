@@ -11,18 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 class WsProductsSizeController extends Controller
 {
-    public function __construct()
+    function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function load(Request $request)
+    function load(Request $request)
     {
         $param = [['prodsize_product', '=', $request->product_id]];
         echo json_encode(Ws_products_size::fetch(0, $param));
     }
 
-    public function submit(Request $request)
+    function submit(Request $request)
     {
         // return
         $color_name = explode(',', $request->name);
@@ -40,14 +40,14 @@ class WsProductsSizeController extends Controller
             return !empty($e);
         }));
 
+        $lastOrder = Ws_products_color::lastOrder(1);
+        $color_ref = uniqidReal(rand(6, 24));
         if (count($color_name) > 1) {
             foreach ($color_name as $color) {
-                $orders     =   rand(0, 1000);
-                $color_ref = uniqidReal(14);
                 $colorParam[] = [
                     'prodcolor_ref'         => $color_ref,
                     'prodcolor_name'        => $color,
-                    'prodcolor_order'       => $orders,
+                    'prodcolor_order'       => ++$lastOrder,
                     'prodcolor_created_by'   => $user,
                     'prodcolor_created'      => $time,
                     'prodcolor_product'     => $request->p_id,
@@ -89,18 +89,15 @@ class WsProductsSizeController extends Controller
                     'prodcolor_freeshipping' => intval($request->freeshipping),
                 ];
             } else {
-                $orders     =   rand(0, 100);
-                $color_ref = uniqidReal(14);
                 $colorParam[] = [
                     'prodcolor_ref'         => $color_ref,
                     'prodcolor_name'        => $request->name,
-                    'prodcolor_order'        => $orders,
+                    'prodcolor_order'        => +$lastOrder,
                     'prodcolor_created_by'   => $user,
                     'prodcolor_created'      => $time,
                     'prodcolor_product'     => $request->p_id,
                 ];
                 foreach ($sizes as $size) {
-                    $index = 0;
                     $sizeParam[] = [
                         'prodsize_size'    => $size,
                         'prodsize_color'   => $color_ref,
@@ -122,7 +119,7 @@ class WsProductsSizeController extends Controller
         ]);
     }
 
-    public function editStatus(Request $request)
+    function editStatus(Request $request)
     {
         $i = 1;
         if ($request->status) $i = 0;
@@ -135,7 +132,7 @@ class WsProductsSizeController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    function update(Request $request)
     {
         // return $request;
         $id = $request->id;

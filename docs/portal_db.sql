@@ -159,6 +159,7 @@ CREATE TABLE IF NOT EXISTS
     `product_type` TINYINT UNSIGNED NOT NULL DEFAULT '2' COMMENT '1:Babies, 2:Kids, 3:Teens, 4:Adults',
     `product_gender` TINYINT UNSIGNED NOT NULL DEFAULT '1' COMMENT '0:Both, 1:Girl, 2:Boy',
     `product_category` INT UNSIGNED NOT NULL,
+    `product_merged_colors` BOOLEAN DEFAULT '0',
     `product_delivery` VARCHAR(120) DEFAULT NULL,
     `product_modified_by` INT UNSIGNED DEFAULT NULL,
     `product_modified` DATETIME DEFAULT NULL,
@@ -178,7 +179,7 @@ CREATE TABLE IF NOT EXISTS
   `ws_products_colors` (
     `prodcolor_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `prodcolor_ref` VARCHAR(24) NOT NULL,
-    -- `prodcolor_code` VARCHAR(12) NOT NULL,
+    `prodcolor_slug` VARCHAR(24) NOT NULL,
     `prodcolor_name` VARCHAR(24) NOT NULL,
     `prodcolor_product` INT UNSIGNED NOT NULL,
     `prodcolor_mincolorqty` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',

@@ -73,11 +73,11 @@ class WsOrderController extends Controller
                 'retailer_password' => Hash::make('1234'),
                 'retailer_fullName' => $request->name,
                 'retailer_company'  => $request->biz,
-                'retailer_phone'    => $request->phone ?? 'default',
+                'retailer_phone'    => $request->phone ?? '',
                 'retailer_country'  => $request->country,
-                'retailer_province' => $request->city  ?? 'default',
-                'retailer_city'     => $request->city ?? 'default',
-                'retailer_address'  => $request->address ?? 'default',
+                'retailer_province' => $request->province  ?? '',
+                'retailer_city'     => $request->city ?? '',
+                'retailer_address'  => $request->address ?? '',
                 'retailer_created'  => Carbon::now(),
             ];
 
@@ -110,22 +110,36 @@ class WsOrderController extends Controller
         }
 
         $orderParam = [
-            'order_code'            => uniqidReal(10),
-            'order_season'          => 1,
-            'order_retailer'        => $retailer[0]->retailer_id,
-            'order_shipping'        => 0,
-            'order_subtotal'        => $ordSubtotal,
-            'order_discount'        => 0,
-            'order_total'           => $ordTotal,
-            'order_currency'        => 1,
-            'order_type'            => 1,
-            'order_note'            => $request->note,
-            'order_created'         => Carbon::now(),
-            'order_proforma'        => uniqidReal(20),
-            'order_proformatime'    => Carbon::now(),
-            'order_invoice'         => uniqidReal(30),
-            'order_invoicetime'     => Carbon::now(),
-            'order_status'          => 0
+            'order_code'          => uniqidReal(12),
+            'order_season'        => 1,
+            'order_retailer'      => $retailer[0]->retailer_id,
+            'order_shipping'      => 0,
+            'order_subtotal'      => $ordSubtotal,
+            'order_discount'      => 0,
+            'order_total'         => $ordTotal,
+            'order_currency'      => 1,
+            'order_type'          => 2,
+            'order_note'          => $request->note,
+            'order_created'       => Carbon::now(),
+            'order_proforma'      => uniqidReal(20),
+            'order_proformatime'  => Carbon::now(),
+            'order_invoice'       => uniqidReal(30),
+            'order_invoicetime'   => Carbon::now(),
+            'order_status'        => 2,
+            'order_bill_country'  => $retailer[0]->retailer_country,
+            'order_bill_province' => $retailer[0]->retailer_province,
+            'order_bill_city'     => $retailer[0]->retailer_city,
+            'order_bill_zip'      => '',
+            'order_bill_line1'    => $retailer[0]->retailer_address,
+            'order_bill_line2'    => '',
+            'order_bill_phone'    => $retailer[0]->retailer_phone,
+            'order_ship_country'  => $retailer[0]->retailer_country,
+            'order_ship_province' => $retailer[0]->retailer_province,
+            'order_ship_city'     => $retailer[0]->retailer_city,
+            'order_ship_zip'      => '',
+            'order_ship_line1'    => $retailer[0]->retailer_address,
+            'order_ship_line2'    => '',
+            'order_ship_phone'    => $retailer[0]->retailer_phone,
         ];
 
         // if ($request->checkbox == 'false') {
@@ -164,12 +178,11 @@ class WsOrderController extends Controller
         //         'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
         //         'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
         //         'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
-
         //     ];
         // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
-        if($result){
+        if ($result) {
             Mail::to($retailer[0]->retailer_email)->send(new OrderCreated($retailer[0]->retailer_fullname));
         }
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
@@ -209,4 +222,5 @@ class WsOrderController extends Controller
     //     return $e;
     //    }
     }
+
 }
