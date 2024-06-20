@@ -198,6 +198,7 @@
             <tr class="bg-blue">
                 <th>#</th>
                 <th class="text-center">Product</th>
+                <th class="text-center">Product Image</th>
                 <th class="text-center">Product Color</th>
                 <th class="text-center">Product Size</th>
                 <th class="text-center">Product Price</th>
@@ -214,6 +215,14 @@
                     <td width="10%">{{ $o->product_code }}</td>
                     <td class="text-center">
                         {{ $o->product_name }}
+                    </td>
+                    <td width="10%" class="text-center">
+                        @if ($o->media_file)
+                            <img src="{{ asset('media/product/' . $o->product_id . '/' . $o->media_file) }}"
+                                width="100px">
+                        @else
+                            not image
+                        @endif
                     </td>
                     <td width="10%">{{ $o->prodcolor_name }}</td>
                     <td width="10%">{{ $o->size_name }}</td>
