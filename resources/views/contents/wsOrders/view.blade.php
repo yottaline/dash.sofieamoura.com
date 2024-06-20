@@ -221,7 +221,7 @@
                             <img src="{{ asset('media/product/' . $o->product_id . '/' . $o->media_file) }}"
                                 width="100px">
                         @else
-                            not image
+                            Not image
                         @endif
                     </td>
                     <td width="10%">{{ $o->prodcolor_name }}</td>
