@@ -134,7 +134,7 @@
 
                             var orderid = $('.order-checkbox:checked').map((i, e) => $(e).val()).get();
                             console.log(orderid);
-                            window.open('/orders/export?' + $.param({
+                            window.open('/ws_orders/export?' + $.param({
                                 orderid: orderid
                             }));
                         });

@@ -212,15 +212,11 @@ class WsOrderController extends Controller
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 
-    public function test(){
+ public function export(Request $request)
+ {
+    $order_id = $request->orderid;
 
-    //    try{
-        Mail::to('ahmedelnoman995@gmail.com')->send(new OrderCreated('ahmed'));
-        echo 's';
-    //    }catch(\Exception $e)
-    //    {
-    //     return $e;
-    //    }
-    }
+    return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
+ }
 
 }
