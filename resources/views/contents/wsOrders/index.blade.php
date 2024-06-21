@@ -87,11 +87,11 @@
                             <table class="table table-hover" id="example">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
-                                        <th class="text-center">Retailer Name</th>
-                                        <th class="text-center">Order Date</th>
-                                        <th class="text-center">Discount</th>
-                                        <th class="text-center">Total Price</th>
+                                        <th class="text-center">Code</th>
+                                        <th class="text-center">Season</th>
+                                        <th class="text-center">Retailer</th>
+                                        <th class="text-center">Placed</th>
+                                        <th class="text-center">Total</th>
                                         <th class="text-center">Status</th>
                                         <th></th>
                                     </tr>
@@ -101,32 +101,17 @@
                                         <td data-ng-bind="order.order_code"
                                             class="text-center small font-monospace text-uppercase">
                                         </td>
+                                        <td class="text-center" data-ng-bind="order.season_name">
                                         <td class="text-center" data-ng-bind="order.retailer_fullName">
                                         </td>
-                                        <td data-ng-bind="order.order_created" class="text-center"></td>
-                                        <td class="text-center"><% order.order_discount %>%</td>
+                                        <td class="text-center">
+                                            <span ng-if="!order.order_placed"> --</span>
+                                            <span ng-if="order.order_placed" data-ng-bind="order.order_placed"></span>
+                                        </td>
                                         <td data-ng-bind="order.order_subtotal" class="text-center"></td>
                                         <td class="text-center">
-                                            <button ng-if="order.order_status == 0"
-                                                class="btn btn-outline-danger btn-circle bi bi-x"
-                                                ng-click="opt($index, 1)"></button>
-                                            <button ng-if="order.order_status == 0"
-                                                class="btn btn-outline-primary btn-circle bi bi-check"
-                                                ng-click="opt($index, 2)"></button>
-                                            <button ng-if="order.order_status == 2"
-                                                class="btn btn-outline-success btn-circle bi bi-check"
-                                                ng-click="opt($index, 3)"></button>
-                                            <button ng-if="order.order_status == 3"
-                                                class="btn btn-outline-warning btn-circle bi bi-cash-stack"
-                                                ng-click="opt($index, 4)"></button>
-                                            <button ng-if="order.order_status == 3"
-                                                class="btn btn-outline-warning btn-circle bi bi-credit-card"
-                                                ng-click="opt($index, 4)"></button>
-                                            <button ng-if="order.order_status == 4"
-                                                class="btn btn-outline-success btn-circle bi bi-truck"
-                                                ng-click="opt($index, 5)"></button>
-                                            <button ng-if="order.order_status == 6"
-                                                class="btn btn-outline-success btn-circle bi bi-clipboard2-check"></button>
+                                            <span
+                                                class="rounded-pill font-monospace"><%statusObject.name[order.order_status]%></span>
                                         </td>
                                         <td class="col-fit">
                                             <a href="/ws_orders/view/<%order.order_id%>" target="_blank"
@@ -157,8 +142,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label for="retailer_name">Retailer Name</label>
-                                    <input type="text" id="retailer_name" class="form-control"
-                                        name="retailer_name" />
+                                    <input type="text" id="retailer_name" class="form-control" name="retailer_name" />
                                 </div>
                             </div>
 
@@ -638,6 +622,11 @@
             });
 
         app.controller('myCtrl', function($scope) {
+            $scope.statusObject = {
+                name: ['Draft', 'Placed', 'Confirmed', 'Advance Payment Is Pending',
+                    'Balance Payment Is Pending', 'Shipped'
+                ],
+            };
             $('.loading-spinner').hide();
             $scope.noMore = false;
             $scope.loading = false;
