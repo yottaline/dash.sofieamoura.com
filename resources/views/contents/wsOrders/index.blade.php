@@ -77,8 +77,9 @@
                             {{-- @csrf --}}
                             <div>
                                 <a href="/ws_orders/create" class="btn btn-outline-primary btn-circle bi bi-plus-lg"></a>
-                                {{-- <button type="button" class="btn btn-outline-primary btn-circle bi bi-plus-lg"
-                                    data-ng-click="setOrder(false)"></button> --}}
+                                <button type="button" id="exportData"
+                                    class="btn btn-outline-success btn-circle bi bi-filetype-xlsx"></button>
+                                @csrf
                                 <button type="button" class="btn btn-outline-dark btn-circle bi bi-arrow-repeat"
                                     data-ng-click="load(true)"></button>
                             </div>
@@ -87,6 +88,7 @@
                             <table class="table table-hover" id="example">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th class="text-center">Code</th>
                                         <th class="text-center">Season</th>
                                         <th class="text-center">Retailer</th>
@@ -98,6 +100,10 @@
                                 </thead>
                                 <tbody>
                                     <tr data-ng-repeat="order in list">
+                                        <td class="text-center">
+                                            <input class="form-check-input order-checkbox" type="checkbox"
+                                                ng-value="order.order_id">
+                                        </td>
                                         <td data-ng-bind="order.order_code"
                                             class="text-center small font-monospace text-uppercase">
                                         </td>
@@ -108,10 +114,9 @@
                                             <span ng-if="!order.order_placed"> --</span>
                                             <span ng-if="order.order_placed" data-ng-bind="order.order_placed"></span>
                                         </td>
-                                        <td data-ng-bind="order.order_subtotal" class="text-center"></td>
+                                        <td data-ng-bind="order.order_subtotal" class="text-center font-monospace"></td>
                                         <td class="text-center">
-                                            <span
-                                                class="rounded-pill font-monospace"><%statusObject.name[order.order_status]%></span>
+                                            <span class="rounded-pill"><%statusObject.name[order.order_status]%></span>
                                         </td>
                                         <td class="col-fit">
                                             <a href="/ws_orders/view/<%order.order_id%>" target="_blank"
@@ -124,6 +129,16 @@
                         </div>
                         @include('layouts.loader')
                     </div>
+                    <script>
+                        $('#exportData').on('click', function() {
+
+                            var orderid = $('.order-checkbox:checked').map((i, e) => $(e).val()).get();
+                            console.log(orderid);
+                            window.open('/orders/export?' + $.param({
+                                orderid: orderid
+                            }));
+                        });
+                    </script>
                 </div>
             </div>
         </div>
