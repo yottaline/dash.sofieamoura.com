@@ -34,7 +34,7 @@ class Ws_product extends Model
         $ws_products = self::join('seasons', 'product_season', 'season_id')
             ->join('categories', 'product_category', 'category_id')
             ->leftJoin('ws_products_colors', 'product_id', 'prodcolor_product')
-            ->Join('products_media', 'prodcolor_media', 'media_id')
+            ->leftJoin('products_media', 'prodcolor_media', 'media_id')
             ->orderBy('prodcolor_order', 'ASC')
             ->orderBy('product_id', 'ASC')
             ->limit($limit)->offset($offset)->groupBy('prodcolor_slug');
