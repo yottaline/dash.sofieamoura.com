@@ -1,273 +1,182 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('index')
+@section('title', 'View order')
+@section('content')
+    <div class="container-fluid container" data-ng-app="myApp" data-ng-controller="myCtrl">
+        <div class="row">
+            <div class="col-12 col-sm-4 col-lg-4 mt-2">
+                <div class="card card-box">
+                    <div class="card-body">
+                        <h4 class="card-title fw-semibold pt-1 me-auto text-uppercase">
+                            <span>ORDER #<%order.order_code%></span><br>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" />
-    <title>Order</title>
+                        </h4>
+                        <h6>
+                            <span>Season/<%order.season_name%></span>
+                        </h6>
+                        <hr>
+                        <span class="fw-semibold">Retailer: <%retailer.retailer_fullName%></span><br>
+                        <span><%statusObject.name[order.order_status]%></span>
+                        <p class="font-secondary">created: <span data-ng-bind="order.order_created"></span></p>
+                        <hr>
+                        <div class="subtotal">
+                            <p>Subtotal: <span data-ng-bind="calculateSubtotal()"></span></p>
+                            <hr>
+                            <p class="text-danger fw-semibold">Discount: <input type="number" value="4"
+                                    class="text-center" style="margin-left:140px; width:100px"
+                                    data-ng-model="order.order_discount" ng-change="calculateSubtotal()">
+                            </p>
+                            <hr>
+                            <p class="fw-bold">Total: <span data-ng-bind="calculateSubtotal()"></span></p>
+                        </div>
+                        <hr>
+                        <div class="delivery">
+                            <form action="/ws_orders/change_status" id="statusForm" method="post">
+                                <input type="hidden" name="id" ng-value="order.order_id">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-9">
+                                        <label for="status">status</label>
+                                        <select name="status" id="status" class="form-select">
+                                            <option value="0">DRAFT</option>
+                                            <option value="1">CANCELLED</option>
+                                            <option value="2">PLACED</option>
+                                            <option value="3">CONFIRMED</option>
+                                            <option value="4">ADVANCE PAYMENT IS PENDING</option>
+                                            <option value="5">BALANCE PAYMENT IS PENDING</option>
+                                            <option value="6">SHIPPED</option>
+                                        </select>
+                                    </div>
+                                    <div class="col mt-4">
+                                        <button type="submit"
+                                            class="btn btn-outline-dark w-100 bi bi-arrow-right-circle
+                                        "></button>
+                                    </div>
+                                </div>
+                            </form>
+                            <script>
+                                $(function() {
+                                    $('#statusForm').on('submit', e => e.preventDefault()).validate({
+                                        submitHandler: function(form) {
+                                            console.log(form);
+                                            var formData = new FormData(form),
+                                                action = $(form).attr('action'),
+                                                method = $(form).attr('method');
 
-    <style>
-        html,
-        body {
-            margin: 10px;
-            padding: 10px;
-            font-family: sans-serif;
-        }
+                                            scope.$apply(() => scope.submitting = true);
+                                            $(form).find('button').prop('disabled', true);
+                                            $.ajax({
+                                                url: action,
+                                                type: method,
+                                                data: formData,
+                                                processData: false,
+                                                contentType: false,
+                                            }).done(function(data, textStatus, jqXHR) {
+                                                var response = JSON.parse(data);
+                                                if (response.status) {
+                                                    toastr.success('status change successfully');
+                                                    scope.$apply(() => {
+                                                        scope.order = response
+                                                            .data;
+                                                    });
+                                                } else toastr.error(response.message);
+                                            }).fail(function(jqXHR, textStatus, errorThrown) {
+                                                toastr.error("error");
+                                            }).always(function() {
+                                                $(form).find('button').prop('disabled', false);
+                                            });
+                                        }
+                                    });
+                                });
+                            </script>
+                            <button class="btn btn-outline-dark mt-4 w-100">Get Proforma Invoice</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        p,
-        span,
-        label {
-            font-family: sans-serif;
-        }
+            <div class="col-12 col-sm-8 col-lg-8">
+                <div class="card card-box mt-2" data-ng-repeat="data in orderData">
+                    <div class="d-flex mt-2">
+                        <h5 class="card-title fw-semibold pt-1 me-auto  text-uppercase">
+                            <span class="text-warning me-2" role="status"></span><span><%data.product_name%>
+                                #<%data.product_ref%></span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="example">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Color</th>
+                                        <th class="text-center">Size</th>
+                                        <th class="text-center">WSP</th>
+                                        <th class="text-center">QTY</th>
+                                        <th class="text-center">Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-ng-bind="data.prodcolor_ref"
+                                            class="text-center small font-monospace text-uppercase">
+                                        </td>
+                                        <td class="text-center" data-ng-bind="data.size_name">
+                                        <td class="text-center" data-ng-bind="data.prodsize_wsp">
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="number" value="4" data-ng-model="data.ordprod_request_qty"
+                                                data-ng-change="updateTotal(0)">
+                                        </td>
+                                        <td data-ng-bind="(data.ordprod_request_qty * data.prodsize_wsp).toFixed(2)"
+                                            class="text-center font-monospace"></td>
+                                        <td class="col-fit">
+                                            <button class="btn btn-outline-dark btn-circle bi bi-x"></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {{-- <div>
+                        <img src="{{ asset('/assets/img/default_product_image.png') }}" alt="">
+                    </div> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@section('js')
+    <script>
+        var scope,
+            app = angular.module('myApp', [], function($interpolateProvider) {
+                $interpolateProvider.startSymbol('<%');
+                $interpolateProvider.endSymbol('%>');
+            });
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 0px !important;
-        }
+        app.controller('myCtrl', function($scope) {
+            $scope.statusObject = {
+                name: ['Draft', 'Cancelled', 'Placed', 'Confirmed', 'Advance Payment Is Pending',
+                    'Balance Payment Is Pending', 'Shipped'
+                ],
+            };
+            $scope.orderDisc = 0;
+            $scope.jsonParse = (str) => JSON.parse(str);
+            $scope.retailer = <?= json_encode($retailer) ?>;
+            $scope.order = <?= json_encode($order) ?>;
+            $scope.orderData = <?= json_encode($orderData) ?>;
 
-        table thead th {
-            height: 28px;
-            text-align: right;
-            font-size: 16px;
-            font-family: sans-serif;
-        }
+            $scope.calculateSubtotal = function() {
+                var total = 0;
+                $scope.orderData.map(p => total += p.ordprod_request_qty * p.prodsize_wsp);
+                return total.toFixed(2);
+            };
 
-        table,
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            font-size: 14px;
-        }
+            $scope.updateTotal = function(index) {
+                var product = $scope.orderData[index];
+                product.total = (product.ordprod_request_qty * product.prodsize_wsp).toFixed(2);
+            };
 
-        .heading {
-            font-size: 24px;
-            margin-top: 12px;
-            margin-bottom: 12px;
-            font-family: sans-serif;
-        }
-
-        .small-heading {
-            font-size: 18px;
-            font-family: sans-serif;
-        }
-
-        .total-heading {
-            font-size: 18px;
-            font-weight: 700;
-            font-family: sans-serif;
-        }
-
-        .order-details tbody tr td:nth-child(1) {
-            width: 20%;
-        }
-
-        .order-details tbody tr td:nth-child(3) {
-            width: 20%;
-        }
-
-        .text-start {
-            text-align: left;
-        }
-
-        .text-end {
-            text-align: right;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .company-data span {
-            margin-bottom: 4px;
-            display: inline-block;
-            font-family: sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .no-border {
-            border: 1px solid #fff !important;
-        }
-
-        .bg-blue {
-            background-color: #000;
-            color: #fff;
-        }
-    </style>
-</head>
-
-<body>
-
-    <table class="order-details">
-        <thead>
-            <tr>
-                <th width="50%" colspan="2" class="text-start company-data">
-                    <span> Order Serial Number : {{ $order->order_code }}</span> <br>
-                    <span> Order Date : {{ $order->order_created }}</span> <br>
-                </th>
-                <th width="50%" colspan="2">
-                    <h2 class="text-center">SOFIE AMOURA <i class="bi bi-brilliance"></i></h2>
-                </th>
-
-            </tr>
-            <tr class="bg-blue">
-                <th width="50%" class="text-center" colspan="2">Order details</th>
-                <th width="50%" class="text-center" colspan="2">Retailer details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td> Order number :</td>
-                <td> {{ $order->order_id }}</td>
-
-                <td>Retailer name </td>
-                <td>{{ $retailer->retailer_fullName }}</td>
-            </tr>
-            <tr>
-                <td>Order Date </td>
-                <td> {{ $order->order_created }}</td>
-
-                <td>Email </td>
-                <td>{{ $retailer->retailer_email }}</td>
-            </tr>
-            <tr>
-                <td>Order date placed</td>
-                <td>{{ $order->order_placed }}</td>
-
-                <td> Retailer Phone</td>
-                <td>{{ $retailer->retailer_phone }}</td>
-            </tr>
-            <tr>
-                <td>Order status</td>
-                <td>
-                    @if ($order->order_status == 0)
-                        DRAFT
-                    @endif
-                    @if ($order->order_status == 1)
-                        CANCELLED
-                    @endif
-                    @if ($order->order_status == 2)
-                        PLACED
-                    @endif
-                    @if ($order->order_status == 3)
-                        CONFIRMED
-                    @endif
-                    @if ($order->order_status == 4)
-                        ADVANCE PAYMENT IS PENDING
-                    @endif
-                    @if ($order->order_status == 5)
-                        BALANCE PAYMENT IS PENDING
-                    @endif
-                    @if ($order->order_status == 6)
-                        SHIPPED
-                    @endif
-                </td>
-
-                <td> Retailer Code </td>
-                <td>{{ $retailer->retailer_code }}</td>
-            </tr>
-
-            <tr>
-                <td>Bill Address</td>
-                <td> {{ $order->order_bill_province }},{{ $order->order_bill_zip }} ,{{ $order->order_bill_city }},
-                    {{ $order->order_bill_line1 }}, {{ $order->order_bill_line2 }}</td>
-            </tr>
-            <tr>
-                <td>Sipping Address</td>
-                <td> {{ $order->order_ship_province }},{{ $order->order_ship_zip }} ,{{ $order->order_ship_city }},
-                    {{ $order->order_ship_line1 }}, {{ $order->order_ship_line2 }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <thead>
-            <tr>
-                <th class="no-border text-end heading" colspan="5">
-                    PRODUCTS
-                </th>
-            </tr>
-            <tr class="bg-blue">
-                <th>#</th>
-                <th class="text-center">Product</th>
-                <th class="text-center">Product Image</th>
-                <th class="text-center">Product Color</th>
-                <th class="text-center">Product Size</th>
-                <th class="text-center">Product Price</th>
-                <th class="text-center">Product Discount</th>
-                <th class="text-center">QTY</th>
-                <th>Before discount</th>
-                <th>After discount</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @forelse($orderData as $o)
-                <tr>
-                    <td width="10%">{{ $o->product_code }}</td>
-                    <td class="text-center">
-                        {{ $o->product_name }}
-                    </td>
-                    <td width="10%" class="text-center">
-                        @if ($o->media_file)
-                            <img src="{{ asset('media/product/' . $o->product_id . '/' . $o->media_file) }}"
-                                width="100px">
-                        @else
-                            Product not Image
-                        @endif
-                    </td>
-                    <td width="10%">{{ $o->prodcolor_name }}</td>
-                    <td width="10%">{{ $o->size_name }}</td>
-                    <td width="10%">{{ $o->prodsize_wsp }}</td>
-                    <td width="10%">{{ $o->prodcolor_discount }}</td>
-                    <td width="10%">{{ $o->ordprod_request_qty }}</td>
-                    <td width="15%" class="fw-bold">{{ $o->ordprod_subtotal }}</td>
-                    <td width="15%" class="fw-bold">{{ $o->ordprod_total }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5"> <i class="bi bi-exclamation-circle display-3"></i></td>
-                    <td>
-                        <i class="bi bi-exclamation-circle display-3"></i>
-                    </td>
-                    <td> <i class="bi bi-exclamation-circle display-3"></i></td>
-                </tr>
-            @endforelse
-            <tr>
-                <td colspan="8">Order Discount :</td>
-                <td>{{ $order->order_discount }}</td>
-            </tr>
-            <tr>
-                <td colspan="8">Shipping fees :</td>
-                <td>{{ $order->order_shipping }}</td>
-            </tr>
-
-            <tr>
-                <td colspan="8" class="total-heading">Total :</td>
-                <td class="total-heading">
-                    @if ($order->order_total !== '0.00')
-                        {{ $order->order_total + $order->order_shipping }}
-                    @else
-                        {{ $order->order_subtotal + $order->order_shipping }}
-                    @endif
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <br>
-    <p class="text-center">
-        Thanks for shopping <i class="bi bi-heart"></i>
-    </p>
-
-</body>
-
-</html>
+            scope = $scope;
+        });
+    </script>
+@endsection
