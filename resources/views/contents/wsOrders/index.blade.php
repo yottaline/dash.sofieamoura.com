@@ -99,7 +99,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="order in list">
+                                    <tr data-ng-repeat="order in list" ng-dblclick="view(order)">
                                         <td class="text-center">
                                             <input class="form-check-input order-checkbox" type="checkbox"
                                                 ng-value="order.order_id">
@@ -722,6 +722,10 @@
                         } else toastr.error(response.message);
                     }, 'json');
                 });
+            }
+
+            $scope.view = function(order) {
+                window.open('/ws_orders/view/' + order.order_id);
             }
 
             // $scope.viewDetails = (order) => {
