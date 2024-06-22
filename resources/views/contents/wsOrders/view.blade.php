@@ -262,6 +262,7 @@
                     product: id,
                     qty: qty,
                     target: target,
+                    _token: '{{ csrf_token() }}',
                 }, function(response) {
                     $scope.$apply(function() {
                         $scope.qtyUpdate = false;
