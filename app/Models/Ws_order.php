@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exports\WsOrderExport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -90,4 +91,7 @@ class Ws_order extends Model
             return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
         }
     }
+
+
+
 }

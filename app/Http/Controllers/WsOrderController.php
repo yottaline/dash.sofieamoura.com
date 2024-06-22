@@ -196,20 +196,28 @@ class WsOrderController extends Controller
             'order_status' => $request->status,
         ];
         if ($request->status == 2) $param['order_placed'] = Carbon::now();
+
         $result =  Ws_order::submit($request->id, $param);
         echo json_encode([
             'status'  => boolval($result),
+            'data'    => $result ? Ws_order::fetch($request->id) : []
         ]);
     }
-
 
     function view($id)
     {
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
-        // return $order;
         $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
-
+        // return $order;
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
+
+ public function export(Request $request)
+ {
+    $order_id = $request->orderid;
+
+    return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
+ }
+
 }
