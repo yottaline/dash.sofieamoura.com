@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\orderConfirmation;
 use App\Mail\OrderCreated;
 use App\Mail\OrderInvoice;
 use App\Mail\OrderProforma;
@@ -210,7 +211,7 @@ class WsOrderController extends Controller
     {
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
-        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+        $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
@@ -287,4 +288,11 @@ class WsOrderController extends Controller
 
         Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, $pdfPath));
         return back();
+        // try {
+        //     Mail::to('b2b@sofieamoura.com')->send(new orderConfirmation());
+        //     echo 'Message Sent';
+        // } catch (Exception $e) {
+        //     echo sprintf('[%s],[%d] ERROR:[%s]', __METHOD__, __LINE__, json_encode($e->getMessage(), true));
+        // }
     }
+}
