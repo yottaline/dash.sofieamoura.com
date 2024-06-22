@@ -33,9 +33,9 @@
                                     #<%p.info.product_ref%></span>
                             </h6>
                             <div class="table-responsive">
-                                <table class="table table-hover sizes-table" id="example">
+                                <table class="table table-hover sizes-table">
                                     <thead>
-                                        <tr class="text-center">
+                                        <tr class="text-center small">
                                             <th>Color</th>
                                             <th>Size</th>
                                             <th>WSP</th>
@@ -46,7 +46,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="text-center" ng-repeat="s as p.sizes track by $index">
+                                        <tr class="text-center" ng-repeat="s as p.sizes track">
                                             <td ng-bind="s.prodcolor_name" class="small text-uppercase"></td>
                                             <td ng-bind="s.size_name">
                                             <td class="font-monospace" ng-bind="s.prodsize_wsp"></td>
@@ -55,9 +55,9 @@
                                                     ng-model="s.ordprod_request_qty">
                                             </td>
                                             <td ng-if="s.order_status > 2">
-                                                <input class="qty-input" type="number" ng-model="s.ordprod_request_qty">
+                                                <input class="qty-input" type="number">
                                             </td>
-                                            <td ng-bind="fn.toFixed(o.ordprod_request_qty * o.prodsize_wsp, 2)"
+                                            <td ng-bind="fn.toFixed(s.ordprod_request_qty * s.prodsize_wsp, 2)"
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
                                                 <a class="link-danger bi bi-x" ng-click="delProduct($index)"></a>
@@ -211,8 +211,8 @@
                             total: 0
                         };
                     $scope.parsedProducts[p.prodcolor_slug].sizes.push(p);
-                    $scope.parsedProducts[p.prodcolor_slug].qty += p.ordprod_request_qty;
-                    $scope.parsedProducts[p.prodcolor_slug].qty += p.ordprod_total;
+                    $scope.parsedProducts[p.prodcolor_slug].qty += +p.ordprod_request_qty;
+                    $scope.parsedProducts[p.prodcolor_slug].total += +p.ordprod_total;
                 });
             }
             // $scope.productTotal = slug => $.map($scope.products, e => e.prodcolor_slug == slug ? e.ordprod_total :
