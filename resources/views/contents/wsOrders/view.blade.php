@@ -3,6 +3,62 @@
 @section('content')
     <div class="container-fluid container" data-ng-app="myApp" data-ng-controller="myCtrl">
         <div class="row">
+
+            <div class="col-12 col-sm-8 col-lg-9">
+                <div class="card card-box mt-2" data-ng-repeat="data in orderData">
+                    <div class="d-flex mt-2">
+                        <h5 class="card-title fw-semibold pt-1 text-uppercase" style="margin-left: 245px">
+                            <span class="text-warning me-2" role="status"></span><span><%data.product_name%>
+                                #<%data.product_ref%></span>
+                        </h5>
+                    </div>
+                    <div class="card-body row">
+                        <div class="col-12 col-sm-4 col-md-3 mb-5" ng-if="data.prodcolor_media == null"
+                            class="product-img rounded mb-2"
+                            style="background-image: url(/assets/img/default_product_image.png);padding:100px"></div>
+                        <div class="col-12 col-sm-4 col-md-3" ng-if="data.prodcolor_media" class="product-img rounded mb-2"
+                            style="background-image: url({{ asset('media/product/') }}/<% data.product_id %>/<% data.media_file %>);padding:100px;background-size:contain">
+                        </div>
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-hover sizes-table" id="example">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Color</th>
+                                            <th class="text-center">Size</th>
+                                            <th class="text-center">WSP</th>
+                                            <th class="text-center">QTY</th>
+                                            <th class="text-center">Total</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td data-ng-bind="data.prodcolor_ref"
+                                                class="text-center small font-monospace text-uppercase">
+                                            </td>
+                                            <td class="text-center" data-ng-bind="data.size_name">
+                                            <td class="text-center" data-ng-bind="data.prodsize_wsp">
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="number" value="4"
+                                                    data-ng-model="data.ordprod_request_qty"
+                                                    data-ng-change="updateTotal(0)">
+                                            </td>
+                                            <td data-ng-bind="(data.ordprod_request_qty * data.prodsize_wsp).toFixed(2)"
+                                                class="text-center font-monospace"></td>
+                                            <td class="col-fit">
+                                                <a class="btn link-danger btn-circle bi bi-x"></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 col-sm-4 col-lg-3 mt-2">
                 <div class="card card-box">
                     <div class="card-body product-block">
@@ -86,63 +142,6 @@
                                 Invoice</button>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-8 col-lg-9">
-                <div class="card card-box mt-2" data-ng-repeat="data in orderData">
-                    <div class="d-flex mt-2">
-                        <h5 class="card-title fw-semibold pt-1 me-auto  text-uppercase">
-                            <span class="text-warning me-2" role="status"></span><span><%data.product_name%>
-                                #<%data.product_ref%></span>
-                        </h5>
-                    </div>
-                    <div class="card-body row">
-                        <div class="col">
-                            <div class="table-responsive">
-                                <table class="table table-hover sizes-table" id="example">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Color</th>
-                                            <th class="text-center">Size</th>
-                                            <th class="text-center">WSP</th>
-                                            <th class="text-center">QTY</th>
-                                            <th class="text-center">Total</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td data-ng-bind="data.prodcolor_ref"
-                                                class="text-center small font-monospace text-uppercase">
-                                            </td>
-                                            <td class="text-center" data-ng-bind="data.size_name">
-                                            <td class="text-center" data-ng-bind="data.prodsize_wsp">
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="number" value="4"
-                                                    data-ng-model="data.ordprod_request_qty"
-                                                    data-ng-change="updateTotal(0)">
-                                            </td>
-                                            <td data-ng-bind="(data.ordprod_request_qty * data.prodsize_wsp).toFixed(2)"
-                                                class="text-center font-monospace"></td>
-                                            <td class="col-fit">
-                                                <a class="btn link-danger btn-circle bi bi-x"></a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-4 col-md-3" ng-if="p.prodcolor_media == null"
-                            class="product-img rounded mb-2"
-                            style="background-image: url(/assets/img/default_product_image.png);padding:100px"></div>
-                        <div class="col-12 col-sm-4 col-md-3" ng-if="p.prodcolor_media" class="product-img rounded mb-2"
-                            style="background-image: url({{ asset('media/product/') }}/<% p.product_id %>/<% p.media_file %>)">
-                        </div>
-                    </div>
-                    {{-- <div> --}}
-                    {{-- </div> --}}
                 </div>
             </div>
         </div>
