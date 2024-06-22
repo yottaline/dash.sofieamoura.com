@@ -147,6 +147,9 @@
                             <a ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100"
                                 href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma
                                 Invoice</a>
+
+                            <a class="btn btn-outline-dark mt-4 w-100" href="/ws_orders/invoice/<%order.order_id%>">Get
+                                Invoice</a>
                         </div>
                     </div>
                 </div>

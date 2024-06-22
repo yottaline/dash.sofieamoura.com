@@ -3,10 +3,13 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderProforma extends Mailable
+class OrderInvoice extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,13 +27,13 @@ class OrderProforma extends Mailable
     public function build()
     {
         return $this->subject('Proforma Invoice Created')
-                    ->view('email_templates.orders.proformaConfirmation')
+                    ->view('email_templates.orders.InvoiceConfirmation')
                     ->with([
                         'retailer' => $this->retailer,
                         'order_code' => $this->order_code
                     ])
                     ->attach(storage_path('app/public/' . $this->pdfPath), [
-                        'as' => 'proforma_invoice.pdf',
+                        'as' => 'invoice.pdf',
                         'mime' => 'application/pdf',
                     ]);
     }

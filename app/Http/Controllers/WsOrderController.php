@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderCreated;
+use App\Mail\OrderInvoice;
+use App\Mail\OrderProforma;
 use App\Models\Currency;
 use App\Models\Location;
 use App\Models\Retailer;
@@ -256,10 +258,36 @@ class WsOrderController extends Controller
         ];
         $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
 
-        $pdfPath = 'orders/' . $order->order_code . '.pdf';
+
+        $pdfPath = 'proforma/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
-        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
+
+        Mail::to('b2b@sofieamoura.com')->send(new OrderProforma($retailer->retailer_fullName, $order->order_code, $pdfPath));
         return back();
     }
+
+    function invoice($id)
+    {
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+
+        $data = [
+            'order' => $order,
+            'retailer' => $retailer,
+            'orderData' => $orderData,
+            'address'   => $address[0]
+        ];
+        $pdf = Pdf::loadView('pdf.invoice', ['data' => $data]);
+
+
+        $pdfPath = 'invoice/' . $order->order_code . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
+
+        Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        return back();
+    }
+
 
 }
