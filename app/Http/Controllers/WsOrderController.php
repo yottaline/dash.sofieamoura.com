@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class WsOrderController extends Controller
 {
@@ -219,5 +221,38 @@ class WsOrderController extends Controller
 
     return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
  }
+
+    function Confirmed($id){
+
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+
+        $data = [
+            'order' => $order,
+            'retailer' => $retailer,
+            'orderData' => $orderData
+        ];
+
+        $pdf = Pdf::loadView('pdf.order', ['data' => $data]);
+
+        $pdfPath = 'orders/' . $id . '.pdf';
+        Storage::disk('local')->put($pdfPath, $pdf->output());
+        // $pdf->save($pdfPath);
+        Mail::to('ahmedelnoman995@gmail.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
+    }
+
+    protected function sendEmail($email, $pdfPath)
+    {
+        Mail::send([], [], function($message) use ($email, $pdfPath) {
+            $message->to($email)
+                ->subject('Your Order Details')
+                ->attach($pdfPath, [
+                    'as' => 'order.pdf',
+                    'mime' => 'application/pdf',
+                ])
+                ->setBody('Please find the attached order details.');
+        });
+    }
 
 }

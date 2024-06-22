@@ -13,44 +13,28 @@ class OrderCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
     public $retailer;
+    public $order_code;
+    public $pdfPath;
 
-    public function __construct($retailer)
+    public function __construct($retailer, $order_code, $pdfPath)
     {
         $this->retailer = $retailer;
+        $this->order_code = $order_code;
+        $this->pdfPath = $pdfPath;
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'Order Created',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'email_templates.orders.orderConfirmation',
-            with: ['retailer' => $this->retailer]
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->subject('Order Created')
+                    ->view('email_templates.orders.orderConfirmation')
+                    ->with([
+                        'retailer' => $this->retailer,
+                        'order_code' => $this->order_code
+                    ])
+                    ->attach(storage_path('app/' . $this->pdfPath), [
+                        'as' => 'order.pdf',
+                        'mime' => 'application/pdf',
+                    ]);
     }
 }

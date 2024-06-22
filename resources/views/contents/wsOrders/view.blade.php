@@ -48,7 +48,8 @@
                                             <td data-ng-bind="(data.ordprod_request_qty * data.prodsize_wsp).toFixed(2)"
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
-                                                <a class="btn link-danger btn-circle bi bi-x"></a>
+                                                <a class="btn link-danger btn-circle bi bi-x"
+                                                    data-ng-click="delProduct($index)"></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -138,6 +139,12 @@
                                     });
                                 });
                             </script>
+                            <a ng-if="order.order_status = 2" class="btn btn-outline-dark mt-4 w-100"
+                                href="/ws_orders/get_confirmed/<%order.order_id%>">Get
+                                Order
+                                Confirmed</a>
+                            <button ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100">Get Proforma
+                                Invoice</button>
                             <button ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100">Get Proforma
                                 Invoice</button>
                         </div>
@@ -166,6 +173,12 @@
             $scope.retailer = <?= json_encode($retailer) ?>;
             $scope.order = <?= json_encode($order) ?>;
             $scope.orderData = <?= json_encode($orderData) ?>;
+
+            // console.log($scope.orderData);
+            $scope.delProduct = function(index) {
+                $scope.orderData.splice(index, 1);
+                console.log(scope.orderData);
+            };
 
             $scope.calculateSubtotal = function() {
                 var total = 0;

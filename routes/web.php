@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::post('change_status', 'WsOrderController@updateStatus');
         Route::get('view/{id}', 'WsOrderController@view');
         Route::get('export', 'WsOrderController@export');
+        Route::get('get_confirmed/{id}', 'WsOrderController@Confirmed');
     });
 
     Route::get('test', 'WsOrderController@test');
