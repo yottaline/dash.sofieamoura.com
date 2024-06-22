@@ -23,17 +23,15 @@
         <div class="row">
             <div class="col-12 col-lg-8 order-lg-last">
                 <div class="card card-box mb-3" ng-repeat="p in parsedProducts">
-                    <div class="d-flex mt-2">
-                        <h5 class="card-title fw-semibold pt-1 text-uppercase title">
-                            <span class="text-warning me-2" role="status"></span><span><%p.info.product_name%>
-                                #<%p.info.product_ref%></span>
-                        </h5>
-                    </div>
-                    <div class="card-body d-flex">
-                        <div ng-if="p.prodcolor_media" class="product-img rounded mb-2"
+                    <div class="card-body d-sm-flex">
+                        <div class="product-img rounded mb-2"
                             style="background-image: url({{ asset('media/product/') }}/<% p.info.product_id %>/<% p.info.media_file %>);">
                         </div>
-                        <div class="col">
+                        <div class="flex-fill">
+                            <h6 class="card-title fw-semibold pt-1 text-uppercase small">
+                                <span class="text-warning me-2" role="status"></span><span><%p.info.product_name%>
+                                    #<%p.info.product_ref%></span>
+                            </h6>
                             <div class="table-responsive">
                                 <table class="table table-hover sizes-table" id="example">
                                     <thead>
@@ -48,7 +46,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="text-center" ng-repeat="s as p.sizes">
+                                        <tr class="text-center" ng-repeat="s as p.sizes track by $index">
                                             <td ng-bind="s.prodcolor_name" class="small text-uppercase"></td>
                                             <td ng-bind="s.size_name">
                                             <td class="font-monospace" ng-bind="s.prodsize_wsp"></td>
@@ -66,6 +64,15 @@
                                             </td>
                                         </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td ng-bind="p.qty">qty</td>
+                                            <td ng-if="s.order_status > 2">qty</td>
+                                            <td ng-bind="p.total">total</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
