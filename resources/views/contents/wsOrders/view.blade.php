@@ -30,8 +30,8 @@
                         </div>
                         <div class="flex-fill">
                             <h6 class="fw-semibold pt-1 text-uppercase small">
-                                <span class="text-warning me-2" role="status"></span><span><%p.info.product_name%>
-                                    #<%p.info.product_ref%></span>
+                                <span class="me-1"><%p.info.product_name%></span>
+                                <span class="text-secondary">#<%p.info.product_code%></span>
                             </h6>
                             <div class="table-responsive">
                                 <table class="table table-hover sizes-table">
@@ -47,7 +47,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="text-center" ng-repeat="s in p.sizes track">
+                                        <tr class="text-center" ng-repeat="s in p.sizes">
                                             <td ng-bind="s.prodcolor_name" class="small text-uppercase"></td>
                                             <td ng-bind="s.size_name">
                                             <td class="font-monospace" ng-bind="s.prodsize_wsp"></td>
