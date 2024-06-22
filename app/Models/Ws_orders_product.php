@@ -29,9 +29,10 @@ class Ws_orders_product extends Model
         // join('ws_orders', 'ordprod_order', 'order_id')
         $oder_products = self::join('ws_products', 'ordprod_product', 'product_id')
             ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id')
-            ->join('sizes', 'prodsize_size', 'sizes.size_id')
+            ->join('sizes', 'prodsize_size', 'size_id')
             ->join('ws_products_colors', 'prodcolor_ref', 'prodsize_color')
-            ->leftJoin('products_media', 'media_color', 'prodcolor_ref');
+            ->leftJoin('products_media', 'media_color', 'prodcolor_ref')
+            ->groupBy('ordprod_id');
         // ->join('products_media', 'prodcolor_media', 'media_id');
 
         if ($params) $oder_products->where($params);

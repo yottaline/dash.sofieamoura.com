@@ -23,7 +23,7 @@
     <div class="container-fluid container" ng-app="ngApp" ng-controller="ngCtrl">
         <div class="row">
             <div class="col-12 col-lg-8 order-lg-last">
-                <div class="card card-box mb-3" ng-repeat="p in parsedProducts">
+                <div class="card card-box mb-3" ng-repeat="(pk, p) in parsedProducts">
                     <div class="card-body d-sm-flex">
                         <div class="product-img rounded mb-2"
                             style="background-image: url({{ asset('media/product/') }}/<% p.info.product_id %>/<% p.info.media_file %>);">
@@ -40,33 +40,34 @@
                                             <th>Color</th>
                                             <th>Size</th>
                                             <th>WSP</th>
-                                            <th>Qty</th>
-                                            <th ng-if="p.info.order_status > 2">Qty</th>
+                                            <th>Req.Qty</th>
+                                            <th ng-if="p.info.order_status > 2">Srv. Qty</th>
                                             <th>Total</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="text-center" ng-repeat="s in p.sizes">
-                                            <td ng-bind="s.prodcolor_name" class="small text-uppercase"></td>
-                                            <td ng-bind="s.size_name">
-                                            <td class="font-monospace" ng-bind="s.prodsize_wsp"></td>
-                                            <td>
-                                                <input class="qty-input" ng-readonly="s.order_status > 2" type="number"
-                                                    ng-model="s.ordprod_request_qty">
+                                        <tr class="small text-center" ng-repeat="(sk, s) in p.sizes">
+                                            <td ng-bind="s.prodcolor_name" class="text-uppercase"></td>
+                                            <td width="60" ng-bind="s.size_name">
+                                            <td width="60" class="font-monospace" ng-bind="s.prodsize_wsp"></td>
+                                            <td class="col-fit">
+                                                <input class="qty-input" ng-readonly="s.order_status > 2" type="text"
+                                                    ng-model="s.ordprod_request_qty" ng-blur="updateQty(pk, sk)">
                                             </td>
-                                            <td ng-if="s.order_status > 2">
-                                                <input class="qty-input" type="number">
+                                            <td class="col-fit" ng-if="s.order_status > 2">
+                                                <input class="qty-input" type="text" ng-model="s.ordprod_served_qty">
                                             </td>
                                             <td ng-bind="fn.toFixed(s.ordprod_request_qty * s.prodsize_wsp, 2)"
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
-                                                <a class="link-danger bi bi-x" ng-click="delProduct($index)"></a>
+                                                <a href="" class="link-danger bi bi-x"
+                                                    ng-click="delProduct($index)"></a>
                                             </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
-                                        <tr>
+                                        <tr class="text-center font-monospace">
                                             <td colspan="3"></td>
                                             <td ng-bind="p.qty">qty</td>
                                             <td ng-if="s.order_status > 2">qty</td>
@@ -223,6 +224,10 @@
                 $scope.products.splice(index, 1);
                 $scope.parseProducts();
             };
+
+            $scope.updateQty = function(pk, sk) {
+                $scope.parseProducts();
+            }
 
             // $scope.calculateSubtotal = function() {
             //     var total = 0;
