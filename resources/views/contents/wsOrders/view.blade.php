@@ -28,11 +28,15 @@
                         <div class="product-img rounded mb-2"
                             style="background-image: url({{ asset('media/product/') }}/<% p.info.product_id %>/<% p.info.media_file %>);">
                         </div>
+
                         <div class="flex-fill">
-                            <h6 class="fw-semibold pt-1 text-uppercase small">
-                                <span class="me-1"><%p.info.product_name%></span>
-                                <span class="text-secondary">#<%p.info.product_code%></span>
-                            </h6>
+                            <div class="d-flex">
+                                <h6 class="fw-semibold pt-1 text-uppercase small me-auto">
+                                    <span class="me-1"><%p.info.product_name%></span>
+                                    <span class="text-secondary">#<%p.info.product_code%></span>
+                                </h6>
+                                <a href="" class="link-danger h5 bi bi-x" ng-click="removeProduct(pk)"></a>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover sizes-table">
                                     <thead>
@@ -57,7 +61,8 @@
                                                     ng-blur="updateQty(s.ordprod_id, s.ordprod_request_qty, 0)">
                                             </td>
                                             <td class="col-fit" ng-if="s.order_status > 2">
-                                                <input class="qty-input" type="text" ng-model="s.ordprod_served_qty">
+                                                <input class="qty-input" type="text" ng-model="s.ordprod_served_qty"
+                                                    ng-blur="updateQty(s.ordprod_id, s.ordprod_served_qty, 1)">
                                             </td>
                                             <td width="80"
                                                 ng-bind="fn.toFixed(s.ordprod_request_qty * s.ordprod_price, 2)"
@@ -69,11 +74,11 @@
                                         </tr>
                                     </tbody>
                                     <tfoot>
-                                        <tr class="text-center font-monospace">
+                                        <tr class="text-center font-monospace small">
                                             <td colspan="3"></td>
                                             <td ng-bind="p.qty">qty</td>
                                             <td ng-if="s.order_status > 2">qty</td>
-                                            <td ng-bind="p.total">total</td>
+                                            <td ng-bind="fn.sepNumber(p.total)">total</td>
                                             <td></td>
                                         </tr>
                                     </tfoot>
@@ -87,53 +92,54 @@
             <div class="col order-lg-first">
                 <div class="card card-box">
                     <div class="card-body product-block">
-                        <h5 class="fw-semibold text-uppercase">
-                            <span>ORDER</span> <span>#<%order.order_code%></span>
-                        </h5>
+                        <h6 class="fw-semibold text-uppercase">
+                            <span>ORDER</span> <span><%order.order_code%></span>
+                        </h6>
                         <h6 class="small"><%order.season_name%></h6>
                         <span class="text-primary"><%statusObject.name[order.order_status]%></span>
                         <p class="text-secondary mb-0 small">created: <span class="font-monospace"
-                                ng-bind="order.order_created"></span></p>
+                                ng-bind="fn.slice(order.order_created, 0, 16)"></span></p>
                         <p class="text-secondary mb-0 small" ng-if="order.order_placed">placed: <span class="font-monospace"
-                                ng-bind="order.order_placed"></span></p>
+                                ng-bind="fn.slice(order.order_placed, 0, 16)"></span></p>
                         <hr>
-                        <h5 class="fw-semibold text-uppercase">Retailer info</h5>
-                        <p class="fw-semibold mb-0"><% retailer.retailer_fullName %></p>
-                        <p class="fw-semibold mb-0"><% retailer.retailer_email %></p>
+                        <h6 class="fw-semibold text-uppercase">Retailer info</h6>
+                        <p class="mb-0 small font-monospace text-seconday"><% retailer.retailer_code %></p>
+                        <p class="mb-0 small"><% retailer.retailer_fullName %></p>
+                        <p class="mb-0 small"><% retailer.retailer_email %></p>
                         <hr>
                         <table class="table small">
                             <tbody>
                                 <tr ng-if="+order.order_discount">
                                     <td class="col-fit">Subtotal</td>
                                     <td class="text-end font-monospace">
-                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="order.currency_code"></span>
                                         <span ng-bind="fn.sepNumber(order.order_subtotal)"></span>
                                     </td>
                                 </tr>
                                 <tr ng-if="+order.order_discount">
                                     <td class="col-fit">Discount</td>
                                     <td class="text-end font-monospace">
-                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="order.currency_code"></span>
                                         <span ng-bind="fn.sepNumber(order.order_discount)"></span>
                                     </td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td class="col-fit">Total</td>
                                     <td class="text-end font-monospace">
-                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="order.currency_code"></span>
                                         <span ng-bind="fn.sepNumber(order.order_total)"></span>
                                     </td>
                                 </tr>
                                 <tr class="text-secondary">
                                     <td class="col-fit">Adv. Payment 30%</td>
                                     <td class="text-end font-monospace">
-                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="order.currency_code"></span>
                                         <span ng-bind="fn.sepNumber(order.order_total * 0.3)"></span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <h5>Qty: </h5>
+                        <h6 class="font-monospace small">Qty: <span ng-bind="orderQty"></span></h6>
                         <div class="mt-4">
                             <form action="/ws_orders/change_status" id="statusForm" method="post">
                                 <input type="hidden" name="id" ng-value="order.order_id">
@@ -202,7 +208,7 @@
 @section('js')
     <script>
         var scope,
-            app = angular.module('ngApp', [], function($interpolateProvider) {
+            app = angular.module('ngApp', ['ngSanitize'], function($interpolateProvider) {
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
             });
@@ -250,12 +256,10 @@
             };
 
             $scope.updateQty = function(id, qty, target) {
-                console.log(id, qty, target);
-                return;
                 $scope.qtyUpdate = true;
-                $.post('/ws_order/updateQty', {
+                $.post('/ws_order/update_qty', {
                     order: $scope.order.order_id,
-                    size: id,
+                    product: id,
                     qty: qty,
                     target: target,
                 }, function(response) {
@@ -263,13 +267,11 @@
                         $scope.qtyUpdate = false;
                         if (response.status) {
                             $scope.order = response.order;
+                            $scope.products = response.products;
                             $scope.parseProducts();
-                        } else {
-
-                        }
+                        } else toastr.error('Error updating qty please reload the page');
                     });
                 }, 'json');
-                $scope.parseProducts();
             }
 
             $scope.parseProducts();

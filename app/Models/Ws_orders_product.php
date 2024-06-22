@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class Ws_orders_product extends Model
 {
@@ -24,7 +25,7 @@ class Ws_orders_product extends Model
         'ordprod_discount',
     ];
 
-    public static function fetch($id = 0, $params = null)
+    static function fetch($id = 0, $params = null)
     {
         // join('ws_orders', 'ordprod_order', 'order_id')
         $oder_products = self::join('ws_products', 'ordprod_product', 'product_id')
@@ -42,7 +43,22 @@ class Ws_orders_product extends Model
         return $id ? $oder_products->first() : $oder_products->get();
     }
 
-    public static function excel($orderids = null)
+    static function submit($product, $order = null)
+    {
+        try {
+            DB::beginTransaction();
+            $status = $product[0] ? self::where('ordprod_id', $product[0])->update($product[1]) : self::create($product[1]);
+            $id = $product[0] ? $product[0] : $status->id;
+            if (!empty($order)) Ws_order::where('order_id', $order[0])->update($order[1]);
+            DB::commit();
+            return ['status' => true, 'id' => $id];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
+        }
+    }
+
+    static function excel($orderids = null)
     {
         $orders =   self::join('ws_orders AS o', 'ordprod_order', 'order_id')->join('ws_products AS wp1', 'ordprod_product', 'product_id')
             ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id')->join('sizes', 'ws_products_sizes.prodsize_size', 'sizes.size_id')

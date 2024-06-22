@@ -192,6 +192,43 @@ class WsOrderController extends Controller
         echo json_encode($result);
     }
 
+    function updateQty(Request $request)
+    {
+        $order = Ws_order::fetch($request->order);
+        $products = Ws_orders_product::fetch(0, [['ordprod_order', $request->order]]);
+
+        $ndx = 0;
+        $order->order_subtotal = 0;
+        $order->order_total = 0;
+        for ($i = 0; $i < count($products); $i++) {
+            if ($products[$i]->ordprod_id == $request->product) {
+                $products[$i]->ordprod_served_qty = $request->qty;
+                $ndx = $i;
+            }
+            $products[$i]->ordprod_subtotal = $products[$i]->ordprod_served_qty * $products[$i]->ordprod_price;
+            $products[$i]->ordprod_total = $products[$i]->ordprod_subtotal - ($products[$i]->ordprod_subtotal * $products[$i]->ordprod_discount / 100);
+
+            $order->order_subtotal += $products[$i]->ordprod_subtotal;
+            $order->order_total += $products[$i]->ordprod_total;
+        }
+        $param = [
+            'ordprod_served_qty' => $request->qty,
+            'ordprod_subtotal' => $products[$ndx]->ordprod_subtotal,
+            'ordprod_total' => $products[$ndx]->ordprod_total,
+        ];
+        if (!$request->target) $param['ordprod_request_qty'] = $request->qty;
+        $orderParam = [
+            'order_subtotal' => $order->order_subtotal,
+            'order_total' => $order->order_total,
+        ];
+
+        $result =  Ws_orders_product::submit([$request->product, $param], [$request->order, $orderParam]);
+        echo json_encode([
+            'status' => boolval($result),
+            'order' => $order,
+            'products' => $products,
+        ]);
+    }
 
     function updateStatus(Request $request)
     {
