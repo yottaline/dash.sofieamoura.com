@@ -22,12 +22,17 @@ use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\SendProformaInvoice;
+use App\Services\TelegramService;
+use Illuminate\Support\Facades\Http;
 
 class WsOrderController extends Controller
 {
-    function __construct()
+    protected $telegramService;
+
+    function __construct(TelegramService $telegramService)
     {
         $this->middleware('auth');
+        $this->telegramService = $telegramService;
     }
 
     function index()
@@ -188,6 +193,7 @@ class WsOrderController extends Controller
         // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
+
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
         echo json_encode($result);
     }
