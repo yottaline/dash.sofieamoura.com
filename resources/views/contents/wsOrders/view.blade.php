@@ -257,7 +257,7 @@
 
             $scope.updateQty = function(id, qty, target) {
                 $scope.qtyUpdate = true;
-                $.post('/ws_order/update_qty', {
+                $.post('/ws_orders/update_qty', {
                     order: $scope.order.order_id,
                     product: id,
                     qty: qty,
