@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\SendProformaInvoice;
 
 class WsOrderController extends Controller
 {
@@ -210,6 +211,7 @@ class WsOrderController extends Controller
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+        // return $orderData;
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
@@ -245,24 +247,8 @@ class WsOrderController extends Controller
 
     function Proforma($id)
     {
-        $order = Ws_order::fetch($id);
-        $retailer = Retailer::fetch($order->order_retailer);
-        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
-        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
-
-        $data = [
-            'order' => $order,
-            'retailer' => $retailer,
-            'orderData' => $orderData,
-            'address'   => $address[0]
-        ];
-        $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
-
-
-        $pdfPath = 'proforma/' . $order->order_code . '.pdf';
-        Storage::disk('public')->put($pdfPath, $pdf->output());
-
-        Mail::to('b2b@sofieamoura.com')->send(new OrderProforma($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        set_time_limit(5000);
+        SendProformaInvoice::dispatch($id);
         return back();
     }
 
