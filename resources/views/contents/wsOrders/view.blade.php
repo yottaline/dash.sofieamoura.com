@@ -128,7 +128,7 @@
                                     <td class="col-fit">Adv. Payment 30%</td>
                                     <td class="text-end font-monospace">
                                         <span ng-bind="order.currency_symbol"></span>
-                                        <span ng-bind="fn.sepNumber(order.order_total * 0.3))"></span>
+                                        <span ng-bind="fn.sepNumber(order.order_total * 0.3)"></span>
                                     </td>
                                 </tr>
                             </tbody>
