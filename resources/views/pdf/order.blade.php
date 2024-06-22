@@ -76,6 +76,7 @@
                                 {{ $total += $product->ordprod_total,
                                     $productQty += $product->ordprod_request_qty,
                                     $qty += $product->ordprod_request_qty }}
+
                                 <tr style="text-align: center">
                                     <td width="110" style="border-top: 1px solid #ccc; padding: 5px">
                                         {{ $product->prodcolor_name }}
