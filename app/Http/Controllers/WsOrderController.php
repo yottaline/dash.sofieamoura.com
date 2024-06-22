@@ -237,7 +237,7 @@ class WsOrderController extends Controller
 
         $pdfPath = 'orders/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
-        Mail::to('ahmedelnoman995@gmail.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
         return back();
     }
 
