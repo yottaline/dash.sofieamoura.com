@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderCreated;
-use App\Mail\TestMail;
+use App\Mail\OrderInvoice;
+use App\Mail\OrderProforma;
 use App\Models\Currency;
 use App\Models\Location;
 use App\Models\Retailer;
@@ -18,6 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class WsOrderController extends Controller
 {
@@ -184,9 +187,6 @@ class WsOrderController extends Controller
         // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
-        if ($result) {
-            Mail::to($retailer[0]->retailer_email)->send(new OrderCreated($retailer[0]->retailer_fullname));
-        }
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
         echo json_encode($result);
     }
@@ -211,7 +211,7 @@ class WsOrderController extends Controller
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
-        // return $order;
+
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 
@@ -221,13 +221,70 @@ class WsOrderController extends Controller
         return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
     }
 
-    function test()
+    function Confirmed($id)
     {
-        try {
-            Mail::to('mahs.1985@gmail.com')->send(new TestMail('Mohamed'));
-            echo 'Message Sent';
-        } catch (Exception $e) {
-            echo sprintf('[%s],[%d] ERROR:[%s]', __METHOD__, __LINE__, json_encode($e->getMessage(), true));
-        }
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+
+        $data = [
+            'order' => $order,
+            'retailer' => $retailer,
+            'orderData' => $orderData,
+            'address'   => $address[0]
+        ];
+
+        $pdf = Pdf::loadView('pdf.order', ['data' => $data]);
+
+        $pdfPath = 'orders/' . $order->order_code . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
+        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        return back();
     }
-}
+
+    function Proforma($id)
+    {
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+
+        $data = [
+            'order' => $order,
+            'retailer' => $retailer,
+            'orderData' => $orderData,
+            'address'   => $address[0]
+        ];
+        $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
+
+
+        $pdfPath = 'proforma/' . $order->order_code . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
+
+        Mail::to('b2b@sofieamoura.com')->send(new OrderProforma($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        return back();
+    }
+
+    function invoice($id)
+    {
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+
+        $data = [
+            'order' => $order,
+            'retailer' => $retailer,
+            'orderData' => $orderData,
+            'address'   => $address[0]
+        ];
+        $pdf = Pdf::loadView('pdf.invoice', ['data' => $data]);
+
+
+        $pdfPath = 'invoice/' . $order->order_code . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
+
+        Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        return back();
+    }
