@@ -198,14 +198,14 @@
                 $.map($scope.products, function(p) {
                     if (typeof $scope.parsedProducts[p.prodcolor_slug] == 'undefined')
                         $scope.parsedProducts[p.prodcolor_slug] = {
-                            info: e,
+                            info: p,
                             sizes: [],
                             qty: 0,
                             total: 0
                         };
-                    $scope.parsedProducts[p.prodcolor_slug].sizes.push(e);
-                    $scope.parsedProducts[p.prodcolor_slug].qty += e.ordprod_request_qty;
-                    $scope.parsedProducts[p.prodcolor_slug].qty += e.ordprod_total;
+                    $scope.parsedProducts[p.prodcolor_slug].sizes.push(p);
+                    $scope.parsedProducts[p.prodcolor_slug].qty += p.ordprod_request_qty;
+                    $scope.parsedProducts[p.prodcolor_slug].qty += p.ordprod_total;
                 });
             }
             // $scope.productTotal = slug => $.map($scope.products, e => e.prodcolor_slug == slug ? e.ordprod_total :
