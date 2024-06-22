@@ -58,7 +58,8 @@
                                             <td class="col-fit" ng-if="s.order_status > 2">
                                                 <input class="qty-input" type="text" ng-model="s.ordprod_served_qty">
                                             </td>
-                                            <td ng-bind="fn.toFixed(s.ordprod_request_qty * s.prodsize_wsp, 2)"
+                                            <td width="70"
+                                                ng-bind="fn.toFixed(s.ordprod_request_qty * s.prodsize_wsp, 2)"
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
                                                 <a href="" class="link-danger bi bi-x"
@@ -214,7 +215,8 @@
                         };
                     $scope.parsedProducts[p.prodcolor_slug].sizes.push(p);
                     $scope.parsedProducts[p.prodcolor_slug].qty += +p.ordprod_request_qty;
-                    $scope.parsedProducts[p.prodcolor_slug].total += +p.ordprod_total;
+                    $scope.parsedProducts[p.prodcolor_slug].total += +p.ordprod_request_qty * +p
+                        .prodsize_wsp;
                 });
             }
             // $scope.productTotal = slug => $.map($scope.products, e => e.prodcolor_slug == slug ? e.ordprod_total :

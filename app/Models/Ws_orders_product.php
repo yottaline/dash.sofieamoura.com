@@ -31,7 +31,7 @@ class Ws_orders_product extends Model
             ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id')
             ->join('sizes', 'prodsize_size', 'size_id')
             ->join('ws_products_colors', 'prodcolor_ref', 'prodsize_color')
-            ->leftJoin('products_media', 'media_color', 'prodcolor_ref')
+            ->join('products_media', 'media_color', 'prodcolor_ref')
             ->groupBy('ordprod_id');
         // ->join('products_media', 'prodcolor_media', 'media_id');
 
