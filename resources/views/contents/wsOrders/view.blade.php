@@ -1,5 +1,6 @@
 @extends('index')
 @section('title', 'View order')
+
 @section('content')
     <div class="container-fluid container" data-ng-app="myApp" data-ng-controller="myCtrl">
         <div class="row">
@@ -7,7 +8,7 @@
             <div class="col-12 col-sm-8 col-lg-9">
                 <div class="card card-box mt-2" data-ng-repeat="data in orderData">
                     <div class="d-flex mt-2">
-                        <h5 class="card-title fw-semibold pt-1 text-uppercase" style="margin-left: 245px">
+                        <h5 class="card-title fw-semibold pt-1 text-uppercase title">
                             <span class="text-warning me-2" role="status"></span><span><%data.product_name%>
                                 #<%data.product_ref%></span>
                         </h5>
@@ -27,23 +28,32 @@
                                             <th class="text-center">Color</th>
                                             <th class="text-center">Size</th>
                                             <th class="text-center">WSP</th>
-                                            <th class="text-center">QTY</th>
+                                            <th class="text-center">Request QTY</th>
+                                            <th class="text-center">Served QTY</th>
                                             <th class="text-center">Total</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td data-ng-bind="data.prodcolor_ref"
+                                            <td data-ng-bind="data.prodcolor_name"
                                                 class="text-center small font-monospace text-uppercase">
                                             </td>
                                             <td class="text-center" data-ng-bind="data.size_name">
                                             <td class="text-center" data-ng-bind="data.prodsize_wsp">
                                             </td>
                                             <td class="text-center">
-                                                <input type="number" value="4"
+                                                <input ng-if="order.order_status <= 2" type="number"
+                                                    style="width:70px;text-align:center" value="4"
                                                     data-ng-model="data.ordprod_request_qty"
                                                     data-ng-change="updateTotal(0)">
+                                                <input ng-if="order.order_status >= 3" readonly type="number"
+                                                    style="width:70px;text-align:center" value="4"
+                                                    data-ng-model="data.ordprod_request_qty"
+                                                    data-ng-change="updateTotal(0)">
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="number" style="width:70px;text-align:center" value="0">
                                             </td>
                                             <td data-ng-bind="(data.ordprod_request_qty * data.prodsize_wsp).toFixed(2)"
                                                 class="text-center font-monospace"></td>
@@ -78,7 +88,7 @@
                             <p>Subtotal: <span data-ng-bind="calculateSubtotal()"></span></p>
                             <hr>
                             <p class="text-danger fw-semibold">Discount: <input type="number" value="4"
-                                    class="text-center" style="margin-left:140px; width:100px"
+                                    class="text-center" style="width:70px;text-align:center"
                                     data-ng-model="order.order_discount" ng-change="calculateSubtotal()">
                             </p>
                             <hr>
