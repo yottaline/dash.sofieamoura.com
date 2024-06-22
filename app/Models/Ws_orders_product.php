@@ -31,8 +31,8 @@ class Ws_orders_product extends Model
             ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id')
             ->join('sizes', 'prodsize_size', 'sizes.size_id')
             ->join('ws_products_colors', 'prodcolor_ref', 'prodsize_color')
-            // ->leftJoin('products_media', 'media_color', 'prodcolor_ref')
-            ->join('products_media', 'prodcolor_media', 'media_id');
+            ->leftJoin('products_media', 'media_color', 'prodcolor_ref');
+        // ->join('products_media', 'prodcolor_media', 'media_id');
 
         if ($params) $oder_products->where($params);
 

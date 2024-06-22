@@ -4,11 +4,12 @@
 @section('style')
     <style>
         .product-img {
-            width: 70px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             background-size: contain;
             background-position: center top;
             background-repeat: no-repeat;
+            margin: 10px;
         }
 
         .qty-input {
@@ -28,7 +29,7 @@
                             style="background-image: url({{ asset('media/product/') }}/<% p.info.product_id %>/<% p.info.media_file %>);">
                         </div>
                         <div class="flex-fill">
-                            <h6 class="card-title fw-semibold pt-1 text-uppercase small">
+                            <h6 class="fw-semibold pt-1 text-uppercase small">
                                 <span class="text-warning me-2" role="status"></span><span><%p.info.product_name%>
                                     #<%p.info.product_ref%></span>
                             </h6>
@@ -46,7 +47,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="text-center" ng-repeat="s as p.sizes track">
+                                        <tr class="text-center" ng-repeat="s in p.sizes track">
                                             <td ng-bind="s.prodcolor_name" class="small text-uppercase"></td>
                                             <td ng-bind="s.size_name">
                                             <td class="font-monospace" ng-bind="s.prodsize_wsp"></td>
