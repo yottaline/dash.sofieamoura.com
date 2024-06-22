@@ -184,9 +184,6 @@ class WsOrderController extends Controller
         // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
-        if ($result) {
-            Mail::to($retailer[0]->retailer_email)->send(new OrderCreated($retailer[0]->retailer_fullname));
-        }
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
         echo json_encode($result);
     }
@@ -211,7 +208,7 @@ class WsOrderController extends Controller
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
-        // return $order;
+
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 
@@ -226,33 +223,22 @@ class WsOrderController extends Controller
 
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
+        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
         $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         $data = [
             'order' => $order,
             'retailer' => $retailer,
-            'orderData' => $orderData
+            'orderData' => $orderData,
+            'address'   => $address[0]
         ];
 
         $pdf = Pdf::loadView('pdf.order', ['data' => $data]);
 
-        $pdfPath = 'orders/' . $id . '.pdf';
-        Storage::disk('local')->put($pdfPath, $pdf->output());
-        // $pdf->save($pdfPath);
+        $pdfPath = 'orders/' . $order->order_code . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
         Mail::to('ahmedelnoman995@gmail.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
-    }
-
-    protected function sendEmail($email, $pdfPath)
-    {
-        Mail::send([], [], function($message) use ($email, $pdfPath) {
-            $message->to($email)
-                ->subject('Your Order Details')
-                ->attach($pdfPath, [
-                    'as' => 'order.pdf',
-                    'mime' => 'application/pdf',
-                ])
-                ->setBody('Please find the attached order details.');
-        });
+        return back();
     }
 
 }

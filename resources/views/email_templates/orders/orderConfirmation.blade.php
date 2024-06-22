@@ -9,5 +9,6 @@
             href="mailto:info@sofieamoura.com">info@sofieamoura.com</a></p>
     <br>
     <p><b>Please see your ORDER # {{ $order_code }} attached.</b></p>
+    <p><a href="{{ asset('storage/orders/' . $order_code . '.pdf') }}">Download Order PDF</a></p>
     <br>
 @endsection
