@@ -219,8 +219,8 @@ class WsOrderController extends Controller
     return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
  }
 
-    function Confirmed($id){
-
+    function Confirmed($id)
+    {
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
@@ -234,6 +234,27 @@ class WsOrderController extends Controller
         ];
 
         $pdf = Pdf::loadView('pdf.order', ['data' => $data]);
+
+        $pdfPath = 'orders/' . $order->order_code . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
+        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        return back();
+    }
+
+    function Proforma($id)
+    {
+        $order = Ws_order::fetch($id);
+        $retailer = Retailer::fetch($order->order_retailer);
+        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+
+        $data = [
+            'order' => $order,
+            'retailer' => $retailer,
+            'orderData' => $orderData,
+            'address'   => $address[0]
+        ];
+        $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
 
         $pdfPath = 'orders/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());

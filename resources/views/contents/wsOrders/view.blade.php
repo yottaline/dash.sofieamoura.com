@@ -91,7 +91,7 @@
                                 @csrf
                                 <span>status</span>
                                 <div class="input-group mb-3">
-                                    <select name="status" id="status" class="form-select">
+                                    <select name="status" class="form-select">
                                         <option value="0">DRAFT</option>
                                         <option value="1">CANCELLED</option>
                                         <option value="2">PLACED</option>
@@ -139,14 +139,14 @@
                                     });
                                 });
                             </script>
-                            <a ng-if="order.order_status = 2" class="btn btn-outline-dark mt-4 w-100"
+                            <a ng-if="order.order_status == 2" class="btn btn-outline-dark mt-4 w-100"
                                 href="/ws_orders/get_confirmed/<%order.order_id%>">Get
                                 Order
                                 Confirmed</a>
-                            <button ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100">Get Proforma
-                                Invoice</button>
-                            <button ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100">Get Proforma
-                                Invoice</button>
+                            <hr>
+                            <a ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100"
+                                href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma
+                                Invoice</a>
                         </div>
                     </div>
                 </div>
