@@ -1,65 +1,68 @@
 @extends('index')
 @section('title', 'View order')
 
-@section('content')
-    <div class="container-fluid container" data-ng-app="myApp" data-ng-controller="myCtrl">
-        <div class="row">
+@section('style')
+    <style>
+        .product-img {
+            width: 70px;
+            height: 120px;
+            background-size: contain;
+            background-position: center top;
+            background-repeat: no-repeat;
+        }
 
-            <div class="col-12 col-sm-8 col-lg-9">
-                <div class="card card-box mt-2" data-ng-repeat="data in orderData">
+        .qty-input {
+            width: 50px;
+            text-align: center;
+        }
+    </style>
+@endsection
+
+@section('content')
+    <div class="container-fluid container" ng-app="ngApp" ng-controller="ngCtrl">
+        <div class="row">
+            <div class="col-12 col-lg-8 order-lg-last">
+                <div class="card card-box mb-3" ng-repeat="p in parsedProducts">
                     <div class="d-flex mt-2">
                         <h5 class="card-title fw-semibold pt-1 text-uppercase title">
-                            <span class="text-warning me-2" role="status"></span><span><%data.product_name%>
-                                #<%data.product_ref%></span>
+                            <span class="text-warning me-2" role="status"></span><span><%p.info.product_name%>
+                                #<%p.info.product_ref%></span>
                         </h5>
                     </div>
-                    <div class="card-body row">
-                        <div class="col-12 col-sm-4 col-md-3 mb-5" ng-if="data.prodcolor_media == null"
-                            class="product-img rounded mb-2"
-                            style="background-image: url(/assets/img/default_product_image.png);padding:100px"></div>
-                        <div class="col-12 col-sm-4 col-md-3" ng-if="data.prodcolor_media" class="product-img rounded mb-2"
-                            style="background-image: url({{ asset('media/product/') }}/<% data.product_id %>/<% data.media_file %>);padding:100px;background-size:contain">
+                    <div class="card-body d-flex">
+                        <div ng-if="p.prodcolor_media" class="product-img rounded mb-2"
+                            style="background-image: url({{ asset('media/product/') }}/<% p.info.product_id %>/<% p.info.media_file %>);">
                         </div>
                         <div class="col">
                             <div class="table-responsive">
                                 <table class="table table-hover sizes-table" id="example">
                                     <thead>
-                                        <tr>
-                                            <th class="text-center">Color</th>
-                                            <th class="text-center">Size</th>
-                                            <th class="text-center">WSP</th>
-                                            <th class="text-center">Request QTY</th>
-                                            <th class="text-center">Served QTY</th>
-                                            <th class="text-center">Total</th>
+                                        <tr class="text-center">
+                                            <th>Color</th>
+                                            <th>Size</th>
+                                            <th>WSP</th>
+                                            <th>Qty</th>
+                                            <th ng-if="p.info.order_status > 2">Qty</th>
+                                            <th>Total</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td data-ng-bind="data.prodcolor_name"
-                                                class="text-center small font-monospace text-uppercase">
+                                        <tr class="text-center" ng-repeat="s as p.sizes">
+                                            <td ng-bind="s.prodcolor_name" class="small text-uppercase"></td>
+                                            <td ng-bind="s.size_name">
+                                            <td class="font-monospace" ng-bind="s.prodsize_wsp"></td>
+                                            <td>
+                                                <input class="qty-input" ng-readonly="s.order_status > 2" type="number"
+                                                    ng-model="s.ordprod_request_qty">
                                             </td>
-                                            <td class="text-center" data-ng-bind="data.size_name">
-                                            <td class="text-center" data-ng-bind="data.prodsize_wsp">
+                                            <td ng-if="s.order_status > 2">
+                                                <input class="qty-input" type="number" ng-model="s.ordprod_request_qty">
                                             </td>
-                                            <td class="text-center">
-                                                <input ng-if="order.order_status <= 2" type="number"
-                                                    style="width:70px;text-align:center" value="4"
-                                                    data-ng-model="data.ordprod_request_qty"
-                                                    data-ng-change="updateTotal(0)">
-                                                <input ng-if="order.order_status >= 3" readonly type="number"
-                                                    style="width:70px;text-align:center" value="4"
-                                                    data-ng-model="data.ordprod_request_qty"
-                                                    data-ng-change="updateTotal(0)">
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="number" style="width:70px;text-align:center" value="0">
-                                            </td>
-                                            <td data-ng-bind="(data.ordprod_request_qty * data.prodsize_wsp).toFixed(2)"
+                                            <td ng-bind="fn.toFixed(o.ordprod_request_qty * o.prodsize_wsp, 2)"
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
-                                                <a class="btn link-danger btn-circle bi bi-x"
-                                                    data-ng-click="delProduct($index)"></a>
+                                                <a class="link-danger bi bi-x" ng-click="delProduct($index)"></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -70,29 +73,29 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-4 col-lg-3 mt-2">
+            <div class="col">
                 <div class="card card-box">
                     <div class="card-body product-block">
                         <h4 class="card-title fw-semibold pt-1 me-auto text-uppercase">
                             <span>ORDER #<%order.order_code%></span><br>
                         </h4>
                         <h6>
-                            <span>Season/<%order.season_name%></span>
+                            <span>Season: <%order.season_name%></span>
                         </h6>
                         <hr>
                         <span class="fw-semibold">Retailer: <%retailer.retailer_fullName%></span><br>
                         <span><%statusObject.name[order.order_status]%></span>
-                        <p class="font-secondary">created: <span data-ng-bind="order.order_created"></span></p>
+                        <p class="font-secondary">created: <span ng-bind="order.order_created"></span></p>
                         <hr>
                         <div class="subtotal">
-                            <p>Subtotal: <span data-ng-bind="calculateSubtotal()"></span></p>
+                            <p>Subtotal: <span ng-bind="calculateSubtotal()"></span></p>
                             <hr>
                             <p class="text-danger fw-semibold">Discount: <input type="number" value="4"
-                                    class="text-center" style="width:70px;text-align:center"
-                                    data-ng-model="order.order_discount" ng-change="calculateSubtotal()">
+                                    class="text-center" style="width:70px;text-align:center" ng-model="order.order_discount"
+                                    ng-change="calculateSubtotal()">
                             </p>
                             <hr>
-                            <p class="fw-bold">Total: <span data-ng-bind="calculateSubtotal()"></span></p>
+                            <p class="fw-bold">Total: <span ng-bind="calculateSubtotal()"></span></p>
                         </div>
                         <hr>
                         <div class="delivery">
@@ -167,43 +170,64 @@
         </div>
     </div>
 @endsection
+
 @section('js')
     <script>
         var scope,
-            app = angular.module('myApp', [], function($interpolateProvider) {
+            app = angular.module('ngApp', [], function($interpolateProvider) {
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
             });
 
-        app.controller('myCtrl', function($scope) {
+        app.controller('ngCtrl', function($scope) {
+            $scope.fn = NgFunctions;
             $scope.statusObject = {
-                name: ['Draft', 'Cancelled', 'Placed', 'Confirmed', 'Advance Payment Is Pending',
+                name: [
+                    'Draft', 'Cancelled', 'Placed',
+                    'Confirmed', 'Advance Payment Is Pending',
                     'Balance Payment Is Pending', 'Shipped'
                 ],
             };
             $scope.orderDisc = 0;
-            $scope.jsonParse = (str) => JSON.parse(str);
             $scope.retailer = <?= json_encode($retailer) ?>;
             $scope.order = <?= json_encode($order) ?>;
-            $scope.orderData = <?= json_encode($orderData) ?>;
+            $scope.products = <?= json_encode($products) ?>;
+            $scope.parsedProducts = {};
+            $scope.parseProducts = function() {
+                $scope.parsedProducts = {};
+                $.map($scope.products, function(p) {
+                    if (typeof $scope.parsedProducts[p.prodcolor_slug] == 'undefined')
+                        $scope.parsedProducts[p.prodcolor_slug] = {
+                            info: e,
+                            sizes: [],
+                            qty: 0,
+                            total: 0
+                        };
+                    $scope.parsedProducts[p.prodcolor_slug].sizes.push(e);
+                    $scope.parsedProducts[p.prodcolor_slug].qty += e.ordprod_request_qty;
+                    $scope.parsedProducts[p.prodcolor_slug].qty += e.ordprod_total;
+                });
+            }
+            // $scope.productTotal = slug => $.map($scope.products, e => e.prodcolor_slug == slug ? e.ordprod_total :
+            //     0).reduce((accumulator, currentValue) => accumulator + currentValue);
 
-            // console.log($scope.orderData);
             $scope.delProduct = function(index) {
-                $scope.orderData.splice(index, 1);
-                console.log(scope.orderData);
+                $scope.products.splice(index, 1);
+                $scope.parseProducts();
             };
 
-            $scope.calculateSubtotal = function() {
-                var total = 0;
-                $scope.orderData.map(p => total += p.ordprod_request_qty * p.prodsize_wsp);
-                return total.toFixed(2);
-            };
+            // $scope.calculateSubtotal = function() {
+            //     var total = 0;
+            //     $scope.products.map(p => total += p.ordprod_request_qty * p.prodsize_wsp);
+            //     return total.toFixed(2);
+            // };
 
-            $scope.updateTotal = function(index) {
-                var product = $scope.orderData[index];
-                product.total = (product.ordprod_request_qty * product.prodsize_wsp).toFixed(2);
-            };
+            // $scope.updateTotal = function(index) {
+            //     var product = $scope.products[index];
+            //     product.total = (product.ordprod_request_qty * product.prodsize_wsp).toFixed(2);
+            // };
 
+            $scope.parseProducts();
             scope = $scope;
         });
     </script>
