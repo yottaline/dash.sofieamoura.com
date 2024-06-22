@@ -20,7 +20,7 @@ return [
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'mail.sofieamoura.com'),
             'port' => env('MAIL_PORT', 465),
-            'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME', 'b2b@sofieamoura.com'),
             'password' => env('MAIL_PASSWORD', 'Mohamad&SafaPass'),
             'timeout' => null,

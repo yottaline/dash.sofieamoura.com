@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'RetailerController@index');
         Route::post('load', 'RetailerController@load');
         Route::match(['post', 'put'], 'submit', 'RetailerController@submit');
-        Route::match(['put', 'get'],'edit_approved', 'RetailerController@editApproved');
+        Route::match(['put', 'get'], 'edit_approved', 'RetailerController@editApproved');
     });
 
     // categories

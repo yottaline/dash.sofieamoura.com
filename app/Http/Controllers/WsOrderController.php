@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderCreated;
+use App\Mail\TestMail;
 use App\Models\Currency;
 use App\Models\Location;
 use App\Models\Retailer;
@@ -12,6 +13,7 @@ use App\Models\Ws_order;
 use App\Models\Ws_orders_product;
 use App\Models\Ws_product;
 use App\Models\Ws_products_size;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -213,11 +215,19 @@ class WsOrderController extends Controller
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 
- public function export(Request $request)
- {
-    $order_id = $request->orderid;
+    function export(Request $request)
+    {
+        $order_id = $request->orderid;
+        return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
+    }
 
-    return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
- }
-
+    function test()
+    {
+        try {
+            Mail::to('mahs.1985@gmail.com')->send(new TestMail('Mohamed'));
+            echo 'Message Sent';
+        } catch (Exception $e) {
+            echo sprintf('[%s],[%d] ERROR:[%s]', __METHOD__, __LINE__, json_encode($e->getMessage(), true));
+        }
+    }
 }
