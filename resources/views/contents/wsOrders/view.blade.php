@@ -22,7 +22,7 @@
 @section('content')
     <div class="container-fluid container" ng-app="ngApp" ng-controller="ngCtrl">
         <div class="row">
-            <div class="col-12 col-lg-8 order-lg-last">
+            <div class="col-12 col-lg-8">
                 <div class="card card-box mb-3" ng-repeat="(pk, p) in parsedProducts">
                     <div class="card-body d-sm-flex">
                         <div class="product-img rounded mb-2"
@@ -37,7 +37,7 @@
                                 <table class="table table-hover sizes-table">
                                     <thead>
                                         <tr class="text-center small">
-                                            <th>Color</th>
+                                            <th class="text-start">Color</th>
                                             <th>Size</th>
                                             <th>WSP</th>
                                             <th>Req.Qty</th>
@@ -48,18 +48,19 @@
                                     </thead>
                                     <tbody>
                                         <tr class="small text-center" ng-repeat="(sk, s) in p.sizes">
-                                            <td ng-bind="s.prodcolor_name" class="text-uppercase"></td>
-                                            <td width="60" ng-bind="s.size_name">
-                                            <td width="60" class="font-monospace" ng-bind="s.prodsize_wsp"></td>
+                                            <td ng-bind="s.prodcolor_name" class="text-uppercase text-start"></td>
+                                            <td width="70" ng-bind="s.size_name">
+                                            <td width="70" class="font-monospace" ng-bind="s.ordprod_price"></td>
                                             <td class="col-fit">
                                                 <input class="qty-input" ng-readonly="s.order_status > 2" type="text"
-                                                    ng-model="s.ordprod_request_qty" ng-blur="updateQty(pk, sk)">
+                                                    ng-model="s.ordprod_request_qty"
+                                                    ng-blur="updateQty(s.ordprod_id, s.ordprod_request_qty, 0)">
                                             </td>
                                             <td class="col-fit" ng-if="s.order_status > 2">
                                                 <input class="qty-input" type="text" ng-model="s.ordprod_served_qty">
                                             </td>
-                                            <td width="70"
-                                                ng-bind="fn.toFixed(s.ordprod_request_qty * s.prodsize_wsp, 2)"
+                                            <td width="80"
+                                                ng-bind="fn.toFixed(s.ordprod_request_qty * s.ordprod_price, 2)"
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
                                                 <a href="" class="link-danger bi bi-x"
@@ -83,38 +84,63 @@
                 </div>
             </div>
 
-            <div class="col">
+            <div class="col order-lg-first">
                 <div class="card card-box">
                     <div class="card-body product-block">
-                        <h4 class="card-title fw-semibold pt-1 me-auto text-uppercase">
-                            <span>ORDER #<%order.order_code%></span><br>
-                        </h4>
-                        <h6>
-                            <span>Season: <%order.season_name%></span>
-                        </h6>
+                        <h5 class="fw-semibold text-uppercase">
+                            <span>ORDER</span> <span>#<%order.order_code%></span>
+                        </h5>
+                        <h6 class="small"><%order.season_name%></h6>
+                        <span class="text-primary"><%statusObject.name[order.order_status]%></span>
+                        <p class="text-secondary mb-0 small">created: <span class="font-monospace"
+                                ng-bind="order.order_created"></span></p>
+                        <p class="text-secondary mb-0 small" ng-if="order.order_placed">placed: <span class="font-monospace"
+                                ng-bind="order.order_placed"></span></p>
                         <hr>
-                        <span class="fw-semibold">Retailer: <%retailer.retailer_fullName%></span><br>
-                        <span><%statusObject.name[order.order_status]%></span>
-                        <p class="font-secondary">created: <span ng-bind="order.order_created"></span></p>
+                        <h5 class="fw-semibold text-uppercase">Retailer info</h5>
+                        <p class="fw-semibold mb-0"><% retailer.retailer_fullName %></p>
+                        <p class="fw-semibold mb-0"><% retailer.retailer_email %></p>
                         <hr>
-                        <div class="subtotal">
-                            <p>Subtotal: <span ng-bind="calculateSubtotal()"></span></p>
-                            <hr>
-                            <p class="text-danger fw-semibold">Discount: <input type="number" value="4"
-                                    class="text-center" style="width:70px;text-align:center" ng-model="order.order_discount"
-                                    ng-change="calculateSubtotal()">
-                            </p>
-                            <hr>
-                            <p class="fw-bold">Total: <span ng-bind="calculateSubtotal()"></span></p>
-                        </div>
-                        <hr>
-                        <div class="delivery">
+                        <table class="table small">
+                            <tbody>
+                                <tr ng-if="+order.order_discount">
+                                    <td class="col-fit">Subtotal</td>
+                                    <td class="text-end font-monospace">
+                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="fn.sepNumber(order.order_subtotal)"></span>
+                                    </td>
+                                </tr>
+                                <tr ng-if="+order.order_discount">
+                                    <td class="col-fit">Discount</td>
+                                    <td class="text-end font-monospace">
+                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="fn.sepNumber(order.order_discount)"></span>
+                                    </td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td class="col-fit">Total</td>
+                                    <td class="text-end font-monospace">
+                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="fn.sepNumber(order.order_total)"></span>
+                                    </td>
+                                </tr>
+                                <tr class="text-secondary">
+                                    <td class="col-fit">Adv. Payment 30%</td>
+                                    <td class="text-end font-monospace">
+                                        <span ng-bind="order.currency_symbol"></span>
+                                        <span ng-bind="fn.sepNumber(order.order_total * 0.3))"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5>Qty: </h5>
+                        <div class="mt-4">
                             <form action="/ws_orders/change_status" id="statusForm" method="post">
                                 <input type="hidden" name="id" ng-value="order.order_id">
                                 @csrf
-                                <span>status</span>
+                                <label for="orderStatus">Status</label>
                                 <div class="input-group mb-3">
-                                    <select name="status" class="form-select">
+                                    <select id="orderStatus" name="status" class="form-select">
                                         <option value="0">DRAFT</option>
                                         <option value="1">CANCELLED</option>
                                         <option value="2">PLACED</option>
@@ -123,20 +149,18 @@
                                         <option value="5">BALANCE PAYMENT IS PENDING</option>
                                         <option value="6">SHIPPED</option>
                                     </select>
-                                    <button type="submit" class="btn btn-outline-dark bi bi-arrow-right" type="button"
-                                        id="button-addon2"></button>
+                                    <button type="submit" class="btn btn-outline-dark bi bi-arrow-right"></button>
                                 </div>
                             </form>
                             <script>
                                 $(function() {
                                     $('#statusForm').on('submit', e => e.preventDefault()).validate({
                                         submitHandler: function(form) {
-                                            console.log(form);
                                             var formData = new FormData(form),
                                                 action = $(form).attr('action'),
                                                 method = $(form).attr('method');
 
-                                            scope.$apply(() => scope.submitting = true);
+                                            scope.$apply(() => scope.statusSubmit = true);
                                             $(form).find('button').prop('disabled', true);
                                             $.ajax({
                                                 url: action,
@@ -146,33 +170,27 @@
                                                 contentType: false,
                                             }).done(function(data, textStatus, jqXHR) {
                                                 var response = JSON.parse(data);
-                                                if (response.status) {
-                                                    toastr.success('status change successfully');
-                                                    scope.$apply(() => {
-                                                        scope.order = response
-                                                            .data;
-                                                    });
-                                                } else toastr.error(response.message);
+                                                scope.$apply(() => {
+                                                    scope.statusSubmit = false;
+                                                    if (response.status) {
+                                                        toastr.success('Status changed successfully');
+                                                        scope.order = response.data;
+                                                    } else toastr.error(response.message);
+                                                });
                                             }).fail(function(jqXHR, textStatus, errorThrown) {
-                                                toastr.error("error");
-                                            }).always(function() {
-                                                $(form).find('button').prop('disabled', false);
+                                                console.error("Error");
                                             });
                                         }
                                     });
                                 });
                             </script>
-                            <a ng-if="order.order_status == 2" class="btn btn-outline-dark mt-4 w-100"
-                                href="/ws_orders/get_confirmed/<%order.order_id%>">Get
-                                Order
-                                Confirmed</a>
-                            <hr>
-                            <a ng-if="order.order_status >= 3" class="btn btn-outline-dark mt-4 w-100"
-                                href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma
-                                Invoice</a>
 
-                            <a class="btn btn-outline-dark mt-4 w-100" href="/ws_orders/invoice/<%order.order_id%>">Get
-                                Invoice</a>
+                            <a ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm w-100"
+                                href="/ws_orders/get_confirmed/<%order.order_id%>">Get Order Confirmation</a>
+                            <a ng-if="fn.inArray(order.order_status, [3, 4])" class="btn btn-outline-primary btn-sm w-100"
+                                href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma Invoice</a>
+                            <a ng-if="fn.inArray(order.order_status, [5, 6])" class="btn btn-outline-success btn-sm w-100"
+                                href="/ws_orders/invoice/<%order.order_id%>">Get Invoice</a>
                         </div>
                     </div>
                 </div>
@@ -198,13 +216,18 @@
                     'Balance Payment Is Pending', 'Shipped'
                 ],
             };
+            $scope.statusSubmit = false;
+            $scope.qtyUpdate = false;
+            $scope.focusedQty = 0;
             $scope.orderDisc = 0;
+            $scope.orderQty = 0;
             $scope.retailer = <?= json_encode($retailer) ?>;
             $scope.order = <?= json_encode($order) ?>;
             $scope.products = <?= json_encode($products) ?>;
             $scope.parsedProducts = {};
             $scope.parseProducts = function() {
                 $scope.parsedProducts = {};
+                $scope.orderQty = 0;
                 $.map($scope.products, function(p) {
                     if (typeof $scope.parsedProducts[p.prodcolor_slug] == 'undefined')
                         $scope.parsedProducts[p.prodcolor_slug] = {
@@ -216,31 +239,38 @@
                     $scope.parsedProducts[p.prodcolor_slug].sizes.push(p);
                     $scope.parsedProducts[p.prodcolor_slug].qty += +p.ordprod_request_qty;
                     $scope.parsedProducts[p.prodcolor_slug].total += +p.ordprod_request_qty * +p
-                        .prodsize_wsp;
+                        .ordprod_price;
+                    $scope.orderQty += +p.ordprod_request_qty;
                 });
             }
-            // $scope.productTotal = slug => $.map($scope.products, e => e.prodcolor_slug == slug ? e.ordprod_total :
-            //     0).reduce((accumulator, currentValue) => accumulator + currentValue);
 
             $scope.delProduct = function(index) {
                 $scope.products.splice(index, 1);
                 $scope.parseProducts();
             };
 
-            $scope.updateQty = function(pk, sk) {
+            $scope.updateQty = function(id, qty, target) {
+                console.log(id, qty, target);
+                return;
+                $scope.qtyUpdate = true;
+                $.post('/ws_order/updateQty', {
+                    order: $scope.order.order_id,
+                    size: id,
+                    qty: qty,
+                    target: target,
+                }, function(response) {
+                    $scope.$apply(function() {
+                        $scope.qtyUpdate = false;
+                        if (response.status) {
+                            $scope.order = response.order;
+                            $scope.parseProducts();
+                        } else {
+
+                        }
+                    });
+                }, 'json');
                 $scope.parseProducts();
             }
-
-            // $scope.calculateSubtotal = function() {
-            //     var total = 0;
-            //     $scope.products.map(p => total += p.ordprod_request_qty * p.prodsize_wsp);
-            //     return total.toFixed(2);
-            // };
-
-            // $scope.updateTotal = function(index) {
-            //     var product = $scope.products[index];
-            //     product.total = (product.ordprod_request_qty * product.prodsize_wsp).toFixed(2);
-            // };
 
             $scope.parseProducts();
             scope = $scope;
