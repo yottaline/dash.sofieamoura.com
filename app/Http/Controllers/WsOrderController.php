@@ -14,6 +14,7 @@ use App\Models\Ws_order;
 use App\Models\Ws_orders_product;
 use App\Models\Ws_product;
 use App\Models\Ws_products_size;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -214,12 +215,11 @@ class WsOrderController extends Controller
         return view('contents.wsOrders.view', compact('order', 'retailer', 'orderData'));
     }
 
- public function export(Request $request)
- {
-    $order_id = $request->orderid;
-
-    return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
- }
+    function export(Request $request)
+    {
+        $order_id = $request->orderid;
+        return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
+    }
 
     function Confirmed($id)
     {
@@ -288,6 +288,3 @@ class WsOrderController extends Controller
         Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, $pdfPath));
         return back();
     }
-
-
-}
