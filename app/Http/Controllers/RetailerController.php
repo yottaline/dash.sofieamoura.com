@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Mail;
 
 class RetailerController extends Controller
 {
-    public function __construct()
+    function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function index()
+    function index()
     {
         $locations = Location::fetch(0, [['location_visible', 1]]);
         $currencies = Currency::fetch(0, [['currency_visible', 1]]);
@@ -32,14 +32,14 @@ class RetailerController extends Controller
         $param  = $request->q ? ['q' => $request->q] : [];
         $limit  = $request->limit;
         $lastId = $request->last_id;
-        if ($request->status)  $param[]  = ['retailer_approved', $request->status -1];
+        if ($request->status)  $param[]  = ['retailer_approved', $request->status - 1];
         if ($request->country) $param[] = ['retailer_country', '=', $request->country];
         if ($request->currecy) $param[] = ['retailer_currency', '=', $request->currecy];
 
         echo json_encode(Retailer::fetch(0, $param, null, $limit, $lastId));
     }
 
-    public function submit(Request $request)
+    function submit(Request $request)
     {
         $request->validate([
             // 'name'       => 'required',
@@ -52,14 +52,12 @@ class RetailerController extends Controller
         $phone = $request->phone;
 
 
-        if(count(Retailer::fetch(0, [['retailer_id', '!=', $id], ['retailer_phone', $phone]])))
-        {
+        if (count(Retailer::fetch(0, [['retailer_id', '!=', $id], ['retailer_phone', $phone]]))) {
             echo json_encode(['status' => false, 'message' => __('Phone number already exists'),]);
             return;
         }
 
-        if($email &&  count(Retailer::fetch(0, [['retailer_id', '!=', $id], ['retailer_email', $email]])))
-        {
+        if ($email &&  count(Retailer::fetch(0, [['retailer_id', '!=', $id], ['retailer_email', $email]]))) {
             echo json_encode(['status' => false, 'message' => __('Email already exists'),]);
             return;
         }
@@ -81,23 +79,21 @@ class RetailerController extends Controller
             'retailer_blocked'      => intval($request->status)
         ];
 
-        if(!$id)
-        {
-          $param['retailer_password'] = Hash::make($request->password);
-          $param['retailer_created'] = Carbon::now();
-        }else{
+        if (!$id) {
+            $param['retailer_password'] = Hash::make($request->password);
+            $param['retailer_created'] = Carbon::now();
+        } else {
             $param['retailer_modified'] = Carbon::now();
         }
 
         $logo = $request->file('logo');
-        if($logo)
-        {
+        if ($logo) {
             $logoName = $this->uniqidReal(rand(4, 18));
             $logo->move('images/retailers/', $logoName);
             $param['retailer_logo'] = $logoName;
         }
 
-        if($id){
+        if ($id) {
             $record = Retailer::fetch($id);
             if ($logo && $record->retailer_logo) {
                 File::delete('images/retailers/' . $record->retailer_logo);
@@ -106,7 +102,7 @@ class RetailerController extends Controller
 
         $result = Retailer::submit($param, $id);
 
-        if($result){
+        if ($result) {
             $paramAddress = [
                 'address_retailer'  => $result,
                 'address_country'   => 1,
@@ -127,7 +123,7 @@ class RetailerController extends Controller
         ]);
     }
 
-    public function editApproved(Request $request)
+    function editApproved(Request $request)
     {
         $id = $request->id;
         $password = uniqidReal(7);
@@ -138,11 +134,9 @@ class RetailerController extends Controller
         ];
 
         $result = Retailer::submit($param, $id);
-        if($result)
-        {
+        if ($result) {
             $retailer = Retailer::fetch($result);
-
-            Mail::to($retailer->retailer_email)->send(new ApprovedAccount($retailer->retailer_fullname, $retailer->retailer_email, $password));
+            Mail::to('b2b@sofieamoura.com')->send(new ApprovedAccount($retailer->retailer_fullname, $retailer->retailer_email, $password));
         }
 
         echo json_encode([
@@ -150,5 +144,4 @@ class RetailerController extends Controller
             'data'   => $result ? $retailer : []
         ]);
     }
-
 }
