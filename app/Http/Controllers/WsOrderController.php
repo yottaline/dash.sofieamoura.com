@@ -235,17 +235,16 @@ class WsOrderController extends Controller
     function delProduct(Request $request)
     {
         $order = Ws_order::fetch($request->order);
-        $orgProducts = Ws_orders_product::fetch(0, [['ordprod_order', $request->order]]);
-        $products = $orgProducts;
+        $_products = Ws_orders_product::fetch(0, [['ordprod_order', $request->order]]);
+        $products = [];
 
         $order->order_subtotal = 0;
         $order->order_total = 0;
-        for ($i = 0; $i < count($orgProducts); $i++) {
-            if ($orgProducts[$i]->ordprod_product == $request->product) {
-                unset($products[$i]);
-            } else {
-                $order->order_subtotal += $orgProducts[$i]->ordprod_subtotal;
-                $order->order_total += $orgProducts[$i]->ordprod_total;
+        for ($i = 0; $i < count($_products); $i++) {
+            if ($_products[$i]->ordprod_product != $request->product) {
+                $order->order_subtotal += $_products[$i]->ordprod_subtotal;
+                $order->order_total += $_products[$i]->ordprod_total;
+                $products[] = $_products[$i];
             }
         }
 
