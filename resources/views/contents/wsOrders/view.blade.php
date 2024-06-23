@@ -35,8 +35,8 @@
                                     <span class="me-1"><%p.info.product_name%></span>
                                     <span class="text-secondary">#<%p.info.product_code%></span>
                                 </h6>
-                                <a href="" class="link-danger h5 bi bi-x"
-                                    ng-click="delProduct(p.info.product_id)"></a>
+                                {{-- <a href="" class="link-danger h5 bi bi-x"
+                                    ng-click="delProduct(p.info.product_id)"></a> --}}
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover sizes-table">
