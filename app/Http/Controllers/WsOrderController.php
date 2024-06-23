@@ -235,6 +235,7 @@ class WsOrderController extends Controller
 
     function Confirmed($id)
     {
+        set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
@@ -264,6 +265,7 @@ class WsOrderController extends Controller
 
     function invoice($id)
     {
+        set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);

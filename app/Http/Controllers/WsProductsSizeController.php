@@ -24,7 +24,7 @@ class WsProductsSizeController extends Controller
 
     function submit(Request $request)
     {
-        // return
+        // return $request;
         $color_name = explode(',', $request->name);
         $id = $request->id;
         $color = $request->color_id;
