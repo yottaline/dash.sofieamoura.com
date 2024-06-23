@@ -69,7 +69,7 @@
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
                                                 <a href="" class="link-danger bi bi-x"
-                                                    ng-click="delProduct($index)"></a>
+                                                    ng-click="delProduct(s.ordprod_id)"></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -250,9 +250,24 @@
                 });
             }
 
-            $scope.delProduct = function(index) {
-                $scope.products.splice(index, 1);
-                $scope.parseProducts();
+            $scope.delProduct = function(id) {
+                if (!confirm('Are you sure to delete this item?')) return;
+                $.post('/ws_orders/del_product', {
+                    order: $scope.order.order_id,
+                    product: id,
+                    _token: '{{ csrf_token() }}',
+                }, function(response) {
+                    $scope.$apply(function() {
+                        if (response.status) {
+                            $scope.order = response.order;
+                            $scope.products = response.products;
+                            $scope.parseProducts();
+                        } else {
+                            toastr.error('Error deleting product please reload the page');
+                            console.log(response.message);
+                        }
+                    });
+                }, 'json');
             };
 
             $scope.updateQty = function(id, qty, target) {
@@ -270,7 +285,10 @@
                             $scope.order = response.order;
                             $scope.products = response.products;
                             $scope.parseProducts();
-                        } else toastr.error('Error updating qty please reload the page');
+                        } else {
+                            toastr.error('Error updating qty please reload the page');
+                            console.log(response.message);
+                        }
                     });
                 }, 'json');
             }

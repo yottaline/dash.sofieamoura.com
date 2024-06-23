@@ -216,18 +216,46 @@ class WsOrderController extends Controller
             'ordprod_subtotal' => $products[$ndx]->ordprod_subtotal,
             'ordprod_total' => $products[$ndx]->ordprod_total,
         ];
-        if (!$request->target) $param['ordprod_request_qty'] = $request->qty;
+        if (!$request->target) {
+            $param['ordprod_request_qty'] = $request->qty;
+            $products[$ndx]->ordprod_request_qty = $request->qty;
+        };
         $orderParam = [
             'order_subtotal' => $order->order_subtotal,
             'order_total' => $order->order_total,
         ];
 
         $result =  Ws_orders_product::submit([$request->product, $param], [$request->order, $orderParam]);
-        echo json_encode([
-            'status' => boolval($result),
+        echo json_encode(array_merge($result, [
             'order' => $order,
             'products' => $products,
-        ]);
+        ]));
+    }
+
+    function delProduct(Request $request)
+    {
+        $order = Ws_order::fetch($request->order);
+        $products = Ws_orders_product::fetch(0, [['ordprod_order', $request->order]]);
+        $ndx = 0;
+        $order->order_subtotal = 0;
+        $order->order_total = 0;
+        for ($i = 0; $i < count($products); $i++) {
+            if ($products[$i]->ordprod_id != $request->product) {
+                $order->order_subtotal += $products[$i]->ordprod_subtotal;
+                $order->order_total += $products[$i]->ordprod_total;
+            } else $ndx = $i;
+        }
+        unset($products[$ndx]);
+        $orderParam = [
+            'order_subtotal' => $order->order_subtotal,
+            'order_total' => $order->order_total,
+        ];
+
+        $result =  Ws_orders_product::del($request->product, [$request->order, $orderParam]);
+        echo json_encode(array_merge($result, [
+            'order' => $order,
+            'products' => $products,
+        ]));
     }
 
     function updateStatus(Request $request)

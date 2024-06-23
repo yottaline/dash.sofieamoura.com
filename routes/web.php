@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
         Route::match(['post', 'put'], 'submit', 'WsOrderController@submit');
         Route::post('change_status', 'WsOrderController@updateStatus');
         Route::post('update_qty', 'WsOrderController@updateQty');
+        Route::post('del_product', 'WsOrderController@delProduct');
         Route::get('view/{id}', 'WsOrderController@view');
         Route::get('export', 'WsOrderController@export');
         Route::get('get_confirmed/{id}', 'WsOrderController@Confirmed');

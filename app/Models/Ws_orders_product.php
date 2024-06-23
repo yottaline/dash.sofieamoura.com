@@ -71,4 +71,18 @@ class Ws_orders_product extends Model
         $date = Carbon::now();
         return Excel::download(new WsOrderExport($data), 'orders' . $date . '.xlsx');
     }
+
+    static function del($product, $order = null)
+    {
+        try {
+            DB::beginTransaction();
+            self::where('ordprod_id', $product)->delete();
+            if (!empty($order)) Ws_order::where('order_id', $order[0])->update($order[1]);
+            DB::commit();
+            return ['status' => true];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
+        }
+    }
 }
