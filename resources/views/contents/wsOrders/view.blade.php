@@ -35,7 +35,8 @@
                                     <span class="me-1"><%p.info.product_name%></span>
                                     <span class="text-secondary">#<%p.info.product_code%></span>
                                 </h6>
-                                <a href="" class="link-danger h5 bi bi-x" ng-click="removeProduct(pk)"></a>
+                                <a href="" class="link-danger h5 bi bi-x"
+                                    ng-click="delProduct(p.info.product_id)"></a>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover sizes-table">
@@ -69,7 +70,7 @@
                                                 class="text-center font-monospace"></td>
                                             <td class="col-fit">
                                                 <a href="" class="link-danger bi bi-x"
-                                                    ng-click="delProduct(s.ordprod_id)"></a>
+                                                    ng-click="delSize(s.ordprod_id)"></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -251,7 +252,7 @@
             }
 
             $scope.delProduct = function(id) {
-                if (!confirm('Are you sure to delete this item?')) return;
+                if (!confirm('Are you sure to delete this product?')) return;
                 $.post('/ws_orders/del_product', {
                     order: $scope.order.order_id,
                     product: id,
@@ -263,7 +264,27 @@
                             $scope.products = response.products;
                             $scope.parseProducts();
                         } else {
-                            toastr.error('Error deleting product please reload the page');
+                            toastr.error('Error deleting please reload the page');
+                            console.log(response.message);
+                        }
+                    });
+                }, 'json');
+            };
+
+            $scope.delSize = function(id) {
+                if (!confirm('Are you sure to delete this item?')) return;
+                $.post('/ws_orders/del_size', {
+                    order: $scope.order.order_id,
+                    size: id,
+                    _token: '{{ csrf_token() }}',
+                }, function(response) {
+                    $scope.$apply(function() {
+                        if (response.status) {
+                            $scope.order = response.order;
+                            $scope.products = response.products;
+                            $scope.parseProducts();
+                        } else {
+                            toastr.error('Error deleting please reload the page');
                             console.log(response.message);
                         }
                     });

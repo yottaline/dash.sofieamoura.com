@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::post('change_status', 'WsOrderController@updateStatus');
         Route::post('update_qty', 'WsOrderController@updateQty');
         Route::post('del_product', 'WsOrderController@delProduct');
+        Route::post('del_size', 'WsOrderController@delSize');
         Route::get('view/{id}', 'WsOrderController@view');
         Route::get('export', 'WsOrderController@export');
         Route::get('get_confirmed/{id}', 'WsOrderController@Confirmed');

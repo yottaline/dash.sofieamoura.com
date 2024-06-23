@@ -72,11 +72,25 @@ class Ws_orders_product extends Model
         return Excel::download(new WsOrderExport($data), 'orders' . $date . '.xlsx');
     }
 
-    static function del($product, $order = null)
+    static function delProduct($product, $order = null)
     {
         try {
             DB::beginTransaction();
-            self::where('ordprod_id', $product)->delete();
+            self::where('ordprod_order', $order[0])->where('ordprod_product', $product)->delete();
+            if (!empty($order)) Ws_order::where('order_id', $order[0])->update($order[1]);
+            DB::commit();
+            return ['status' => true];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['status' => false, 'message' => 'error: ' . $e->getMessage()];
+        }
+    }
+
+    static function delSize($size, $order = null)
+    {
+        try {
+            DB::beginTransaction();
+            self::where('ordprod_id', $size)->delete();
             if (!empty($order)) Ws_order::where('order_id', $order[0])->update($order[1]);
             DB::commit();
             return ['status' => true];

@@ -235,12 +235,41 @@ class WsOrderController extends Controller
     function delProduct(Request $request)
     {
         $order = Ws_order::fetch($request->order);
+        $orgProducts = Ws_orders_product::fetch(0, [['ordprod_order', $request->order]]);
+        $products = $orgProducts;
+
+        $order->order_subtotal = 0;
+        $order->order_total = 0;
+        for ($i = 0; $i < count($orgProducts); $i++) {
+            if ($orgProducts[$i]->ordprod_product == $request->product) {
+                unset($products[$i]);
+            } else {
+                $order->order_subtotal += $orgProducts[$i]->ordprod_subtotal;
+                $order->order_total += $orgProducts[$i]->ordprod_total;
+            }
+        }
+
+        $orderParam = [
+            'order_subtotal' => $order->order_subtotal,
+            'order_total' => $order->order_total,
+        ];
+
+        $result =  Ws_orders_product::delProduct($request->product, [$request->order, $orderParam]);
+        echo json_encode(array_merge($result, [
+            'order' => $order,
+            'products' => $products,
+        ]));
+    }
+
+    function delSize(Request $request)
+    {
+        $order = Ws_order::fetch($request->order);
         $products = Ws_orders_product::fetch(0, [['ordprod_order', $request->order]]);
         $ndx = 0;
         $order->order_subtotal = 0;
         $order->order_total = 0;
         for ($i = 0; $i < count($products); $i++) {
-            if ($products[$i]->ordprod_id != $request->product) {
+            if ($products[$i]->ordprod_id != $request->size) {
                 $order->order_subtotal += $products[$i]->ordprod_subtotal;
                 $order->order_total += $products[$i]->ordprod_total;
             } else $ndx = $i;
@@ -251,7 +280,7 @@ class WsOrderController extends Controller
             'order_total' => $order->order_total,
         ];
 
-        $result =  Ws_orders_product::del($request->product, [$request->order, $orderParam]);
+        $result =  Ws_orders_product::delSize($request->size, [$request->order, $orderParam]);
         echo json_encode(array_merge($result, [
             'order' => $order,
             'products' => $products,
