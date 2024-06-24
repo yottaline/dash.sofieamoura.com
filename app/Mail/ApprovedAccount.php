@@ -43,7 +43,7 @@ class ApprovedAccount extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email_templates.orders.approved',
+            view: 'email_templates.account.approved',
             with: ['name' => $this->name, 'email' => $this->email, 'password' => $this->password]
         );
     }

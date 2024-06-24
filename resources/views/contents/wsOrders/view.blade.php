@@ -147,7 +147,8 @@
                                 @csrf
                                 <label for="orderStatus">Status</label>
                                 <div class="input-group mb-3">
-                                    <select id="orderStatus" name="status" class="form-select">
+                                    <select id="orderStatus" name="status" class="form-select"
+                                        ng-value="order.order_status">
                                         <option value="0">DRAFT</option>
                                         <option value="1">CANCELLED</option>
                                         <option value="2">PLACED</option>
@@ -218,7 +219,7 @@
             $scope.fn = NgFunctions;
             $scope.statusObject = {
                 name: [
-                    'Draft', 'Cancelled', 'Placed',
+                    'Draft', 'Canceled', 'Placed',
                     'Confirmed', 'Advance Payment Is Pending',
                     'Balance Payment Is Pending', 'Shipped'
                 ],

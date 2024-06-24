@@ -155,45 +155,6 @@ class WsOrderController extends Controller
             'order_ship_phone'    => $retailer[0]->retailer_phone,
         ];
 
-        // if ($request->checkbox == 'false') {
-        //     $orderParam = [
-        //         ...$orderParam,
-        //         'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
-        //         'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
-        //         'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
-        //         'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
-        //         'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
-        //         'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
-        //         'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
-        //         'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
-        //         'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
-        //         'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
-
-        //     ];
-        // } else {
-        //     $orderParam = [
-        //         ...$orderParam,
-        //         'order_bill_country'  => $retailer[0]->retailer_country ?? 1,
-        //         'order_bill_province' => $retailer[0]->retailer_province ?? 'default',
-        //         'order_bill_city'     => $retailer[0]->retailer_city ?? 'default',
-        //         'order_bill_zip'      => $retailer[0]->retailer_country ?? 'default',
-        //         'order_bill_line1'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_bill_line2'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_bill_phone'    => $retailer[0]->retailer_phone ?? 'default',
-        //         'order_ship_country'  => $retailer[0]->retailer_country ?? 'default',
-        //         'order_ship_province' => $retailer[0]->retailer_province ?? 'default',
-        //         'order_ship_city'     => $retailer[0]->retailer_city ?? 'default',
-        //         'order_ship_zip'      => $retailer[0]->retailer_country ?? 1,
-        //         'order_ship_line1'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_ship_line2'    => $retailer[0]->retailer_city ?? 'default',
-        //         'order_ship_phone'    => $retailer[0]->retailer_phone ?? 'default',
-        //     ];
-        // }
-
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
 
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
@@ -331,17 +292,13 @@ class WsOrderController extends Controller
         set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
-        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
-        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+        $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
-        $data = [
+        $pdf = Pdf::loadView('pdf.order', [
             'order' => $order,
             'retailer' => $retailer,
-            'orderData' => $orderData,
-            'address'   => $address[0]
-        ];
-
-        $pdf = Pdf::loadView('pdf.order', ['data' => $data]);
+            'products' => $products,
+        ]);
 
         $pdfPath = 'orders/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
@@ -361,16 +318,14 @@ class WsOrderController extends Controller
         set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
-        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
-        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+        // $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
-        $data = [
+        $pdf = Pdf::loadView('pdf.invoice', [
             'order' => $order,
             'retailer' => $retailer,
-            'orderData' => $orderData,
-            'address'   => $address[0]
-        ];
-        $pdf = Pdf::loadView('pdf.invoice', ['data' => $data]);
+            'products' => $products,
+        ]);
 
 
         $pdfPath = 'invoice/' . $order->order_code . '.pdf';

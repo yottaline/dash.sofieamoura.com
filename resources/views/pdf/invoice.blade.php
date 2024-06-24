@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORDER #{{ $data['order']->order_code }}</title>
+    <title>ORDER #{{ $order->order_code }}</title>
 </head>
 
 <body>
@@ -15,44 +15,22 @@
         <p>
             <b>Invoice</b><br>
             <br>
-            Invoice #: {{ $data['order']->order_invoice }} <br>
-            Date: {{ $data['order']->order_invoicetime }} <br>
-            Order #:{{ $data['order']->order_code }}<br>
-            Season: {{ $data['order']->season_name }}<br>
-            Customer name: {{ $data['retailer']->retailer_fullName }}<br>
-            Customer ID: {{ $data['retailer']->retailer_code }}<br>
-            Placed: {{ $data['order']->order_placed }}<br>
-            Order type: {{ $data['order']->order_type == 1 ? 'Immediate' : 'Pre-order' }}
+            Invoice #: {{ $order->order_invoice }} <br>
+            Date: {{ $order->order_invoicetime }} <br>
+            Order #:{{ $order->order_code }}<br>
+            Season: {{ $order->season_name }}<br>
+            Customer name: {{ $retailer->retailer_fullName }}<br>
+            Customer ID: {{ $retailer->retailer_code }}<br>
+            Placed: {{ $order->order_placed }}<br>
+            Order type: {{ $order->order_type == 1 ? 'Immediate' : 'Pre-order' }}
         </p>
         <br>
-        <table style="border-collapse: collapse; width: 100%">
-            <tbody>
-                <tr>
-                    <td style="padding: 5px; width: 50%"><b>Billing address</b></td>
-                    <td style="padding: 5px; width: 50%"><b>Shipping address</b></td>
-                </tr>
-                <tr>
-                    <td style="padding: 0 5px; width: 50%">
-                        {{ $data['address']->address_line1 }}</td>
-                    <td style="padding: 0 5px; width: 50%"> {{ $data['address']->address_line1 }}</td>
-                </tr>
-                <tr>
-                    <td style="padding: 0 5px; width: 50%">{{ $data['address']->address_line2 }}</td>
-                    <td style="padding: 0 5px; width: 50%"> {{ $data['address']->address_line2 }}</td>
-                </tr>
-                <tr>
-                    <td style="padding: 0 5px; width: 50%">Postal code: {{ $data['address']->address_zip }}</td>
-                    <td style="padding: 0 5px; width: 50%">Postal code: {{ $data['address']->address_zip }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <br>
-        @if ($data['order']->order_note)
-            <p><b>Notes</b><br>{{ $data['order']->order_note }}</p>
+        @if ($order->order_note)
+            <p><b>Notes</b><br>{{ $order->order_note }}</p>
         @endif
     </div>
     <?php $qty = 0; ?>
-    @foreach ($data['orderData'] as $product)
+    @foreach ($products as $product)
         <?php $total = 0;
         $productQty = 0; ?>
         <div style="border: 1px solid #ccc; margin-bottom: 20px; padding:15px; font-size: 80%; width: 100%;">
@@ -103,7 +81,7 @@
                                     <td colspan="3" style="border-top: 1px solid #ccc; padding: 5px"></td>
                                     <td style="border-top: 1px solid #ccc; padding: 5px"><?= $productQty ?></td>
                                     <td style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ $data['order']->currency_code }}
+                                        {{ $order->currency_code }}
                                         {{ $product->ordprod_total }}</td>
                                 </tr>
                             </tfoot>
@@ -116,12 +94,12 @@
 
     <div style="font-size: 80%">
         <p><b>Total qty: {{ $qty }}</b><br>
-            @if ($data['order']->order_discount > 0)
-                <b>Subtotal: {{ $data['order']->currency_code }} {{ $data['order']->order_subtotal }}</b><br>
-                <b>Discount: {{ $data['order']->currency_code }} -{{ $data['order']->order_discount }}</b><br>
+            @if ($order->order_discount > 0)
+                <b>Subtotal: {{ $order->currency_code }} {{ $order->order_subtotal }}</b><br>
+                <b>Discount: {{ $order->currency_code }} -{{ $order->order_discount }}</b><br>
             @endif
-            <b>Total: {{ $data['order']->currency_code }} {{ $data['order']->order_subtotal }}</b><br>
-            <b>Advance Payment: {{ $data['order']->currency_code }} {{ $data['retailer']->retailer_adv_payment }}</b>
+            <b>Total: {{ $order->currency_code }} {{ $order->order_subtotal }}</b><br>
+            <b>Advance Payment: {{ $order->currency_code }} {{ $retailer->retailer_adv_payment }}</b>
         </p>
         <br>
         <p style="text-align: center"><i>Thank you for your business!</i></p>

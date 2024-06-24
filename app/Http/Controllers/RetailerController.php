@@ -139,9 +139,6 @@ class RetailerController extends Controller
             Mail::to('b2b@sofieamoura.com')->send(new ApprovedAccount($retailer->retailer_fullname, $retailer->retailer_email, $password));
         }
 
-        echo json_encode([
-            'status' => boolval($result),
-            'data'   => $result ? $retailer : []
-        ]);
+        echo 'Account activated successfully';
     }
 }
