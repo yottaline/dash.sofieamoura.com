@@ -102,6 +102,7 @@ Route::middleware('auth')->group(function () {
         Route::get('get_confirmed/{id}', 'WsOrderController@Confirmed');
         Route::get('get_proforma/{id}', 'WsOrderController@Proforma');
         Route::get('invoice/{id}', 'WsOrderController@invoice');
+        Route::get('get_retailer/{id}', 'WsOrderController@getRetailer');
     });
 
     Route::get('test', 'WsOrderController@test');

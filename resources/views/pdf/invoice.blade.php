@@ -60,7 +60,7 @@
                 <tr>
                     <td style="vertical-align: top; padding: 5px">
                         <a href="#">
-                            <img src="{{ asset('media/products/' . $product->product_id . '/' . $product->media_file) }}"
+                            <img src="{{ public_path('/media/product/' . $product->product_id . '/' . $product->media_file) }}"
                                 alt="photo" width='100'>
                         </a>
                     </td>

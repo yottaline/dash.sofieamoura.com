@@ -22,12 +22,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\SendProformaInvoice;
+use App\Services\TelegramService;
+use Illuminate\Support\Facades\Http;
 
 class WsOrderController extends Controller
 {
-    function __construct()
+    protected $telegramService;
+
+    function __construct(TelegramService $telegramService)
     {
         $this->middleware('auth');
+        $this->telegramService = $telegramService;
     }
 
     function index()
@@ -42,7 +48,8 @@ class WsOrderController extends Controller
     function create()
     {
         $countries = Location::fetch(null, [['location_visible', '1']]);
-        return view('contents.wsOrders.create', compact('countries'));
+        $retailers = Retailer::fetch(0);
+        return view('contents.wsOrders.create', compact('countries', 'retailers'));
     }
 
     function load(Request $request)
@@ -188,6 +195,7 @@ class WsOrderController extends Controller
         // }
 
         $result = Ws_order::submit(0, $orderParam, $orderProductParam);
+
         if ($result['status']) $result['data'] = Ws_order::fetch($result['id']);
         echo json_encode($result);
     }
@@ -305,6 +313,9 @@ class WsOrderController extends Controller
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
+        // return $products;
+
+
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'products'));
     }
@@ -317,6 +328,7 @@ class WsOrderController extends Controller
 
     function Confirmed($id)
     {
+        set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
@@ -339,29 +351,14 @@ class WsOrderController extends Controller
 
     function Proforma($id)
     {
-        $order = Ws_order::fetch($id);
-        $retailer = Retailer::fetch($order->order_retailer);
-        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
-        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
-
-        $data = [
-            'order' => $order,
-            'retailer' => $retailer,
-            'orderData' => $orderData,
-            'address'   => $address[0]
-        ];
-        $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
-
-
-        $pdfPath = 'proforma/' . $order->order_code . '.pdf';
-        Storage::disk('public')->put($pdfPath, $pdf->output());
-
-        Mail::to('b2b@sofieamoura.com')->send(new OrderProforma($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        set_time_limit(5000);
+        SendProformaInvoice::dispatch($id);
         return back();
     }
 
     function invoice($id)
     {
+        set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
@@ -387,5 +384,10 @@ class WsOrderController extends Controller
         // } catch (Exception $e) {
         //     echo sprintf('[%s],[%d] ERROR:[%s]', __METHOD__, __LINE__, json_encode($e->getMessage(), true));
         // }
+    }
+
+    function getRetailer($id)
+    {
+        echo json_encode(Retailer::fetch($id));
     }
 }

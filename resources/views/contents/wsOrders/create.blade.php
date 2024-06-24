@@ -39,45 +39,58 @@
                 <div class="card card-box mb-3">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold text-uppercase">Retailer Info</h5>
-                        <div class="mb-3">
-                            <label for="retailerEmail">Email<b class="text-danger">&ast;</b></label>
-                            <input type="email" class="form-control form-control-sm retailer-field" id="retailerEmail"
-                                ng-disabled="submitting">
-                        </div>
-                        <div class="mb-3">
-                            <label for="retailerName">Name<b class="text-danger">&ast;</b></label>
-                            <input type="text" class="form-control form-control-sm retailer-field" id="retailerName"
-                                ng-disabled="submitting">
-                        </div>
-                        <div class="mb-3">
-                            <label for="retailerBusiness">Business<b class="text-danger">&ast;</b></label>
-                            <input type="text" class="form-control form-control-sm retailer-field" id="retailerBusiness"
-                                ng-disabled="submitting">
-                        </div>
-                        <div class="mb-3">
-                            <label for="retailerPhone">Phone</label>
-                            <input type="tel" class="form-control form-control-sm retailer-field font-monospcae"
-                                id="retailerPhone" ng-disabled="submitting">
-                        </div>
-                        <div class="mb-3">
-                            <label for="retailerCountry">Country<b class="text-danger">&ast;</b></label>
-                            <select class="form-select form-select-sm font-monospcae retailer-field select2"
-                                id="retailerCountry" ng-disabled="submitting">
-                                <option value=""></option>
-                                @foreach ($countries as $c)
-                                    <option value="{{ $c->location_id }}">{{ $c->location_name }}</option>
-                                @endforeach
+                        <div class="input-group mb-3">
+                            <select name="retailer" id="retailer" class="form-select">
+                                <option value="defalt">-- SELECT RETAILER NAME --</option>
+                                <option ng-repeat="retailer in retailers" ng-value="retailer.retailer_id"
+                                    ng-bind="retailer.retailer_fullName"></option>
                             </select>
+                            <button data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                                aria-controls="collapseExample" class="btn btn-outline-dark bi bi-plus"
+                                type="button"></button>
                         </div>
-                        <div class="mb-3">
-                            <label for="retailerCity">City</label>
-                            <input type="text" class="form-control form-control-sm retailer-field font-monospcae"
-                                id="retailerCity" ng-disabled="submitting">
-                        </div>
-                        <div class="mb-3">
-                            <label for="retailerAddress">Address</label>
-                            <textarea rows="3" class="form-control form-control-sm retailer-field font-monospcae" id="retailerAddress"
-                                ng-disabled="submitting"></textarea>
+
+                        <div class="collapse" id="collapseExample">
+                            <div class="mb-3">
+                                <label for="retailerEmail">Email<b class="text-danger">&ast;</b></label>
+                                <input type="email" class="form-control form-control-sm retailer-field" id="retailerEmail"
+                                    ng-disabled="submitting">
+                            </div>
+                            <div class="mb-3">
+                                <label for="retailerName">Name<b class="text-danger">&ast;</b></label>
+                                <input type="text" class="form-control form-control-sm retailer-field" id="retailerName"
+                                    ng-disabled="submitting">
+                            </div>
+                            <div class="mb-3">
+                                <label for="retailerBusiness">Business<b class="text-danger">&ast;</b></label>
+                                <input type="text" class="form-control form-control-sm retailer-field"
+                                    id="retailerBusiness" ng-disabled="submitting">
+                            </div>
+                            <div class="mb-3">
+                                <label for="retailerPhone">Phone</label>
+                                <input type="tel" class="form-control form-control-sm retailer-field font-monospcae"
+                                    id="retailerPhone" ng-disabled="submitting">
+                            </div>
+                            <div class="mb-3">
+                                <label for="retailerCountry">Country<b class="text-danger">&ast;</b></label>
+                                <select class="form-select form-select-sm font-monospcae retailer-field select2"
+                                    id="retailerCountry" ng-disabled="submitting">
+                                    <option value=""></option>
+                                    @foreach ($countries as $c)
+                                        <option value="{{ $c->location_id }}">{{ $c->location_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="retailerCity">City</label>
+                                <input type="text" class="form-control form-control-sm retailer-field font-monospcae"
+                                    id="retailerCity" ng-disabled="submitting">
+                            </div>
+                            <div class="mb-3">
+                                <label for="retailerAddress">Address</label>
+                                <textarea rows="3" class="form-control form-control-sm retailer-field font-monospcae" id="retailerAddress"
+                                    ng-disabled="submitting"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,7 +122,8 @@
                                                     <td width="40" class="font-monospace text-center"
                                                         ng-bind="s.info.prodsize_wsp">
                                                     </td>
-                                                    <td width="30" class="font-monospace text-center" ng-bind="s.qty">
+                                                    <td width="30" class="font-monospace text-center"
+                                                        ng-bind="s.qty">
                                                     </td>
                                                     <td width="60" class="px-2 font-monospace text-center"
                                                         ng-bind="fn.toFixed(s.total, 2)">
@@ -124,7 +138,8 @@
                                 </div>
                                 <div class="font-monospace small text-end py-2">
                                     <div class="me-3 d-inline-block">Qty: <span ng-bind="o.qty"></span></div>
-                                    <div class="d-inline-block">Total: <span ng-bind="fn.toFixed(o.total, 2)"></span></div>
+                                    <div class="d-inline-block">Total: <span ng-bind="fn.toFixed(o.total, 2)"></span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="px-2 d-flex">
@@ -244,6 +259,7 @@
             $scope.submitting = false;
             $scope.list = [];
             $scope.offset = 0;
+            $scope.retailers = <?= json_encode($retailers) ?>;
             $scope.load = function(reload = false) {
                 if (reload) {
                     $scope.list = [];
@@ -425,7 +441,7 @@
                     scope.$apply(() => {
                         $scope.submitting = false;
                         if (response.status) {
-                            $('.retailer-field').val(null);
+                            $('.retailer-field').val(null).prop('readonly', false);;
                             $scope.order = {};
                             toastr.success('Order placed');
                         }
@@ -438,7 +454,22 @@
         });
 
         $(function() {
-            // $('.select2').select2();
+            $('#retailer').on('change', function() {
+                var idState = this.value;
+                console.log(idState);
+                $.ajax({
+                    url: '/ws_orders/get_retailer/' + idState,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(res) {
+                        $('#retailerEmail').val(res.retailer_email).prop('readonly', true);
+                        $('#retailerName').val(res.retailer_fullName).prop('readonly', true);
+                        $('#retailerBusiness').val(res.retailer_company).prop('readonly', true);
+                        $('#retailerPhone').val(res.retailer_phone).prop('readonly', true);
+                        $('#retailerCountry').val(res.retailer_country).prop('readonly', true);
+                    }
+                });
+            });
 
         });
 

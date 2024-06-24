@@ -59,10 +59,10 @@
             <table style="border-collapse: collapse; width: 100%">
                 <tr>
                     <td style="vertical-align: top; padding: 5px">
-                        <a href="#">
-                            <img src="{{ asset('media/products/' . $product->product_id . '/' . $product->media_file) }}"
-                                alt="photo" width='100'>
-                        </a>
+                        {{-- <a href="#"> --}}
+                        <img src="{{ public_path('/media/product/' . $product->product_id . '/' . $product->media_file) }}"
+                            alt="photo" width='100'>
+                        {{-- </a> --}}
                     </td>
                     <td style="vertical-align: top">
                         <p style="margin: 0"><b>{{ $product->product_name }} #{{ $product->product_code }}</b></p>
