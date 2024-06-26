@@ -97,8 +97,6 @@ class WsOrderController extends Controller
             $status = Retailer::submit($retailerParam, null);
             $retailer = Retailer::fetch(0, [['retailer_id', $status]]);
         }
-
-        // $retailer_address = Retailer_address::fetch(0, [['address_retailer', $request->retailer_id]]);
         $ordSubtotal = $orderTotalDisc = $ordTotal = 0;
         $orderParam = [];
         $products  = Ws_products_size::fetch(0, null, $ids);
@@ -139,6 +137,7 @@ class WsOrderController extends Controller
             'order_invoice'       => uniqidReal(30),
             'order_invoicetime'   => Carbon::now(),
             'order_status'        => 2,
+            'order_placed'        => Carbon::now(),
             'order_bill_country'  => $retailer[0]->retailer_country,
             'order_bill_province' => $retailer[0]->retailer_province,
             'order_bill_city'     => $retailer[0]->retailer_city,
