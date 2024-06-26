@@ -301,8 +301,11 @@ class WsOrderController extends Controller
 
         $pdfPath =  'orders/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
-        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
-        return back();
+
+        if(Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath))){
+            echo json_encode(['status'  => true,]);
+        }
+        // return back();
     }
 
     function Proforma($id)
@@ -317,7 +320,6 @@ class WsOrderController extends Controller
         set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
-        // $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
         $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         $pdf = Pdf::loadView('pdf.invoice', [
@@ -332,12 +334,6 @@ class WsOrderController extends Controller
 
         Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
         return back();
-        // try {
-        //     Mail::to('b2b@sofieamoura.com')->send(new orderConfirmation());
-        //     echo 'Message Sent';
-        // } catch (Exception $e) {
-        //     echo sprintf('[%s],[%d] ERROR:[%s]', __METHOD__, __LINE__, json_encode($e->getMessage(), true));
-        // }
     }
 
     function getRetailer($id)

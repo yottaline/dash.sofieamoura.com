@@ -1,3 +1,19 @@
+<?php
+$parsedProducts = [];
+foreach ($products as $p) {
+    if (!isset($parsedProducts[$p->prodcolor_slug])) {
+        $parsedProducts[$p->prodcolor_slug] = [
+            'id' => $p->product_id,
+            'media' => $p->media_file,
+            'name' => $p->product_name,
+            'code' => $p->product_code,
+            'total' => $p->ordprod_total,
+            'sizes' => [],
+        ];
+    }
+    $parsedProducts[$p->prodcolor_slug]['sizes'][] = $p;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,20 +68,18 @@
         @endif
     </div>
     <?php $qty = 0; ?>
-    @foreach ($data['orderData'] as $product)
+    @foreach ($parsedProducts as $product)
         <?php $total = 0;
         $productQty = 0; ?>
         <div style="border: 1px solid #ccc; margin-bottom: 20px; padding:15px; font-size: 80%; width: 100%;">
             <table style="border-collapse: collapse; width: 100%">
                 <tr>
                     <td style="vertical-align: top; padding: 5px">
-                        {{-- <a href="#"> --}}
-                        <img src="{{ public_path('/media/product/' . $product->product_id . '/' . $product->media_file) }}"
+                        <img src="{{ public_path('/media/product/' . $product['id'] . '/' . $product['media']) }}"
                             alt="photo" width='100'>
-                        {{-- </a> --}}
                     </td>
                     <td style="vertical-align: top">
-                        <p style="margin: 0"><b>{{ $product->product_name }} #{{ $product->product_code }}</b></p>
+                        <p style="margin: 0"><b>{{ $product['name'] }} #{{ $product['code'] }}</b></p>
 
                         <table style="font-size: 12px; margin-top: 15px; font-size: 90%; width: 100%">
                             <thead>
@@ -78,33 +92,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{ $total += $product->ordprod_total,
-                                    $productQty += $product->ordprod_request_qty,
-                                    $qty += $product->ordprod_request_qty }}
-                                <tr style="text-align: center">
-                                    <td width="110" style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ $product->prodcolor_name }}
-                                    </td>
-                                    <td width="110" style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ $product->size_name }}
-                                    </td>
-                                    <td width="70" style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ $product->prodsize_wsp }}</td>
-                                    <td width="50" style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ $product->ordprod_request_qty }}
-                                    </td>
-                                    <td width="80" style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ number_format($product->ordprod_request_qty * $product->prodsize_wsp, 2, '.', '') }}
-                                    </td>
-                                </tr>
+                                @foreach ($product['sizes'] as $s)
+                                    {{ $total += $s->ordprod_total, $productQty += $s->ordprod_request_qty, $qty += $s->ordprod_request_qty }}
+
+                                    <tr style="text-align: center">
+                                        <td style="border-top: 1px solid #ccc; padding: 5px">
+                                            {{ $s->prodcolor_name }}
+                                        </td>
+                                        <td width="70" style="border-top: 1px solid #ccc; padding: 5px">
+                                            {{ $s->size_name }}
+                                        </td>
+                                        <td width="70" style="border-top: 1px solid #ccc; padding: 5px">
+                                            {{ $s->prodsize_wsp }}</td>
+                                        <td width="50" style="border-top: 1px solid #ccc; padding: 5px">
+                                            {{ $s->ordprod_request_qty }}
+                                        </td>
+                                        <td width="80" style="border-top: 1px solid #ccc; padding: 5px">
+                                            {{ number_format($s->ordprod_request_qty * $s->prodsize_wsp, 2, '.', '') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr style="text-align: center">
                                     <td colspan="3" style="border-top: 1px solid #ccc; padding: 5px"></td>
                                     <td style="border-top: 1px solid #ccc; padding: 5px"><?= $productQty ?></td>
                                     <td style="border-top: 1px solid #ccc; padding: 5px">
-                                        {{ $data['order']->currency_code }}
-                                        {{ $product->ordprod_total }}</td>
+                                        {{ $order->currency_code }}
+                                        {{ $product['total'] }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -113,7 +128,6 @@
             </table>
         </div>
     @endforeach
-
     <div style="font-size: 80%">
         <p><b>Total qty: {{ $qty }}</b><br>
             @if ($data['order']->order_discount > 0)

@@ -31,17 +31,13 @@ class SendProformaInvoice implements ShouldQueue
     {
         $order = Ws_order::fetch($this->orderId);
         $retailer = Retailer::fetch($order->order_retailer);
-        $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
-        $orderData = Ws_orders_product::fetch(0, [['ordprod_order', $this->orderId]]);
+        $products = Ws_orders_product::fetch(0, [['ordprod_order', $this->orderId]]);
 
-        $data = [
+        $pdf = Pdf::loadView('pdf.order', [
             'order' => $order,
             'retailer' => $retailer,
-            'orderData' => $orderData,
-            'address'   => $address[0]
-        ];
-
-        $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
+            'products' => $products,
+        ]);
 
         $pdfPath = 'proforma/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
