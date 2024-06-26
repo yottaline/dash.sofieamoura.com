@@ -299,9 +299,9 @@ class WsOrderController extends Controller
             'products' => $products,
         ]);
 
-        $pdfPath = 'public/orders/' . $order->order_code . '.pdf';
+        $pdfPath =  'orders/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
-        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
         return back();
     }
 
@@ -327,10 +327,10 @@ class WsOrderController extends Controller
         ]);
 
 
-        $pdfPath = 'public/invoice/' . $order->order_code . '.pdf';
+        $pdfPath =  'invoice/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
 
-        Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
         return back();
         // try {
         //     Mail::to('b2b@sofieamoura.com')->send(new orderConfirmation());

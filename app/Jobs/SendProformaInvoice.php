@@ -43,9 +43,9 @@ class SendProformaInvoice implements ShouldQueue
 
         $pdf = Pdf::loadView('pdf.profroma', ['data' => $data]);
 
-        $pdfPath = 'public/proforma/' . $order->order_code . '.pdf';
+        $pdfPath = 'proforma/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
 
-        Mail::to('b2b@sofieamoura.com')->send(new OrderProforma($retailer->retailer_fullName, $order->order_code, $pdfPath));
+        Mail::to('b2b@sofieamoura.com')->send(new OrderProforma($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
     }
 }
