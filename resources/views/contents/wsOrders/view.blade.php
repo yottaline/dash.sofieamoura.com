@@ -193,9 +193,15 @@
                                 });
                             </script>
 
-                            <a ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm w-100"
-                                ng-click="Confirmation(order.order_id)">Get Order
-                                Confirmation</a>
+                            <div class="d-flex align-items-center">
+                                <a ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm" style="width: 95%"
+                                    ng-click="Confirmation(order.order_id)" aria-describedby="basic-addon2">Get Order
+                                    Confirmation </a>
+                                <div class="loading-spinner spinner-border ms-auto spinner-border-sm text-warning"
+                                    role="status" aria-hidden="true">
+                                </div>
+                            </div>
+
                             <a ng-if="fn.inArray(order.order_status, [3, 4])" class="btn btn-outline-primary btn-sm w-100"
                                 href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma Invoice</a>
                             <a ng-if="fn.inArray(order.order_status, [5, 6])" class="btn btn-outline-success btn-sm w-100"
@@ -225,6 +231,7 @@
                     'Balance Payment Is Pending', 'Shipped'
                 ],
             };
+            $('.loading-spinner').hide();
             $scope.statusSubmit = false;
             $scope.qtyUpdate = false;
             $scope.focusedQty = 0;
@@ -317,7 +324,9 @@
             }
 
             $scope.Confirmation = function(id) {
+                $('.loading-spinner').show();
                 $.get('/ws_orders/get_confirmed/' + id, function(response) {
+                    $('.loading-spinner').hide();
                     $scope.$apply(function() {
                         if (response) {
                             toastr.success('Get Order Confirmation successfully');
