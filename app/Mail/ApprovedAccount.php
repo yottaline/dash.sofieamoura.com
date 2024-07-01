@@ -33,7 +33,7 @@ class ApprovedAccount extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Approved Account',
+            subject: 'Approved Account--' . $this->name,
         );
     }
 

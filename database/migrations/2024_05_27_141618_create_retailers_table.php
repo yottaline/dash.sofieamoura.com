@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('retailer_fullName', 255);
             $table->string('retailer_email', 120)->unique();
             $table->string('retailer_password', 255);
+            $table->string('retailer_store', 120);
+            $table->string('retailer_vat', 120);
             $table->string('retailer_phone', 24)->unique();
             $table->string('retailer_company', 120);
             $table->string('retailer_logo', 64)->nullable();
@@ -27,6 +29,8 @@ return new class extends Migration
             $table->string('retailer_province', 120);
             $table->string('retailer_city', 120);
             $table->string('retailer_address', 255)->nullable();
+            $table->string('retailer_billAddress', 255);
+            $table->string('retailer_shipAddress', 255);
             $table->integer('retailer_billAdd', false, true)->nullable();
             $table->integer('retailer_shipAdd', false, true)->nullable();
             $table->tinyInteger('retailer_currency', false, true)->default('1');

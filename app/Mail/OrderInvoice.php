@@ -26,7 +26,7 @@ class OrderInvoice extends Mailable
 
     public function build()
     {
-        return $this->subject('Proforma Invoice Created')
+        return $this->subject('Invoice-' .  $this->retailer .'-'.  $this->order_code)
                     ->view('email_templates.orders.InvoiceConfirmation')
                     ->with([
                         'retailer' => $this->retailer,

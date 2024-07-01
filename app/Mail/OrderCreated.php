@@ -26,7 +26,7 @@ class OrderCreated extends Mailable
 
     public function build()
     {
-        return $this->subject('Order Created')
+        return $this->subject('Order Created -' .  $this->retailer .'-'.  $this->order_code)
                     ->view('email_templates.orders.orderConfirmation')
                     ->with([
                         'retailer' => $this->retailer,

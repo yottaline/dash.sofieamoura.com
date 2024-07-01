@@ -23,7 +23,7 @@ class OrderProforma extends Mailable
 
     public function build()
     {
-        return $this->subject('Proforma Invoice Created')
+        return $this->subject('Proforma Invoice-'.  $this->retailer .'-'.  $this->order_code)
                     ->view('email_templates.orders.proformaConfirmation')
                     ->with([
                         'retailer' => $this->retailer,

@@ -193,12 +193,36 @@
                                 });
                             </script>
 
-                            <a ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm w-100"
-                                href="/ws_orders/get_confirmed/<%order.order_id%>">Get Order Confirmation</a>
-                            <a ng-if="fn.inArray(order.order_status, [3, 4])" class="btn btn-outline-primary btn-sm w-100"
-                                href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma Invoice</a>
-                            <a ng-if="fn.inArray(order.order_status, [5, 6])" class="btn btn-outline-success btn-sm w-100"
-                                href="/ws_orders/invoice/<%order.order_id%>">Get Invoice</a>
+                            <div class="d-flex align-items-center">
+                                <a ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm" style="width: 95%"
+                                    ng-click="Confirmation(order.order_id)" aria-describedby="basic-addon2">Get Order
+                                    Confirmation </a>
+                                <div class="loading-spinner-confirmation spinner-border ms-auto spinner-border-sm text-warning"
+                                    role="status" aria-hidden="true">
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <a ng-if="fn.inArray(order.order_status, [3, 4])" class="btn btn-outline-primary btn-sm"
+                                    style="width: 95%" ng-click="proforma(order.order_id)"
+                                    aria-describedby="basic-addon2">Get Proforma
+                                    Invoice</a>
+                                <div class="loading-spinner-proforma spinner-border ms-auto spinner-border-sm text-warning"
+                                    role="status" aria-hidden="true">
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <a ng-if="fn.inArray(order.order_status, [5, 6])"
+                                    class="btn btn-outline-success btn-sm w-100" style="width: 95%"
+                                    ng-click="invoice(order.order_id)" aria-describedby="basic-addon2">Get Invoice</a>
+                                <div class="loading-spinner-invoice spinner-border ms-auto spinner-border-sm text-warning"
+                                    role="status" aria-hidden="true">
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
                 </div>
@@ -224,6 +248,9 @@
                     'Balance Payment Is Pending', 'Shipped'
                 ],
             };
+            $('.loading-spinner-confirmation').hide();
+            $('.loading-spinner-proforma').hide();
+            $('.loading-spinner-invoice').hide();
             $scope.statusSubmit = false;
             $scope.qtyUpdate = false;
             $scope.focusedQty = 0;
@@ -309,6 +336,51 @@
                             $scope.parseProducts();
                         } else {
                             toastr.error('Error updating qty please reload the page');
+                            console.log(response.message);
+                        }
+                    });
+                }, 'json');
+            }
+
+            $scope.Confirmation = function(id) {
+                $('.loading-spinner-confirmation').show();
+                $.get('/ws_orders/get_confirmed/' + id, function(response) {
+                    $('.loading-spinner-confirmation').hide();
+                    $scope.$apply(function() {
+                        if (response) {
+                            toastr.success('Get Order Confirmation successfully');
+                        } else {
+                            toastr.error('Error In Order Confirmation ');
+                            console.log(response.message);
+                        }
+                    });
+                }, 'json');
+            }
+
+            $scope.proforma = function(id) {
+                $('.loading-spinner-proforma').show();
+                $.get('/ws_orders/get_proforma/' + id, function(response) {
+                    $('.loading-spinner-proforma').hide();
+                    $scope.$apply(function() {
+                        if (response) {
+                            toastr.success('Get Order Porforma successfully');
+                        } else {
+                            toastr.error('Error In Order Porforma');
+                            console.log(response.message);
+                        }
+                    });
+                }, 'json');
+            }
+
+            $scope.invoice = function(id) {
+                $('.loading-spinner-invoice').show();
+                $.get('/ws_orders/invoice/' + id, function(response) {
+                    $('.loading-spinner-invoice').hide();
+                    $scope.$apply(function() {
+                        if (response) {
+                            toastr.success('Get invoice successfully');
+                        } else {
+                            toastr.error('Error In invoice ');
                             console.log(response.message);
                         }
                     });
