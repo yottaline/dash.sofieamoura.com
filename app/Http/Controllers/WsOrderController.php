@@ -32,7 +32,7 @@ class WsOrderController extends Controller
 
     function __construct(TelegramService $telegramService)
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
         $this->telegramService = $telegramService;
     }
 
