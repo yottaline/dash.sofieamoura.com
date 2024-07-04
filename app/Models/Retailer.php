@@ -38,34 +38,35 @@ class Retailer extends Model
 
     public static function fetch($id = 0, $params = null, $limit = null, $lastId = null)
     {
-        $retailers = self::join('locations', 'retailer_country', 'location_id')
-        ->join('currencies', 'retailer_currency', 'currency_id')->orderBy('retailer_created', 'DESC')->limit($limit);
+        $retailers = self:: //join('locations', 'retailer_country', 'location_id')
+            join('currencies', 'retailer_currency', 'currency_id')
+            ->orderBy('retailer_created', 'DESC')->limit($limit);
 
         if (isset($params['q'])) {
             $retailers->where(function (Builder $query) use ($params) {
                 $query->where('retailer_email', 'like', '%' . $params['q'] . '%')
-                ->orWhere('retailer_phone', 'like', '%' . $params['q'] . '%')
-                ->orWhere('retailer_fullName', $params['q'])
-                ->orWhere('retailer_company', $params['q'])
-                ->orWhere('retailer_address', $params['q'])
-                ->orWhere('retailer_adv_payment', $params['q']);
+                    ->orWhere('retailer_phone', 'like', '%' . $params['q'] . '%')
+                    ->orWhere('retailer_fullName', $params['q'])
+                    ->orWhere('retailer_company', $params['q'])
+                    ->orWhere('retailer_address', $params['q'])
+                    ->orWhere('retailer_adv_payment', $params['q']);
             });
 
             unset($params['q']);
         }
 
-        if($lastId) $retailers->where('retailer_id', '<', $lastId);
+        if ($lastId) $retailers->where('retailer_id', '<', $lastId);
 
-        if($params) $retailers->where($params);
+        if ($params) $retailers->where($params);
 
-        if($id) $retailers->where('retailer_id', $id);
+        if ($id) $retailers->where('retailer_id', $id);
 
         return $id ? $retailers->first() : $retailers->get();
     }
 
     public static function submit($param, $id)
     {
-        if($id) return self::where('retailer_id', $id)->update($param) ? $id : false;
+        if ($id) return self::where('retailer_id', $id)->update($param) ? $id : false;
         $status = self::create($param);
         return $status ? $status->id : false;
     }

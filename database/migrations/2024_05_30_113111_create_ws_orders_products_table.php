@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('ordprod_id', true, true);
             $table->integer('ordprod_order')->unsigned();
             $table->integer('ordprod_product')->unsigned();
+            $table->integer('ordprod_color')->unsigned();
             $table->bigInteger('ordprod_size')->unsigned();
             $table->smallInteger('ordprod_request_qty')->unsigned();
             $table->smallInteger('ordprod_served_qty')->unsigned();

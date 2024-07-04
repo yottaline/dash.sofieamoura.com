@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 */
 
 Route::get('/', fn () => view('dashboard'))->middleware('auth');
+Route::get('ws_orders/get_confirmed/{id}/{getStatus?}', 'WsOrderController@Confirmed');
 
 Route::middleware('auth')->group(function () {
     // locations
@@ -99,7 +100,6 @@ Route::middleware('auth')->group(function () {
         Route::post('del_size', 'WsOrderController@delSize');
         Route::get('view/{id}', 'WsOrderController@view');
         Route::get('export', 'WsOrderController@export');
-        Route::get('get_confirmed/{id}', 'WsOrderController@Confirmed');
         Route::get('get_proforma/{id}', 'WsOrderController@Proforma');
         Route::get('invoice/{id}', 'WsOrderController@invoice');
         Route::get('get_retailer/{id}', 'WsOrderController@getRetailer');

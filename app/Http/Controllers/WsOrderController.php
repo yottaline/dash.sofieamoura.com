@@ -32,7 +32,7 @@ class WsOrderController extends Controller
 
     function __construct(TelegramService $telegramService)
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
         $this->telegramService = $telegramService;
     }
 
@@ -257,10 +257,12 @@ class WsOrderController extends Controller
 
     function updateStatus(Request $request)
     {
+        $order = Ws_order::fetch($request->id);
         $param = [
             'order_status' => $request->status,
         ];
-        if ($request->status == 2) $param['order_placed'] = Carbon::now();
+        if ($request->status == 2 && !$order->order_placed)
+            $param['order_placed'] = Carbon::now();
 
         $result =  Ws_order::submit($request->id, $param);
         echo json_encode([
@@ -274,9 +276,6 @@ class WsOrderController extends Controller
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
         $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
-        // return $products;
-
-
 
         return view('contents.wsOrders.view', compact('order', 'retailer', 'products'));
     }
@@ -287,30 +286,41 @@ class WsOrderController extends Controller
         return $order_id ? Ws_orders_product::excel($order_id) : Ws_orders_product::excel();
     }
 
-    function Confirmed($id)
+    function Confirmed($id, $getStatus = 0)
     {
         set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
+        $billAddress = Retailer_address::fetch(0, [
+            ['retailer_id', $order->order_retailer],
+            ['address_type', '1'],
+        ]);
+        $shipAddress = Retailer_address::fetch(0, [
+            ['retailer_id', $order->order_retailer],
+            ['address_type', '2'],
+        ]);
         $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         $pdf = Pdf::loadView('pdf.order', [
             'order' => $order,
             'retailer' => $retailer,
+            'billAddress' => $billAddress[0],
+            'shipAddress' => $shipAddress[0],
             'products' => $products,
         ]);
 
         $pdfPath =  'orders/' . $order->order_code . '.pdf';
         Storage::disk('public')->put($pdfPath, $pdf->output());
         Mail::to('b2b@sofieamoura.com')->send(new OrderCreated($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
-        return back();
+
+        if ($getStatus) echo json_encode(['status' => true]);
     }
 
     function Proforma($id)
     {
         set_time_limit(5000);
         SendProformaInvoice::dispatch($id);
-        return back();
+        echo json_encode(['status' => true]);
     }
 
     function invoice($id)
@@ -318,12 +328,21 @@ class WsOrderController extends Controller
         set_time_limit(5000);
         $order = Ws_order::fetch($id);
         $retailer = Retailer::fetch($order->order_retailer);
-        // $address = Retailer_address::fetch(0, [['address_retailer', $retailer->retailer_id]]);
+        $billAddress = Retailer_address::fetch(0, [
+            ['retailer_id', $order->order_retailer],
+            ['address_type', '1'],
+        ]);
+        $shipAddress = Retailer_address::fetch(0, [
+            ['retailer_id', $order->order_retailer],
+            ['address_type', '2'],
+        ]);
         $products = Ws_orders_product::fetch(0, [['ordprod_order', $id]]);
 
         $pdf = Pdf::loadView('pdf.invoice', [
             'order' => $order,
             'retailer' => $retailer,
+            'billAddress' => $billAddress[0],
+            'shipAddress' => $shipAddress[0],
             'products' => $products,
         ]);
 
@@ -332,13 +351,7 @@ class WsOrderController extends Controller
         Storage::disk('public')->put($pdfPath, $pdf->output());
 
         Mail::to('b2b@sofieamoura.com')->send(new OrderInvoice($retailer->retailer_fullName, $order->order_code, 'public/' . $pdfPath));
-        return back();
-        // try {
-        //     Mail::to('b2b@sofieamoura.com')->send(new orderConfirmation());
-        //     echo 'Message Sent';
-        // } catch (Exception $e) {
-        //     echo sprintf('[%s],[%d] ERROR:[%s]', __METHOD__, __LINE__, json_encode($e->getMessage(), true));
-        // }
+        echo json_encode(['status' => true]);
     }
 
     function getRetailer($id)

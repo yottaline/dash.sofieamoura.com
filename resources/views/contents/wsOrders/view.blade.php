@@ -193,12 +193,15 @@
                                 });
                             </script>
 
-                            <a ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm w-100"
-                                href="/ws_orders/get_confirmed/<%order.order_id%>">Get Order Confirmation</a>
-                            <a ng-if="fn.inArray(order.order_status, [3, 4])" class="btn btn-outline-primary btn-sm w-100"
-                                href="/ws_orders/get_proforma/<%order.order_id%>">Get Proforma Invoice</a>
-                            <a ng-if="fn.inArray(order.order_status, [5, 6])" class="btn btn-outline-success btn-sm w-100"
-                                href="/ws_orders/invoice/<%order.order_id%>">Get Invoice</a>
+                            <button ng-if="order.order_status == 2" class="btn btn-outline-dark btn-sm w-100"
+                                ng-click="getOrderConfirmation()">Get Order Confirmation</button>
+
+                            <button ng-if="fn.inArray(order.order_status, [3, 4])" ng-click="getProformaInvoice()"
+                                class="btn btn-outline-primary btn-sm w-100">Get Proforma Invoice</button>
+
+                            <button ng-if="fn.inArray(order.order_status, [5, 6])"
+                                class="btn btn-outline-success btn-sm w-100" ng-click="getInvoice()">Get Invoice</button>
+                            <script></script>
                         </div>
                     </div>
                 </div>
@@ -311,6 +314,33 @@
                             toastr.error('Error updating qty please reload the page');
                             console.log(response.message);
                         }
+                    });
+                }, 'json');
+            }
+
+            $scope.getOrderConfirmation = function() {
+                $.get(`/ws_orders/get_confirmed/${$scope.order.order_id}/1`, null, function(response) {
+                    $scope.$apply(function() {
+                        if (response.status) toastr.success('Order confirmation sent');
+                        else toastr.error('Error on sending order confirmation sent');
+                    });
+                }, 'json');
+            }
+
+            $scope.getProformaInvoice = function() {
+                $.get(`/ws_orders/get_proforma/${$scope.order.order_id}`, null, function(response) {
+                    $scope.$apply(function() {
+                        if (response.status) toastr.success('Proforma invoice sent');
+                        else toastr.error('Error on sending Proforma invoice sent');
+                    });
+                }, 'json');
+            }
+
+            $scope.getInvoice = function() {
+                $.get(`/ws_orders/invoice/${$scope.order.order_id}`, null, function(response) {
+                    $scope.$apply(function() {
+                        if (response.status) toastr.success('Order invoice sent');
+                        else toastr.error('Error on sending order invoice sent');
                     });
                 }, 'json');
             }

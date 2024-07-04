@@ -17,24 +17,24 @@ class OrderInvoice extends Mailable
     public $order_code;
     public $pdfPath;
 
-    public function __construct($retailer, $order_code, $pdfPath)
+    function __construct($retailer, $order_code, $pdfPath)
     {
         $this->retailer = $retailer;
         $this->order_code = $order_code;
         $this->pdfPath = $pdfPath;
     }
 
-    public function build()
+    function build()
     {
-        return $this->subject('Proforma Invoice Created')
-                    ->view('email_templates.orders.InvoiceConfirmation')
-                    ->with([
-                        'retailer' => $this->retailer,
-                        'order_code' => $this->order_code
-                    ])
-                    ->attach(storage_path('app/public/' . $this->pdfPath), [
-                        'as' => 'invoice.pdf',
-                        'mime' => 'application/pdf',
-                    ]);
+        return $this->subject("Order #{$this->order_code} invoice | {$this->retailer}")
+            ->view('email_templates.orders.InvoiceConfirmation')
+            ->with([
+                'retailer' => $this->retailer,
+                'order_code' => $this->order_code
+            ])
+            ->attach(storage_path('app/public/' . $this->pdfPath), [
+                'as' => 'invoice.pdf',
+                'mime' => 'application/pdf',
+            ]);
     }
 }
