@@ -25,16 +25,23 @@ class WsOrderExport implements FromCollection, WithHeadings
 
 
         return [
-            'Order Coder',
-            'Placed',
-            'Retailer Name',
-            'Retailer Email',
-            'Product Code',
-            'Product Name',
-            'Season Name',
-            'Size Name',
-            'Request Qty',
-            'Total Price',
+            'ORDER',
+            'RETAILER CODE',
+            'RETAILER COMPANY',
+            'RETAILER NAME',
+            'PRODUCT CODE',
+            'PRODUCT NAME',
+            'CATEGORY',
+            'PRODUCT INFO',
+            'SIZE',
+            'COLOR',
+            'WSP',
+            'QTY',
+            'TOTAL',
+            'SHIP QTY',
+            'SHIP TOTAL',
         ];
     }
 }
+// Season Name
+// 'Retailer Email',

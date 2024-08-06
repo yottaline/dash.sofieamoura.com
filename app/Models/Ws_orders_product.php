@@ -64,10 +64,13 @@ class Ws_orders_product extends Model
             ->join('ws_products_sizes', 'ordprod_size', 'prodsize_id')->join('sizes', 'ws_products_sizes.prodsize_size', 'sizes.size_id')
             ->join('seasons', 'season_id', 'product_season')
             ->join('retailers', 'retailer_id', 'order_retailer')
+            ->join('categories', 'product_category', 'category_id')
             ->join('ws_products_colors', 'ws_products_colors.prodcolor_ref', 'ws_products_sizes.prodsize_color');
 
         if ($orderids) $orders->whereIn('o.order_id', $orderids);
-        $data = $orders->get(['o.order_code', 'o.order_placed', 'retailer_fullName', 'retailer_email', 'wp1.product_code', 'wp1.product_name', 'season_name', 'size_name', 'ordprod_request_qty', 'o.order_total']);
+        $data = $orders->get(['o.order_code', 'retailer_code', 'retailer_company', 'retailer_fullName',
+        'wp1.product_code', 'wp1.product_name', 'category_name',  'wp1.product_desc','size_name','prodcolor_name',
+        'prodsize_wsp' ,'ordprod_request_qty', 'o.order_total', 'ordprod_request_qty AS ship_wsp', 'o.order_total  AS ship_total']);
         $date = Carbon::now();
         return Excel::download(new WsOrderExport($data), 'orders' . $date . '.xlsx');
     }
